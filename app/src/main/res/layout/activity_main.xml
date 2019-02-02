@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    External Citation
+    Date: February 1, 2019
+    Problem: Had trouble laying out images with symmetry
+    Resource: https://developer.android.com/guide/topics/ui/layout/relative
+    Solution: Used Relative Layout to create found in listed site
+
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -52,7 +60,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="50">
+        android:layout_weight="50"
+        android:background="#268b3a">
+
+        <TextView
+            android:id="@+id/turnText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Turn: Player 4"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="30dp" />
 
         <ImageView
             android:id="@+id/player3"
@@ -61,25 +78,64 @@
             android:layout_above="@id/flop1"
             android:layout_centerInParent="true"
             android:layout_marginBottom="50dp"
-            app:srcCompat="@drawable/player"/>
+            android:background="#00ffb7"
+            app:srcCompat="@drawable/player" />
+
+        <TextView
+            android:id="@+id/player2Chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/player2"
+            android:layout_below="@id/player2"
+            android:text="$500"
+            android:textSize="20dp" />
 
         <ImageView
             android:id="@+id/player2"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@id/flop3"
             android:layout_centerInParent="true"
             android:layout_marginRight="50dp"
-            app:srcCompat="@drawable/player"/>
+            android:layout_toLeftOf="@id/flop3"
+            android:background="@android:color/holo_purple"
+            app:srcCompat="@drawable/player" />
+
+        <TextView
+            android:id="@+id/player3Chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/player3"
+            android:layout_toRightOf="@id/player3"
+            android:text="$500"
+            android:textSize="20dp" />
 
         <ImageView
             android:id="@+id/player4"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toRightOf="@id/river"
             android:layout_centerInParent="true"
             android:layout_marginLeft="50dp"
-            app:srcCompat="@drawable/player"/>
+            android:layout_toRightOf="@id/river"
+            android:background="@android:color/holo_orange_light"
+            app:srcCompat="@drawable/player" />
+
+        <TextView
+            android:id="@+id/player4Chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/player4"
+            android:layout_below="@id/player4"
+            android:text="$500"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="34dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/player4"
+            app:srcCompat="@drawable/dealer" />
 
         <ImageView
             android:id="@+id/logo"
@@ -146,7 +202,7 @@
             app:srcCompat="@drawable/chip_stack" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/totalPot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/turn"
@@ -171,10 +227,11 @@
             android:orientation="vertical">
 
             <SeekBar
-                android:id="@+id/seekBar2"
+                android:id="@+id/bettingSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3" />
+                android:layout_weight="3"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,18 +241,24 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/bettingStack"
                     android:layout_width="@android:dimen/notification_large_icon_width"
                     android:layout_height="@android:dimen/notification_large_icon_height"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/chip_stack" />
 
-                <TextView
-                    android:id="@+id/textView2"
+                <EditText
+                    android:id="@+id/betInsertText"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:ems="10"
+                    android:hint="Place Bets"
+                    android:inputType="number"
+                    android:textColor="@android:color/holo_orange_light"
+                    android:textColorHighlight="@android:color/darker_gray"
+                    android:textColorHint="@android:color/holo_orange_light" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -205,7 +268,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/showCards"
+                    android:id="@+id/showButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -265,18 +328,29 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="@android:dimen/notification_large_icon_height"
-                    android:layout_height="@android:dimen/notification_large_icon_height"
+                    android:id="@+id/playerImage"
+                    android:layout_width="20dp"
+                    android:layout_height="64dp"
                     android:layout_weight="1"
+                    android:background="@android:color/holo_blue_bright"
                     app:srcCompat="@drawable/player" />
+
+                <TextView
+                    android:id="@+id/currChips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="$500"
+                    android:textColor="@android:color/holo_orange_light"
+                    android:textSize="30dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_weight="10"
+                android:orientation="horizontal"
+                android:layout_gravity="top">
 
                 <Button
                     android:id="@+id/betButton"
