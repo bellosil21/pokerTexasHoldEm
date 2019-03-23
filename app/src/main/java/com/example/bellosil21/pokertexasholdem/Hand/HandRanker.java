@@ -1,8 +1,11 @@
 package com.example.bellosil21.pokertexasholdem.Hand;
 
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+
 import java.util.ArrayList;
 
-import static com.example.bellosil21.pokertexasholdem.Hand.Card.Suit.NUM_OF_SUITS;
+import static com.example.bellosil21.pokertexasholdem.Poker.Hand.Card.Suit.NUM_OF_SUITS;
 
 public class HandRanker {
     public static final int FLUSH_REQ = 5;
