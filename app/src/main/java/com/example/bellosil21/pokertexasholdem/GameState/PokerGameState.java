@@ -7,7 +7,6 @@ import com.example.bellosil21.pokertexasholdem.Money.PlayerChipCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 /**
  * Defines the game state to play Poker.
  *
@@ -297,21 +296,4 @@ public class PokerGameState implements Serializable {
         playingDeck.dealPlayers(hands);
     }
 
-    public int handType(Hand player, ArrayList<Card> community) {
-
-        return 0;
-    }
-
-    public boolean flush(ArrayList<Card> cards) {
-
-        return false;
-    }
-
-    public ArrayList<Integer> winningDecision(ArrayList<Hand> players,
-                                              ArrayList<Card> community,
-                                              ArrayList<Integer> winners,
-                                              int winningHandType){
-
-        return winners;
-    }
 }
