@@ -111,6 +111,8 @@ public class HandRanker {
      * Get the best StraightFLush from each suit array. Then, return the best one.
      * Otherwise, return null.
      *
+     * Both helper methods used here handle null cases.
+     *
      * @return the CardCollection containing the best StraightFlush; otherwise, null
      */
     private CardCollection findStraightFlush() {
@@ -119,13 +121,10 @@ public class HandRanker {
         CardCollection diamondsSF = findStraightFlushHelper(diamonds);
         CardCollection heartsSF = findStraightFlushHelper(hearts);
 
-        CardCollection bestSF = spadesSF;
-        if (bestSF != null) {
-            if (clubsSF != null){
-            }
-        }
-
-        return null;
+        CardCollection bestSF = getHigherCardCollection(spadesSF, clubsSF);
+        bestSF = getHigherCardCollection(bestSF, diamondsSF);
+        bestSF = getHigherCardCollection(bestSF, heartsSF);
+        return bestSF;
     }
 
     /**
@@ -214,12 +213,31 @@ public class HandRanker {
     }
 
     /**
-     * Returns the higher ranking CardCollection from two CardCollections
-     * @param a
-     * @param b
-     * @return
+     * Returns the higher ranking CardCollection from two CardCollections.
+     * If they are equal in rank, it is arbitrary which one we return. For our
+     * implementation, we return the first CardCollection a.
+     *
+     * This method handles null CardCollections. If there is only one null
+     * collection, return the one that isn't null.
+     * If both are null, return null.
+     *
+     * @param a the first CardCollection to compare
+     * @param b the second CardCollection to compare
+     * @return the higher ranking CardCollection
      */
     private CardCollection getHigherCardCollection(CardCollection a, CardCollection b) {
+        //handing null cases
+        if (a == null && b == null) {
+            return null;
+        }
+        else if (a == null) {
+            return b;
+        }
+        else if (b == null) {
+            return a;
+        }
+
+        //non-null cases
         int compareTo = a.compareTo(b);
         if (compareTo > 1) {
             return a;
