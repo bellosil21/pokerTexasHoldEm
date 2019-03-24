@@ -64,7 +64,21 @@ public class BetController {
         return false;
     }
 
-    public boolean check(int playerID){return false;}
+    public boolean check(int playerID){
+        if(playerID < 0){
+            /*invalid player ID*/
+            return false;
+        }
+        if(isPlayerAllIn){
+            /*meaning someone in the round has already bet so checking is unrealistic*/
+            return false;
+        }
+        if(maxBet != 0){
+            /*meaning its not the first turn*/
+            return false;
+        }
+        return true;
+    }
 
     public boolean raiseBet(int playerID, int amount){
         if (amount <= maxBet) {
@@ -93,6 +107,30 @@ public class BetController {
         /*pot.addChips(maxBet); */
         //return true;
     }
-    public boolean allIn(int playerID){return false;}
+    public boolean allIn(int playerID){
+        if(playerID < 0){
+            /* invalid player ID*/
+            return false;
+        }
+        int allChips = players.get(playerID).getChips();
+
+        /*check to see if all in is the largest bet*/
+        if(allChips > maxBet){
+            maxBet = allChips;
+        }
+
+        /*remove all the chips from given player object.*/
+        players.get(playerID).removeChips(allChips);
+
+        /*set isAllIn variable to true*/
+        isPlayerAllIn = true;
+
+        /*set players last bet to this all in amount*/
+        players.get(playerID).setLastBet(allChips);
+
+        return true;
+    }
+
+    /* what? */
     public void distributePots(){}
 }
