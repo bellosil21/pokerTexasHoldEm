@@ -19,8 +19,11 @@ import java.util.Collections;
  */
 public class HandRanker {
     public static final int FLUSH_REQ = 5;
-
+    private static final int FOUR_OF_A_KIND_REQ = 4;
+    private static final int THREE_OF_A_KIND_REQ = 3;
+    private static final int PAIR_REQ = 2;
     private static final int START = 0;
+    private static final int CARDS_ON_HAND = 5;
 
     private ArrayList<Card> cardSet;
     private ArrayList<Card> clubs;
@@ -101,29 +104,241 @@ public class HandRanker {
     //TODO
     private CardCollection findStraightFlush() { return null; }
 
-    //TODO
-    private CardCollection findFourOfAKind() { return null; }
+    /**
+     * Finds the best Four of a Kind hand
+     *
+     * @return the best FOur of a Kind Card Collection
+     */
+    private CardCollection findFourOfAKind() {
+        for (Card card: cardSet){
+            rankOccurrences[card.getRank().getValue()]++;
+        }
+
+        int toCheck = -1;
+        for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
+            if (rankOccurrences[index] == FOUR_OF_A_KIND_REQ){
+                toCheck = index;
+                break;
+            }
+        }
+
+        if (toCheck == -1){return null;}
+
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+        int ind = 0;
+
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck){
+                toReturn[ind] = card;
+                ind++;
+            }
+        }
+
+        for (Card card: cardSet) {
+            if (card.getRank().getValue() != toCheck){
+                toReturn[ind] = card;
+                break;
+            }
+        }
+
+        return new CardCollection(toReturn, HandRank.FOUR_OF_A_KIND);
+    }
+
+
+    private CardCollection findFullHouse() {
+        int pair = -1;
+        int triple = -1;
+
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+
+        for (int index = Card.Rank.NUM_OF_RANKS; index >= START; index--){
+            if (rankOccurrences[index] == PAIR_REQ){
+                pair = index;
+            }
+            else if (rankOccurrences[index] == THREE_OF_A_KIND_REQ){
+                triple = index;
+            }
+
+            if (triple > START || pair > START){ break;}
+        }
+
+        if (triple < START || pair < START){ return null;}
+
+        int ind = 0;
+
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == triple){
+                toReturn[ind] = card;
+                ind++;
+            }
+            else if (card.getRank().getValue() == pair){
+                toReturn[ind] = card;
+            }
+
+            if (ind == CARDS_ON_HAND){break;}
+        }
+
+        return new CardCollection(toReturn, HandRank.FULL_HOUSE);
+    }
 
     //TODO
-    private CardCollection findFullHouse() { return null; }
+    private CardCollection findFlush() {
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+        int index = 0;
 
-    //TODO
-    private CardCollection findFlush() { return null; }
+        // Checks which suits
+        if (spades.size() > FLUSH_REQ){
+            for (Card card: spades){
+                if (index == CARDS_ON_HAND){break;}
+                toReturn[index] = card;
+                ++index;
+            }
+        }
+        else if (clubs.size() > FLUSH_REQ){
+            for (Card card: clubs){
+                if (index == CARDS_ON_HAND){break;}
+                toReturn[index] = card;
+                ++index;
+            }
+        }
+        else if (hearts.size() > FLUSH_REQ){
+            for (Card card: hearts){
+                if (index == CARDS_ON_HAND){break;}
+                toReturn[index] = card;
+                ++index;
+            }
+        }
+        else if (diamonds.size() > FLUSH_REQ){
+            for (Card card: diamonds){
+                if (index == CARDS_ON_HAND){break;}
+                toReturn[index] = card;
+                ++index;
+            }
+        }
+        else{ return null;}
+
+        // Creates, initializes, and returns a new CardCollection object
+        return new CardCollection(toReturn, HandRank.FLUSH);
+    }
 
     //TODO
     private CardCollection findStraight() { return null; }
 
     //TODO
-    private CardCollection findThreeOfAKind() { return null; }
+    private CardCollection findThreeOfAKind() {
+        int toCheck = -1;
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+
+        for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
+            if (rankOccurrences[index] == THREE_OF_A_KIND_REQ){
+                toCheck = index;
+                break;
+            }
+        }
+
+        if (toCheck == -1){return null;}
+
+        int ind = 0;
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck){
+                toReturn[ind] = card;
+                ind++;
+            }
+        }
+
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck){
+                toReturn[ind] = card;
+                ind++;
+            }
+            if (ind == CARDS_ON_HAND){break;}
+        }
+        return new CardCollection(toReturn, HandRank.THREE_OF_A_KIND);
+    }
 
     //TODO
-    private CardCollection findTwoPair() { return null; }
+    private CardCollection findTwoPair() {
+
+        int toCheck1 = -1;
+        int toCheck2 = -1;
+
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+
+        for (int index = Card.Rank.NUM_OF_RANKS; index >= START; index--){
+            if (rankOccurrences[index] == PAIR_REQ){
+                if (toCheck1 < 0) {
+                    toCheck1 = index;
+                }
+                else{
+                    toCheck2 = index;
+                    break;
+                }
+            }
+        }
+
+        if ((toCheck1 < START) || (toCheck2 < START)){return null;}
+
+        int ind = 0;
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck1 ||
+                    card.getRank().getValue() == toCheck2){
+                toReturn[ind] = card;
+                ind++;
+            }
+        }
+
+        for (Card card: cardSet){
+            if (card.getRank().getValue() != toCheck1 ||
+                    card.getRank().getValue() != toCheck2){
+                toReturn[ind] = card;
+                ind++;
+            }
+            if (ind == CARDS_ON_HAND){break;}
+        }
+        return new CardCollection(toReturn, HandRank.PAIR);
+    }
 
     //TODO
-    private CardCollection findOnePair() { return null; }
+    private CardCollection findOnePair() {
+
+        int toCheck = -1;
+        Card[] toReturn = new Card[CARDS_ON_HAND];
+
+        for (int index = Card.Rank.NUM_OF_RANKS; index > -1 ; index--){
+            if (rankOccurrences[index] == PAIR_REQ){
+                toCheck = index;
+                break;
+            }
+        }
+
+        if (toCheck == -1){return null;}
+
+        int ind = 0;
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck){
+                toReturn[ind] = card;
+                ind++;
+            }
+        }
+
+        for (Card card: cardSet){
+            if (card.getRank().getValue() == toCheck){
+                toReturn[ind] = card;
+                ind++;
+            }
+            if (ind == CARDS_ON_HAND){break;}
+        }
+        return new CardCollection(toReturn, HandRank.PAIR);
+    }
 
     //TODO
-    private CardCollection findHighCard() { return null; }
+    private CardCollection findHighCard() {
+        Card[] toReturn = new Card[1];
+
+        toReturn[START] = cardSet.get(START);
+
+        return new CardCollection(toReturn, HandRank.HIGH_CARD);
+    }
 
     /**
      * A helper method to be used in the constructor.
