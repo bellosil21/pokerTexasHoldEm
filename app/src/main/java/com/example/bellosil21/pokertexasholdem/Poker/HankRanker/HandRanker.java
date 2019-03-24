@@ -4,6 +4,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.SortCardByRank;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,19 +19,23 @@ import java.util.Collections;
  * @author Gabe Marcial
  */
 public class HandRanker {
-    public static final int FLUSH_REQ = 5;
-    private static final int FOUR_OF_A_KIND_REQ = 4;
-    private static final int THREE_OF_A_KIND_REQ = 3;
-    private static final int PAIR_REQ = 2;
-    private static final int START = 0;
-    private static final int CARDS_ON_HAND = 5;
 
+    /** instance vars **/
     private ArrayList<Card> cardSet;
     private ArrayList<Card> clubs;
     private ArrayList<Card> spades;
     private ArrayList<Card> diamonds;
     private ArrayList<Card> hearts;
     private int[] rankOccurrences;
+
+    /** constants **/
+    //public static final int FLUSH_REQ = 5;
+    //private static final int START = 0;
+    private static final int FIVE_CARD_HAND = 5;
+    private static final int FOUR_CARD_HAND = 4;
+    private static final int THREE_CARD_HAND = 3;
+    private static final int TWO_CARD_HAND = 2;
+    private static final int ONE_CARD_HAND = 1;
 
     public HandRanker(Hand player, ArrayList<Card> community){
         cardSet = new ArrayList<Card>();
@@ -45,6 +50,7 @@ public class HandRanker {
         rankOccurrences = new int[Card.Rank.NUM_OF_RANKS];
     }
 
+
     /**
      * Find the best five card poker hand out of the five community cards and two hole cards. We
      * will first for test the best poker hand, a straight flush, and the incrementally test until
@@ -56,7 +62,7 @@ public class HandRanker {
      * @return a CardCollection containing the five poker cards of the best hand, the HandRank, and
      * the highest Rank of the collection.
      */
-    public CardCollection computeHandRank() {
+    private CardCollection computeHandRank() {
         // sort the cardSet by rank in order to return the best 5.
         // given this sorted set we can sort each suit into a sorted
         // set to search for hands involving suits.
@@ -101,8 +107,61 @@ public class HandRanker {
         return findHighCard();
     }
 
-    //TODO
-    private CardCollection findStraightFlush() { return null; }
+    /**
+     * Get the best StraightFLush from each suit array. Then, return the best one.
+     * Otherwise, return null.
+     *
+     * @return the CardCollection containing the best StraightFlush; otherwise, null
+     */
+    private CardCollection findStraightFlush() {
+        CardCollection spadesSF = findStraightFlushHelper(spades);
+        CardCollection clubsSF = findStraightFlushHelper(clubs);
+        CardCollection diamondsSF = findStraightFlushHelper(diamonds);
+        CardCollection heartsSF = findStraightFlushHelper(hearts);
+
+        CardCollection bestSF = spadesSF;
+        if (bestSF != null) {
+            if (clubsSF != null){
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * If there exist a subset of a suit array such that the subset's rank values, n, are
+     * {n, n-1, n-2, n-3, n-4}, we return a CardCollection representing those cards, with a
+     * HandRank of StraightFlush. Otherwise, return null.
+     * Note: The arrays of suits should be ordered from the card with highest rank to the card
+     * with least ranking.
+     *
+     * @param cards an array of cards from the same suit
+     * @return the CardCollection of the best StraightFlush if there is one; otherwise, null
+     */
+    private CardCollection findStraightFlushHelper(ArrayList<Card> cards) {
+        // only loop while there are 5 cards remaining in the array (the current index + 4)
+        for (int i = 0; i < cards.size() - FIVE_CARD_HAND + 1; i++) {
+            int highestRank = cards.get(i).getRank().getValue();
+            int nextRank1 = cards.get(i + 1).getRank().getValue();
+            int nextRank2 = cards.get(i + 2).getRank().getValue();
+            int nextRank3 = cards.get(i + 3).getRank().getValue();
+            int lowestRank = cards.get(i + 4).getRank().getValue();
+
+            // check if this subset obeys {n, n-1, n-2, n-3, n-4}
+            // if so, this subset is a StraightFlush
+            // otherwise, go to next iteration
+            if (highestRank == (nextRank1 + 1) &&
+                    highestRank == (nextRank2 + 2) &&
+                    highestRank == (nextRank3 + 3) &&
+                    highestRank == (lowestRank + 4)) {
+                Card[] straightFlush = {cards.get(i), cards.get(i + 1),
+                        cards.get(i + 2), cards.get(i + 3),
+                        cards.get(i + 4)};
+                return new CardCollection(straightFlush, HandRank.STRAIGHT_FLUSH);
+            }
+        }
+        return null;
+    }
 
     /**
      * Finds the best Four of a Kind hand
@@ -364,6 +423,23 @@ public class HandRanker {
                 assert false;
 
         }
+    }
+
+    /**
+     * Returns the higher ranking CardCollection from two CardCollections
+     * @param a
+     * @param b
+     * @return
+     */
+    private CardCollection getHigherCardCollection(CardCollection a, CardCollection b) {
+        int compareTo = a.compareTo(b);
+        if (compareTo > 1) {
+            return a;
+        }
+        else if (compareTo < 1) {
+            return b;
+        }
+        return a;
     }
 
     //

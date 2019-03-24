@@ -14,7 +14,6 @@ public class CardCollection {
 
     private Card[] cards;
     private HandRank handRank;
-    private Card.Rank rank;
 
     public CardCollection(Card[] cards, HandRank handRank) {
         this.cards = new Card[cards.length];
@@ -22,8 +21,6 @@ public class CardCollection {
             this.cards[i] = cards[i];
         }
         this.handRank = handRank;
-
-        //TODO: Calculate high card
     }
 
     public Card[] getCards() {
@@ -34,7 +31,55 @@ public class CardCollection {
         return handRank;
     }
 
-    public Card.Rank getRank() {
-        return rank;
+    public Card.Rank getHighestRank() {
+        Card.Rank highestRank = cards[0].getRank();
+
+        for (int i = 1; i < cards.length; i++) {
+            if (cards[0].getRank().getValue() > highestRank.getValue()) {
+                highestRank = cards[i].getRank();
+            }
+        }
+
+        return highestRank;
+    }
+
+    /**
+     * Compares this CardCollection to another CardCollection based on their ranking
+     * (first compares the HandRank, and then the highest card rank if HandRank is equal)
+     *
+     * @param other the CardCollection to compare against "this" one
+     * @return 1 if this CardCollection is a higher rank
+     *         -1 if this CardCollection is a lower rank
+     *         0 if this CardCollection ties with the other
+     */
+    public int compareTo(CardCollection other) {
+        if (this.handRank.getValue() > other.handRank.getValue()) {
+            return 1;
+        }
+        else if (this.handRank.getValue() < other.handRank.getValue()) {
+            return -1;
+        }
+        return compareHighestCardRankTo(other);
+    }
+
+    /**
+     * Compares this CardCollection to another CardCollection based on their ranking
+     *
+     * @param other the CardCollection to compare against "this" one
+     * @return 1 if this CardCollection is a higher rank
+     *         -1 if this CardCollection is a lower rank
+     *         0 if this CardCollection ties with the other
+     */
+    public int compareHighestCardRankTo(CardCollection other) {
+        int thisHighRank = this.getHighestRank().getValue();
+        int otherHighRank = other.getHighestRank().getValue();
+
+        if (thisHighRank > otherHighRank) {
+            return 1;
+        }
+        else if (thisHighRank == otherHighRank) {
+            return 0;
+        }
+        return -1;
     }
 }
