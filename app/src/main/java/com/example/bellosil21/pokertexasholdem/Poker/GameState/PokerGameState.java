@@ -42,7 +42,7 @@ public class PokerGameState implements Serializable {
     private ArrayList<PlayerChipCollection> playersChips;
 
     // tracks the pot and maximum bet
-    private BetTracker bets;
+    private PotTracker bets;
     // tracks whose turn it is
     private TurnTracker turn;
 
@@ -79,7 +79,7 @@ public class PokerGameState implements Serializable {
             playersChips.add(new PlayerChipCollection(startingChips, i));
         }
 
-        bets = new BetTracker(playersChips);
+        //bets = new PotTracker(playersChips);
 
         turn = new TurnTracker(playersChips, dealerID);
     }
@@ -123,7 +123,7 @@ public class PokerGameState implements Serializable {
             playersChips.add(new PlayerChipCollection(cc));
         }
 
-        bets = new BetTracker(toCopy.bets);
+        bets = new PotTracker(toCopy.bets);
         turn = new TurnTracker(toCopy.turn);
     }
 
@@ -182,7 +182,7 @@ public class PokerGameState implements Serializable {
     /**
      * Submits a bet if it's the player's turn and goes to the next turn.
      * this is equivalent to Raise action which is why
-     * we call the raise method from the BetTracker class.
+     * we call the raise method from the PotTracker class.
      *
      * @param playerID the ID of the player giving the action
      * @param amount   the amount that the player is submitting
