@@ -175,7 +175,7 @@ public class HandRanker {
 
         int toCheck = -1;
         for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
-            if (rankOccurrences[index] == FOUR_OF_A_KIND_REQ){
+            if (rankOccurrences[index] == 4){
                 toCheck = index;
                 break;
             }
@@ -183,7 +183,7 @@ public class HandRanker {
 
         if (toCheck == -1){return null;}
 
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[FOUR_CARD_HAND];
         int ind = 0;
 
         for (Card card: cardSet){
@@ -208,20 +208,20 @@ public class HandRanker {
         int pair = -1;
         int triple = -1;
 
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[FIVE_CARD_HAND];
 
-        for (int index = Card.Rank.NUM_OF_RANKS; index >= START; index--){
-            if (rankOccurrences[index] == PAIR_REQ){
+        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
+            if (rankOccurrences[index] == 2){
                 pair = index;
             }
-            else if (rankOccurrences[index] == THREE_OF_A_KIND_REQ){
+            else if (rankOccurrences[index] == 3){
                 triple = index;
             }
 
-            if (triple > START || pair > START){ break;}
+            if (triple >= 0 || pair >= 0){ break;}
         }
 
-        if (triple < START || pair < START){ return null;}
+        if (triple < 0|| pair < 0){ return null;}
 
         int ind = 0;
 
@@ -234,7 +234,7 @@ public class HandRanker {
                 toReturn[ind] = card;
             }
 
-            if (ind == CARDS_ON_HAND){break;}
+            if (ind == FIVE_CARD_HAND){break;}
         }
 
         return new CardCollection(toReturn, HandRank.FULL_HOUSE);
@@ -242,34 +242,34 @@ public class HandRanker {
 
     //TODO
     private CardCollection findFlush() {
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[FIVE_CARD_HAND];
         int index = 0;
 
         // Checks which suits
-        if (spades.size() > FLUSH_REQ){
+        if (spades.size() > FIVE_CARD_HAND){
             for (Card card: spades){
-                if (index == CARDS_ON_HAND){break;}
+                if (index == FIVE_CARD_HAND){break;}
                 toReturn[index] = card;
                 ++index;
             }
         }
-        else if (clubs.size() > FLUSH_REQ){
+        else if (clubs.size() > FIVE_CARD_HAND){
             for (Card card: clubs){
-                if (index == CARDS_ON_HAND){break;}
+                if (index == FIVE_CARD_HAND){break;}
                 toReturn[index] = card;
                 ++index;
             }
         }
-        else if (hearts.size() > FLUSH_REQ){
+        else if (hearts.size() > FIVE_CARD_HAND){
             for (Card card: hearts){
-                if (index == CARDS_ON_HAND){break;}
+                if (index == FIVE_CARD_HAND){break;}
                 toReturn[index] = card;
                 ++index;
             }
         }
-        else if (diamonds.size() > FLUSH_REQ){
+        else if (diamonds.size() > FIVE_CARD_HAND){
             for (Card card: diamonds){
-                if (index == CARDS_ON_HAND){break;}
+                if (index == FIVE_CARD_HAND){break;}
                 toReturn[index] = card;
                 ++index;
             }
@@ -286,10 +286,10 @@ public class HandRanker {
     //TODO
     private CardCollection findThreeOfAKind() {
         int toCheck = -1;
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[THREE_CARD_HAND];
 
         for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
-            if (rankOccurrences[index] == THREE_OF_A_KIND_REQ){
+            if (rankOccurrences[index] == THREE_CARD_HAND){
                 toCheck = index;
                 break;
             }
@@ -310,7 +310,7 @@ public class HandRanker {
                 toReturn[ind] = card;
                 ind++;
             }
-            if (ind == CARDS_ON_HAND){break;}
+            if (ind == THREE_CARD_HAND){break;}
         }
         return new CardCollection(toReturn, HandRank.THREE_OF_A_KIND);
     }
@@ -321,10 +321,10 @@ public class HandRanker {
         int toCheck1 = -1;
         int toCheck2 = -1;
 
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[FOUR_CARD_HAND];
 
-        for (int index = Card.Rank.NUM_OF_RANKS; index >= START; index--){
-            if (rankOccurrences[index] == PAIR_REQ){
+        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
+            if (rankOccurrences[index] == TWO_CARD_HAND){
                 if (toCheck1 < 0) {
                     toCheck1 = index;
                 }
@@ -335,7 +335,7 @@ public class HandRanker {
             }
         }
 
-        if ((toCheck1 < START) || (toCheck2 < START)){return null;}
+        if ((toCheck1 < 0) || (toCheck2 < 0)){return null;}
 
         int ind = 0;
         for (Card card: cardSet){
@@ -345,15 +345,6 @@ public class HandRanker {
                 ind++;
             }
         }
-
-        for (Card card: cardSet){
-            if (card.getRank().getValue() != toCheck1 ||
-                    card.getRank().getValue() != toCheck2){
-                toReturn[ind] = card;
-                ind++;
-            }
-            if (ind == CARDS_ON_HAND){break;}
-        }
         return new CardCollection(toReturn, HandRank.PAIR);
     }
 
@@ -361,10 +352,10 @@ public class HandRanker {
     private CardCollection findOnePair() {
 
         int toCheck = -1;
-        Card[] toReturn = new Card[CARDS_ON_HAND];
+        Card[] toReturn = new Card[TWO_CARD_HAND];
 
         for (int index = Card.Rank.NUM_OF_RANKS; index > -1 ; index--){
-            if (rankOccurrences[index] == PAIR_REQ){
+            if (rankOccurrences[index] == TWO_CARD_HAND){
                 toCheck = index;
                 break;
             }
@@ -385,16 +376,16 @@ public class HandRanker {
                 toReturn[ind] = card;
                 ind++;
             }
-            if (ind == CARDS_ON_HAND){break;}
+            if (ind == TWO_CARD_HAND){break;}
         }
         return new CardCollection(toReturn, HandRank.PAIR);
     }
 
     //TODO
     private CardCollection findHighCard() {
-        Card[] toReturn = new Card[1];
+        Card[] toReturn = new Card[ONE_CARD_HAND];
 
-        toReturn[START] = cardSet.get(START);
+        toReturn[0] = cardSet.get(0);
 
         return new CardCollection(toReturn, HandRank.HIGH_CARD);
     }
