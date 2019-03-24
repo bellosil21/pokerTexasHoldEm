@@ -55,12 +55,9 @@ public class PotTracker {
         contributors.add(playerID);
     }
 
-    /* how do we do this? */
-    public boolean checkIfContributed(int playerID){
-        /** if a playerID exists in the array list of contributors, than does that mean they have
-        indeed "contributed" already? meaning return true in this method??
-         */
-        return false;
+
+    public ArrayList<Integer> getContributors(){
+        return this.contributors;
     }
 
     /*

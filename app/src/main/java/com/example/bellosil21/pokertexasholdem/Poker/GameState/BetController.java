@@ -6,14 +6,21 @@ import java.util.ArrayList;
 
 public class BetController {
     private ArrayList<PotTracker> pots;
-    private ArrayList<PlayerChipCollection> players;
+    private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
     private int maxBet; //added a getter method for this shit bois.
     private boolean isPlayerAllIn;
     private int smallBlind;
     private int bigBlind;
     private int numberOfPlayers;
+    private final int MAIN_POT_INDEX = 0;
+    /*
+    private final int INDEX_0 = 0;
+    private final int INDEX_1 = 1;
+    private final int INDEX_2 = 2;
+    private final int INDEX_3 = 4;
+    */
 
-    public BetController(int numPlayers){
+    public BetController(int numPlayers, int smBlind, int bgBlind){
         if(numPlayers < 2){
             /** invalid number of players nah?
              *
@@ -25,13 +32,23 @@ public class BetController {
         pots.add(new PotTracker());
         this.maxBet = 0;
         this.isPlayerAllIn = false;
-        this.smallBlind = 0;
-        this.bigBlind = 0;
+        this.smallBlind = smBlind;
+        this.bigBlind = bgBlind;
         this.numberOfPlayers = numPlayers;
     }
 
     /*not sure what you want this to do*/
-    public void forceBlinds(int smallBlindID, int bigBlindID){}
+    //will automatically put bets for player index 0 and 1
+    public void forceBlinds(int smallBlindID, int bigBlindID){
+        /*add the small blind and big blind bets to the pot*/
+        pots.get(MAIN_POT_INDEX).pot.addChips(smallBlind);
+        pots.get(MAIN_POT_INDEX).pot.addChips(bigBlind);
+
+        /*remove the chips from the big blind and small blind players*/
+        players.get(smallBlindID).removeChips(smallBlind);
+        players.get(bigBlindID).removeChips(bigBlind);
+
+    }
 
     public boolean call(int playerID){
         /* we should put a unit test here to test if player chips is the amount we want*/
@@ -49,7 +66,7 @@ public class BetController {
             pots.get(1).pot.addChips(playerChips*numberOfPlayers);
 
             /*this pot goes to the person with the highest bet if they were to win the round*/
-            pots.get(0).pot.addChips(playerChips);
+            pots.get(MAIN_POT_INDEX).pot.addChips(playerChips);
 
             /*add player to list of contributors in potTracker*/
             //pots.get(0).addContributor(playerID); is this even neccessary, wouldnt this repeat?
@@ -57,7 +74,7 @@ public class BetController {
             isPlayerAllIn = true;
         } else {
             players.get(playerID).removeChips(maxBet);
-            pots.get(0).pot.addChips(maxBet);
+            pots.get(MAIN_POT_INDEX).pot.addChips(maxBet);
         }
 
         players.get(playerID).setHasCalled(true);
@@ -92,7 +109,7 @@ public class BetController {
         maxBet = amount;
         players.get(playerID).removeChips(amount);
         players.get(playerID).setLastBet(amount);
-        pots.get(0).pot.addChips(amount);
+        pots.get(MAIN_POT_INDEX).pot.addChips(amount);
         return true;
         //pots.get(0).addContributor(playerID);    dont understand purpose.
         /*
@@ -112,11 +129,17 @@ public class BetController {
             /* invalid player ID*/
             return false;
         }
+
         int allChips = players.get(playerID).getChips();
 
         /*check to see if all in is the largest bet*/
         if(allChips > maxBet){
             maxBet = allChips;
+        }
+        else{
+            /* make a new subpot for this all in*/
+            pots.add(new PotTracker());
+            pots.get(pots.size()-1).pot.addChips(allchips);
         }
 
         /*remove all the chips from given player object.*/
@@ -131,9 +154,71 @@ public class BetController {
         return true;
     }
 
-    /* what? */
-    public void distributePots(){}
+    public void distributePots(int[] rankings){
+        int n;
+        ArrayList<Integer> winners;
+        for(PotTracker p : pots){
+            winners = new ArrayList<>();
+            n = getHighestRanking(p.getContributors(), rankings);
+                for(int i = 0; i<rankings.length; i++){
+                    if(rankings[i] == n){
+                        winners.add(i);
+                    }
+                }
+               int money = p.pot.getChips();
+            /* noe iterate through all the winners and distribute pots accordingly. */
+            if(winners.size() >1){
+                //split money into groups equal to the amount of winners.
+                money = money/winners.size();
+                for(int i = 0; i<winners.size(); i++){
+                    players.get(winners.get(i)).addChips(money);
+                }
+            }
+            else{
+                players.get(winners.get(0)).addChips(money);
+            }
+        }
+        /*reset maxbet and isPlayerAllin*/
+       asynchronousReset();
+    }
+    /* this method will take in an array of integers that symbolize the type of winning hand
+    * if -1. than folded
+    * if two or more integers reapeat, than split the pot.
+    */
+
+
+    /**
+     * helper method for distribute pots.
+     * @return
+     */
+    private int getHighestRanking(ArrayList<Integer> contributors, int[] rankings){
+        /* 0 is the highest possible rank, which makes the for loop weird. */
+        int highestRank = rankings[contributors.get(0)];
+        for(int i = 0; i < contributors.size(); i++){
+            if(highestRank > rankings[contributors.get(i)]) {
+                highestRank = rankings[contributors.get(i)];
+            }
+        }
+        return highestRank;
+    }
+
     public int getMaxBet(){
         return this.maxBet;
+    }
+
+    public int getPlayerChips(int playerID){
+        int allChips = players.get(playerID).getChips();
+        return allChips;
+    }
+
+    /**
+     * This is a helper method for other methods in the BetController class.
+     * This basically resets the maxBet variable to 0 and the isPlayerAllIn boolean to false.
+     * examples of where this would be called would include when the round is over
+     * (i.e. distributePots() is called).
+     */
+    private void asynchronousReset(){
+        maxBet = 0;
+        isPlayerAllIn = false;
     }
 }

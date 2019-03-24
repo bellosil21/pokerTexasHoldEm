@@ -83,7 +83,8 @@ public class PokerGameState implements Serializable {
             playersChips.add(new PlayerChipCollection(startingChips, i));
         }
         */
-        controller = new BetController(numPlayers);
+        controller = new BetController(numPlayers, smallBlind, bigBlind);
+
         //bets = new PotTracker(playersChips);
 
         turn = new TurnTracker(playersChips, dealerID);
@@ -277,7 +278,8 @@ public class PokerGameState implements Serializable {
      */
     public boolean allIn(int playerID) {
         if (turn.getActivePlayerID() == playerID) {
-            int bet = playersChips.get(playerID).getChips();
+            //int bet = playersChips.get(playerID).getChips();
+            int bet =  controller.getPlayerChips(playerID); //alternative to the code above.
             /*changed 'bets' to 'controller' */
             return controller.raiseBet(playerID, bet);
         }
