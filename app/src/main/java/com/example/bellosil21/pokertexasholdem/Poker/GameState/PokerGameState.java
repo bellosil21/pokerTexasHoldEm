@@ -303,4 +303,16 @@ public class PokerGameState implements Serializable {
         playingDeck.dealPlayers(hands);
     }
 
+    /**
+     * Determines the rankings of the players from a HankRanker
+     *
+     * @return an int array who's indexes match the same player indexes as hands. The int represents
+     * the players ranking, where 0 is the best rank, a higher int is a lower rank, and the max
+     * integer means the player has folded.
+     */
+    public int[] rankCardCollections() {
+        //TODO
+        return null;
+    }
+
 }
