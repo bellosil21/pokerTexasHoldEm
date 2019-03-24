@@ -62,11 +62,11 @@ public class HandRanker {
      * @return a CardCollection containing the five poker cards of the best hand, the HandRank, and
      * the highest Rank of the collection.
      */
-    private CardCollection computeHandRank() {
+    public CardCollection computeHandRank() {
         // sort the cardSet by rank in order to return the best 5.
         // given this sorted set we can sort each suit into a sorted
         // set to search for hands involving suits.
-        // while sorting by suit, we can also count the type of ranks for pairs,
+        // while sorting by suit, we can also count the type of ranks for pairs,import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRank;
         // three of a kinds, and four of a kinds
         Collections.sort(cardSet, new SortCardByRank());
 
