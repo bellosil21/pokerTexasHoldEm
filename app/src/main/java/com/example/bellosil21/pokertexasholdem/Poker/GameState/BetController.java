@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class BetController {
     private ArrayList<PotTracker> pots;
     private ArrayList<PlayerChipCollection> players;
-    private int maxBet;
+    private int maxBet; //added a getter method for this shit bois.
     private boolean isPlayerAllIn;
     private int smallBlind;
     private int bigBlind;
@@ -133,4 +133,7 @@ public class BetController {
 
     /* what? */
     public void distributePots(){}
+    public int getMaxBet(){
+        return this.maxBet;
+    }
 }

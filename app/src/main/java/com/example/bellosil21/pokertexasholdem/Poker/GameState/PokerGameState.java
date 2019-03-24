@@ -46,6 +46,9 @@ public class PokerGameState implements Serializable {
     // tracks whose turn it is
     private TurnTracker turn;
 
+    /** new stuff */
+    private BetController controller;
+
     /**
      * constants
      */
@@ -74,11 +77,13 @@ public class PokerGameState implements Serializable {
         smallBlind = startingSmall;
         bigBlind = startingBig;
 
+        /*since we have bet Controller, this is unneccessary
         playersChips = new ArrayList<PlayerChipCollection>();
         for (int i = 0; i < numPlayers; i++) {
             playersChips.add(new PlayerChipCollection(startingChips, i));
         }
-
+        */
+        controller = new BetController(numPlayers);
         //bets = new PotTracker(playersChips);
 
         turn = new TurnTracker(playersChips, dealerID);
@@ -92,7 +97,7 @@ public class PokerGameState implements Serializable {
      * @param toCopy   the PokerGameState to copy
      * @param playerID the playerID that is given this copy of the game state
      */
-    public PokerGameState(PokerGameState toCopy, int playerID) {
+    public PokerGameState(PokerGameState toCopy, int playerID) { //original constructor changed.
         playingDeck = null;
 
         // only pass the player their hand or the hand's showCards is true;
@@ -192,7 +197,7 @@ public class PokerGameState implements Serializable {
         if (turn.getActivePlayerID() != playerID) {
             return false;
         }
-        if (bets.raiseBet(playerID, amount)) {
+        if (controller.raiseBet(playerID, amount)) { //changed 'bets' to controller
             turn.nextTurn();
             return true;
         }
@@ -236,7 +241,8 @@ public class PokerGameState implements Serializable {
      * @return true if the maxBet == 0 and it is the player's turn
      */
     public boolean check(int playerID) {
-        if (turn.getActivePlayerID() == playerID && bets.getMaxBet() == 0) {
+        /*changed bets.getMaxBet() to controller.getMaxBet*/
+        if (turn.getActivePlayerID() == playerID && controller.getMaxBet() == 0) {
             turn.nextTurn();
             return true;
         }
@@ -254,7 +260,7 @@ public class PokerGameState implements Serializable {
             return false;
         }
 
-        bets.call(playerID);
+        controller.call(playerID); //changed 'bets' to controller
         turn.nextTurn();
         return true;
     }
@@ -272,7 +278,8 @@ public class PokerGameState implements Serializable {
     public boolean allIn(int playerID) {
         if (turn.getActivePlayerID() == playerID) {
             int bet = playersChips.get(playerID).getChips();
-            return bets.raiseBet(playerID, bet);
+            /*changed 'bets' to 'controller' */
+            return controller.raiseBet(playerID, bet);
         }
         return false;
     }
