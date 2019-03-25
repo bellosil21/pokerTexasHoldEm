@@ -66,7 +66,7 @@ public class HandRanker {
         // sort the cardSet by rank in order to return the best 5.
         // given this sorted set we can sort each suit into a sorted
         // set to search for hands involving suits.
-        // while sorting by suit, we can also count the type of ranks for pairs,import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRank;
+        // while sorting by suit, we can also count the type of ranks for pairs,
         // three of a kinds, and four of a kinds
         Collections.sort(cardSet, new SortCardByRank());
 
