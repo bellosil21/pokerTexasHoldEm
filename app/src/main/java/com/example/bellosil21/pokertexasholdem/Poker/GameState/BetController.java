@@ -51,7 +51,7 @@ public class BetController {
     }
 
     public boolean call(int playerID){
-        /* we should put a unit test here to test if player chips is the amount we want*/
+        //TODO: we should put a unit test here to test if player chips is the amount we want
         int playerChips = players.get(playerID).getChips();
 
 
@@ -161,7 +161,7 @@ public class BetController {
             winners = new ArrayList<>();
             n = getHighestRanking(p.getContributors(), rankings);
                 for(int i = 0; i<rankings.length; i++){
-                    if(rankings[i] == n){
+                     if(rankings[i] == n){
                         winners.add(i);
                     }
                 }
