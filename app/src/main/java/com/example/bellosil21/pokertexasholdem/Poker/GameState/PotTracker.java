@@ -16,6 +16,9 @@ public class PotTracker {
     private ArrayList<Integer> contributors;
     private int contribution; 
     protected ChipCollection pot;
+    private boolean isPlayerAllIn; // when a player is all in, the contribution
+                                   // cannot be adjusted
+
 
     /**
      * External Citation
@@ -29,8 +32,10 @@ public class PotTracker {
      * @param
      */
     public PotTracker() {
+        contributors = new ArrayList<Integer>();
         pot =  new ChipCollection(0);
-        contribution = 0; 
+        contribution = 0;
+        isPlayerAllIn = false;
     }
 
     /**
@@ -43,21 +48,31 @@ public class PotTracker {
             this.contributors.add(toCopy.contributors.get(i));
         }
         this.contribution = toCopy.contribution; 
-        this.pot = new ChipCollection(0); 
-        this.pot.addChips(toCopy.pot.getChips());
+        this.pot = new ChipCollection(toCopy.pot.getChips());
     }
 
     public void addContributor(int playerID){
-        if(playerID < 0){
-            /* returns a positive integer ID*/
-            this.addContributor(playerID*playerID);
-        }
         contributors.add(playerID);
     }
 
-
     public ArrayList<Integer> getContributors(){
         return this.contributors;
+    }
+
+    public void addChips(int amount) {
+        pot.addChips(amount);
+    }
+
+    public void removeChips(int amount) {
+        pot.removeChips(amount);
+    }
+
+    public boolean isPlayerAllIn() {
+        return isPlayerAllIn;
+    }
+
+    public void setPlayerAllIn(boolean playerAllIn) {
+        isPlayerAllIn = playerAllIn;
     }
 
     /*

@@ -8,7 +8,6 @@ public class BetController {
     private ArrayList<PotTracker> pots;
     private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
     private int maxBet; //added a getter method for this shit bois.
-    private boolean isPlayerAllIn;
     private int smallBlind;
     private int bigBlind;
     private int numberOfPlayers;
@@ -20,65 +19,28 @@ public class BetController {
     private final int INDEX_3 = 4;
     */
 
-    public BetController(int numPlayers, int smBlind, int bgBlind){
-        if(numPlayers < 2){
-            /** invalid number of players nah?
-             *
-             */
-        }
+    public BetController(int numPlayers, int smBlind, int bgBlind, int startingChips){
         for(int i = 0; i<numPlayers; i++){
-            players.add(new PlayerChipCollection(0, i)); //i will be the id of player.
+            players.add(new PlayerChipCollection(startingChips, i)); //i will be the id of player.
         }
         pots.add(new PotTracker());
         this.maxBet = 0;
-        this.isPlayerAllIn = false;
         this.smallBlind = smBlind;
         this.bigBlind = bgBlind;
         this.numberOfPlayers = numPlayers;
     }
 
-    /*not sure what you want this to do*/
-    //will automatically put bets for player index 0 and 1
     public void forceBlinds(int smallBlindID, int bigBlindID){
-        /*add the small blind and big blind bets to the pot*/
-        pots.get(MAIN_POT_INDEX).pot.addChips(smallBlind);
-        pots.get(MAIN_POT_INDEX).pot.addChips(bigBlind);
-
-        /*remove the chips from the big blind and small blind players*/
-        players.get(smallBlindID).removeChips(smallBlind);
-        players.get(bigBlindID).removeChips(bigBlind);
-
+        //if player has enough, use the method raise bet on them with blind amount
+        //if they do not have enough, make them all in
     }
 
     public boolean call(int playerID){
-        //TODO: we should put a unit test here to test if player chips is the amount we want
         int playerChips = players.get(playerID).getChips();
 
+        //if player has enough, add the amount to the pot
+        //if player does not, make them all in
 
-        if (playerChips < maxBet) {
-            //since all the chips this player had was not enought, they have put all in.
-            players.get(playerID).removeChips(playerChips);
-            pots.add(new PotTracker()); //check to see if this index should be 1.
-
-            /*this will create the new main pot which will consist only of the playerchips times
-            the number of players.
-             */
-            pots.get(1).pot.addChips(playerChips*numberOfPlayers);
-
-            /*this pot goes to the person with the highest bet if they were to win the round*/
-            pots.get(MAIN_POT_INDEX).pot.addChips(playerChips);
-
-            /*add player to list of contributors in potTracker*/
-            //pots.get(0).addContributor(playerID); is this even neccessary, wouldnt this repeat?
-            /*lastly, let the controller know that someone has all ined.*/
-            isPlayerAllIn = true;
-        } else {
-            players.get(playerID).removeChips(maxBet);
-            pots.get(MAIN_POT_INDEX).pot.addChips(maxBet);
-        }
-
-        players.get(playerID).setHasCalled(true);
-        return false;
     }
 
     public boolean check(int playerID){
@@ -94,6 +56,9 @@ public class BetController {
             /*meaning its not the first turn*/
             return false;
         }
+
+        //TODO: contribute to the pot with 0 amount
+
         return true;
     }
 
@@ -124,6 +89,26 @@ public class BetController {
         /*pot.addChips(maxBet); */
         //return true;
     }
+
+    /**
+     * If going allIn when the next pot to contribute has a higher contribute
+     * than the player's chips to allIn, create a new pot at index N-1 (N
+     * sized pot array). Then, shift the contributions of the N'th pot, such
+     * that chips moved is the allin's players chips times the contributors
+     * of the N'th pot. The contribution of this new pot is the allIn amount,
+     * and the contributors is the allIn player plus all players on the N'th
+     * pot. Also, set the isPlayerAllIn to true.
+     *
+     * If going allIn when then next pot to contribute has a lower contribute
+     * amount than the player's chips to allIn, add the contribution
+     * amount to the N'th pot and set isPlayerAllIn to true. Then, create a new
+     * pot at index N+1 (N sized pot array) and add the allIn's player chip
+     * amount minus the N'th pot contribution amount. Finally, set this new
+     * pot's isPlayerAllIn to true.
+     *
+     * @param playerID the ID of the player
+     * @return true regardless of playerID
+     */
     public boolean allIn(int playerID){
         if(playerID < 0){
             /* invalid player ID*/

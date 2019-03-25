@@ -83,7 +83,7 @@ public class PokerGameState implements Serializable {
             playersChips.add(new PlayerChipCollection(startingChips, i));
         }
         */
-        controller = new BetController(numPlayers, smallBlind, bigBlind);
+        controller = new BetController(numPlayers, smallBlind, bigBlind, startingChips);
 
         //bets = new PotTracker(playersChips);
 
