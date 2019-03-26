@@ -81,4 +81,6 @@ public class Deck implements Serializable {
         return toReturn;
     }
 
+    public ArrayList<Card> getDeck(){return this.deckOfCards;}
+
 }

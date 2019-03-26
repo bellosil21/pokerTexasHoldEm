@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
-import com.example.bellosil21.pokertexasholdem.Poker.Player.GamePlayer;
+import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
+import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 
 public class PokerFold extends GameAction {
     /**
