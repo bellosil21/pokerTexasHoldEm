@@ -62,7 +62,7 @@ public class HandRanker {
      * @return a CardCollection containing the five poker cards of the best hand, the HandRank, and
      * the highest Rank of the collection.
      */
-    private CardCollection computeHandRank() {
+    public CardCollection computeHandRank() {
         // sort the cardSet by rank in order to return the best 5.
         // given this sorted set we can sort each suit into a sorted
         // set to search for hands involving suits.
