@@ -137,9 +137,8 @@ public class BetController {
             maxBet = allChips;
         }
         else{
-            /* make a new subpot for this all in*/
             pots.add(new PotTracker());
-            pots.get(pots.size()-1).pot.addChips(allchips);
+            pots.get(pots.size()-1).pot.addChips(allChips);
         }
 
         /*remove all the chips from given player object.*/
