@@ -317,4 +317,11 @@ public class PokerGameState implements Serializable {
         return null;
     }
 
+    public BetController getController() {
+        return controller;
+    }
+
+    public TurnTracker getTurn() {
+        return turn;
+    }
 }

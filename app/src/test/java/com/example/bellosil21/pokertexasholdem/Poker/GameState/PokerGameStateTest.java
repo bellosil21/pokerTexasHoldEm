@@ -3,10 +3,9 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class PokerGameStateTest {
 
@@ -17,6 +16,26 @@ public class PokerGameStateTest {
 
     @Test
     public void placeBets() {
+        PokerGameState game = new PokerGameState(100, 10,
+                                                    20, 4);
+        boolean isLegalAction;
+
+        isLegalAction = game.placeBets(0, 200);
+        assertEquals(false, isLegalAction); // does have enough to bet
+                                                    // 200;
+
+        isLegalAction = game.placeBets(game.getTurn().getActivePlayerID(), 21);
+        assertEquals(true, isLegalAction);
+
+        isLegalAction = game.placeBets(game.getTurn().getActivePlayerID(), 20);
+        assertEquals(false, isLegalAction); // cannot bet a smaller amount
+
+        isLegalAction = game.placeBets(game.getTurn().getActivePlayerID(), 21);
+        assertEquals(false, isLegalAction);  // must bet an amount greater
+                                                     // than the the maxBet
+
+        isLegalAction = game.placeBets(game.getTurn().getActivePlayerID(), 22);
+        assertEquals(true, isLegalAction);
     }
 
     @Test
@@ -45,6 +64,23 @@ public class PokerGameStateTest {
 
     @Test
     public void allIn() {
+        PokerGameState game = new PokerGameState(100, 10,
+                20, 4);
+
+        boolean isLegalAction;
+
+        isLegalAction = game.allIn(game.getTurn().getActivePlayerID());
+        assertEquals(true, isLegalAction); // if it is the active player's
+        // turn, they can always go all in
+
+        isLegalAction = game.allIn(game.getTurn().getActivePlayerID());
+        assertEquals(true, isLegalAction);
+
+        isLegalAction = game.allIn(game.getTurn().getActivePlayerID());
+        assertEquals(true, isLegalAction);
+
+        isLegalAction = game.allIn(game.getTurn().getActivePlayerID());
+        assertEquals(true, isLegalAction);
     }
 
     @Test
@@ -57,5 +93,6 @@ public class PokerGameStateTest {
 
     @Test
     public void rankCardCollections() {
+
     }
 }
