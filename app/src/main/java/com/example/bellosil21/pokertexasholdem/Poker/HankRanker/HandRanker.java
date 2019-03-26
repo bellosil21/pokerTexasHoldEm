@@ -168,23 +168,23 @@ public class HandRanker {
      * @return the best FOur of a Kind Card Collection
      */
     private CardCollection findFourOfAKind() {
-        for (Card card: cardSet){
-            rankOccurrences[card.getRank().getValue()]++;
-        }
 
+        // Checks and rankOccurrences array to find the rank that uses all four
+        // suits of the card
         int toCheck = -1;
-        for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
+        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
             if (rankOccurrences[index] == 4){
                 toCheck = index;
                 break;
             }
         }
 
+        // Returns null no rank has four instances in the hand
         if (toCheck == -1){return null;}
 
+        // Gets all the cards of that rank
         Card[] toReturn = new Card[FOUR_CARD_HAND];
         int ind = 0;
-
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
                 toReturn[ind] = card;
@@ -192,23 +192,27 @@ public class HandRanker {
             }
         }
 
-        for (Card card: cardSet) {
-            if (card.getRank().getValue() != toCheck){
-                toReturn[ind] = card;
-                break;
-            }
-        }
-
+        // Creates, initializes, and returns a CardCollection object containing
+        // the Four of a Kind hand and its Hand Rank type
         return new CardCollection(toReturn, HandRank.FOUR_OF_A_KIND);
     }
 
 
+    /**
+     * Checks community cards and the player's hand to find the best
+     * hand that contains a Full House
+     *
+     * @return a CardCollection object containing the best Full House Hand
+     */
     private CardCollection findFullHouse() {
+        // instance variables for the rank that is the highest pair
+        // and triple
         int pair = -1;
         int triple = -1;
 
+        // Checks the rankOccurrences array to find the highest rankings that
+        // has pairs or triples
         Card[] toReturn = new Card[FIVE_CARD_HAND];
-
         for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
             if (rankOccurrences[index] == 2){
                 pair = index;
@@ -217,13 +221,15 @@ public class HandRanker {
                 triple = index;
             }
 
-            if (triple >= 0 || pair >= 0){ break;}
+            if (triple >= 0 && pair >= 0){ break;}
         }
 
+        // Checks if a pair and triple exist
+        // If not, null is returned
         if (triple < 0|| pair < 0){ return null;}
 
+        // Gets all the cards that are part of the highest triple or double
         int ind = 0;
-
         for (Card card: cardSet){
             if (card.getRank().getValue() == triple){
                 toReturn[ind] = card;
@@ -236,15 +242,25 @@ public class HandRanker {
             if (ind == FIVE_CARD_HAND){break;}
         }
 
+        // Creates, initializes, and returns a CardCollection object containing
+        // the Full House hand and its Hand Rank type
         return new CardCollection(toReturn, HandRank.FULL_HOUSE);
     }
 
-    //TODO
+    /**
+     * Checks all the cards to see if there at least 5 cards of the same suit
+     * in a Hand to make the highest winning flush
+     *
+     * @return a CardCollection object containing the highest flush possible
+     * with the given cards
+     */
     private CardCollection findFlush() {
         Card[] toReturn = new Card[FIVE_CARD_HAND];
         int index = 0;
 
-        // Checks which suits
+        // Checks each suit to find which suit has more than five cards
+        // and adds the highest five cards into the Hand
+        // If none exists, returns null
         if (spades.size() > FIVE_CARD_HAND){
             for (Card card: spades){
                 if (index == FIVE_CARD_HAND){break;}
@@ -282,28 +298,33 @@ public class HandRanker {
     //TODO
     private CardCollection findStraight() { return null; }
 
-    //TODO
+    /**
+     * Checks all given cards to find the hand with the highest
+     * triple
+     *
+     * @return a CardCollection object with the highest Three of a Kind
+     * collection
+     */
     private CardCollection findThreeOfAKind() {
         int toCheck = -1;
-        Card[] toReturn = new Card[THREE_CARD_HAND];
 
-        for (int index = 0; index < Card.Rank.NUM_OF_RANKS; index++){
+        // Creates and finds the rank in which three instances of that kind
+        // exists
+        Card[] toReturn = new Card[THREE_CARD_HAND];
+        for (int index = Card.Rank.NUM_OF_RANKS; index >=0 ; index++){
             if (rankOccurrences[index] == THREE_CARD_HAND){
                 toCheck = index;
                 break;
             }
         }
 
+        // If none is found, return null
         if (toCheck == -1){return null;}
 
-        int ind = 0;
-        for (Card card: cardSet){
-            if (card.getRank().getValue() == toCheck){
-                toReturn[ind] = card;
-                ind++;
-            }
-        }
 
+        // Adds all the cards with the highest rank to the array of cards
+        // to be returned
+        int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
                 toReturn[ind] = card;
@@ -311,17 +332,28 @@ public class HandRanker {
             }
             if (ind == THREE_CARD_HAND){break;}
         }
+
+        // Creates, initializes, and returns a CardCollection object
+        // containing the highest three of a kind hand
         return new CardCollection(toReturn, HandRank.THREE_OF_A_KIND);
     }
 
-    //TODO
+    /**
+     * Checks all the given cards to find the highest hand involving two
+     * pairs of cards for different ranks
+     *
+     * @return
+     */
     private CardCollection findTwoPair() {
 
+        // Initializing the instances variables for storing the ranks
+        // with pairs
         int toCheck1 = -1;
         int toCheck2 = -1;
 
+        // Checks each rank and finds two highest ranks that has pairs in the
+        // hand
         Card[] toReturn = new Card[FOUR_CARD_HAND];
-
         for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
             if (rankOccurrences[index] == TWO_CARD_HAND){
                 if (toCheck1 < 0) {
@@ -334,8 +366,11 @@ public class HandRanker {
             }
         }
 
+        // if two ranks cannot be found, return null
         if ((toCheck1 < 0) || (toCheck2 < 0)){return null;}
 
+        // Adds all the cards with either of the two found ranks into the
+        // array of cards
         int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck1 ||
@@ -344,7 +379,10 @@ public class HandRanker {
                 ind++;
             }
         }
-        return new CardCollection(toReturn, HandRank.PAIR);
+
+        // Creates, initializes, and returns a CardCollection object
+        // containing the highest Two Pair hand and its Hand Rank type
+        return new CardCollection(toReturn, HandRank.TWO_PAIR);
     }
 
     //TODO
