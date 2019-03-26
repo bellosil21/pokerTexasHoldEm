@@ -3,6 +3,13 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -16,6 +23,8 @@ public class PokerGameStateTest {
 
     @Test
     public void placeBets() {
+        PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
+
         PokerGameState game = new PokerGameState(100, 10,
                                                     20, 4);
         boolean isLegalAction;
@@ -40,6 +49,16 @@ public class PokerGameStateTest {
 
     @Test
     public void fold() {
+        PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
+
+        boolean ans = true;
+        boolean ans2 = false;
+        boolean val;
+        boolean val2;
+        val =  myGameState.fold(0);
+        val2 = myGameState.fold(3);
+        assertEquals(ans,val);
+        assertEquals(ans2, val2);
     }
 
     @Test
@@ -48,6 +67,18 @@ public class PokerGameStateTest {
 
     @Test
     public void check() {
+        PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
+        ArrayList<PlayerChipCollection> players = new ArrayList<>();
+        //TurnTracker turn = new TurnTracker();
+        boolean ans = true;
+        boolean ans2 = false;
+        boolean val1;
+        boolean val2;
+        val1 = myGameState.check(0);
+        val2 = myGameState.check(3); //should be false bc not current turn.
+        assertEquals(ans, val1);
+        assertEquals(ans2, val2);
+
     }
 
     @Test
@@ -93,6 +124,5 @@ public class PokerGameStateTest {
 
     @Test
     public void rankCardCollections() {
-
     }
 }
