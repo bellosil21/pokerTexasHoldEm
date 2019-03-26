@@ -1,6 +1,12 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
+
 import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class PokerGameStateTest {
 
@@ -27,6 +33,14 @@ public class PokerGameStateTest {
 
     @Test
     public void call() {
+        PokerGameState gameState = new PokerGameState(100,1,5,4);
+        ArrayList<PlayerChipCollection> playersChips = null;
+        int playerID = 0;
+        TurnTracker turn = new TurnTracker(playersChips, playerID);
+        playerID = 1234;
+        gameState.call(playerID);
+        assertEquals(playerID, playersChips.get(playerID));
+
     }
 
     @Test
