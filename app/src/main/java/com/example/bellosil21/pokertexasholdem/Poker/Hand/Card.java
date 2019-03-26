@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Hand;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Defines a playing card, which is composed of a suit and rank.
@@ -11,7 +12,6 @@ import java.io.Serializable;
  * @author Gabe Marcial
  */
 public class Card implements Serializable, CardSlot {
-
     /**
      * Defines the type of suits in a standard 52 card deck.
      */
@@ -34,19 +34,19 @@ public class Card implements Serializable, CardSlot {
      * and assigns an integer value to weight enum.
      */
     public enum Rank {
-        TWO(1),
-        THREE(2),
-        FOUR(3),
-        FIVE(4),
-        SIX(5),
-        SEVEN(6),
-        EIGHT(7),
-        NINE(8),
-        TEN(9),
-        JACK(10),
-        QUEEN(11),
-        KING(12),
-        ACE(13);
+        TWO(0),
+        THREE(1),
+        FOUR(2),
+        FIVE(3),
+        SIX(4),
+        SEVEN(5),
+        EIGHT(6),
+        NINE(7),
+        TEN(8),
+        JACK(9),
+        QUEEN(10),
+        KING(11),
+        ACE(12);
 
         public static final int NUM_OF_RANKS = 13;
         private int numVal;

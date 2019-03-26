@@ -18,26 +18,6 @@ public class Hand implements Serializable {
     //Determines if other players can see this player's cards
     private boolean showCards;
 
-    public enum HandRank{
-        ROYAL_FLUSH(1),
-        STRAIGHT_FLUSH(2),
-        FOUR_OF_A_KIND(3),
-        FULL_HOUSE(4),
-        FLUSH(5),
-        STRAIGHT(6),
-        THREE_OF_A_KIND(7),
-        TWO_PAIR(8),
-        PAIR(9),
-        HIGH_CARD(10);
-
-        public static final int numOfHandRanks = 10;
-        private int numVal;
-
-        HandRank(int rank){this.numVal = rank;}
-
-        public int getRank(){return this.numVal;}
-    }
-
     /**
      * Initializes a hand to have two blank cards.
      */
@@ -78,6 +58,10 @@ public class Hand implements Serializable {
     public void setHole2(CardSlot hole2) {
         this.hole2 = hole2;
     }
+
+    public CardSlot getHole1() { return this.hole1; }
+
+    public CardSlot getHole2() { return this.hole2; }
 
     /**
      * Describes the hand.

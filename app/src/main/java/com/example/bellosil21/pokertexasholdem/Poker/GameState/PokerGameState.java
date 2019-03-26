@@ -7,7 +7,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 /**
  * Defines the game state to play Poker.
  *
@@ -43,9 +42,12 @@ public class PokerGameState implements Serializable {
     private ArrayList<PlayerChipCollection> playersChips;
 
     // tracks the pot and maximum bet
-    private BetTracker bets;
+    private PotTracker bets;
     // tracks whose turn it is
     private TurnTracker turn;
+
+    /** new stuff */
+    private BetController controller;
 
     /**
      * constants
@@ -75,12 +77,15 @@ public class PokerGameState implements Serializable {
         smallBlind = startingSmall;
         bigBlind = startingBig;
 
+        /*since we have bet Controller, this is unneccessary
         playersChips = new ArrayList<PlayerChipCollection>();
         for (int i = 0; i < numPlayers; i++) {
             playersChips.add(new PlayerChipCollection(startingChips, i));
         }
+        */
+        controller = new BetController(numPlayers, smallBlind, bigBlind);
 
-        bets = new BetTracker(playersChips);
+        //bets = new PotTracker(playersChips);
 
         turn = new TurnTracker(playersChips, dealerID);
     }
@@ -93,7 +98,7 @@ public class PokerGameState implements Serializable {
      * @param toCopy   the PokerGameState to copy
      * @param playerID the playerID that is given this copy of the game state
      */
-    public PokerGameState(PokerGameState toCopy, int playerID) {
+    public PokerGameState(PokerGameState toCopy, int playerID) { //original constructor changed.
         playingDeck = null;
 
         // only pass the player their hand or the hand's showCards is true;
@@ -124,7 +129,7 @@ public class PokerGameState implements Serializable {
             playersChips.add(new PlayerChipCollection(cc));
         }
 
-        bets = new BetTracker(toCopy.bets);
+        bets = new PotTracker(toCopy.bets);
         turn = new TurnTracker(toCopy.turn);
     }
 
@@ -183,7 +188,7 @@ public class PokerGameState implements Serializable {
     /**
      * Submits a bet if it's the player's turn and goes to the next turn.
      * this is equivalent to Raise action which is why
-     * we call the raise method from the BetTracker class.
+     * we call the raise method from the PotTracker class.
      *
      * @param playerID the ID of the player giving the action
      * @param amount   the amount that the player is submitting
@@ -193,7 +198,7 @@ public class PokerGameState implements Serializable {
         if (turn.getActivePlayerID() != playerID) {
             return false;
         }
-        if (bets.raiseBet(playerID, amount)) {
+        if (controller.raiseBet(playerID, amount)) { //changed 'bets' to controller
             turn.nextTurn();
             return true;
         }
@@ -237,7 +242,8 @@ public class PokerGameState implements Serializable {
      * @return true if the maxBet == 0 and it is the player's turn
      */
     public boolean check(int playerID) {
-        if (turn.getActivePlayerID() == playerID && bets.getMaxBet() == 0) {
+        /*changed bets.getMaxBet() to controller.getMaxBet*/
+        if (turn.getActivePlayerID() == playerID && controller.getMaxBet() == 0) {
             turn.nextTurn();
             return true;
         }
@@ -255,7 +261,7 @@ public class PokerGameState implements Serializable {
             return false;
         }
 
-        bets.call(playerID);
+        controller.call(playerID); //changed 'bets' to controller
         turn.nextTurn();
         return true;
     }
@@ -272,8 +278,10 @@ public class PokerGameState implements Serializable {
      */
     public boolean allIn(int playerID) {
         if (turn.getActivePlayerID() == playerID) {
-            int bet = playersChips.get(playerID).getChips();
-            return bets.raiseBet(playerID, bet);
+            //int bet = playersChips.get(playerID).getChips();
+            int bet =  controller.getPlayerChips(playerID); //alternative to the code above.
+            /*changed 'bets' to 'controller' */
+            return controller.raiseBet(playerID, bet);
         }
         return false;
     }
@@ -297,21 +305,16 @@ public class PokerGameState implements Serializable {
         playingDeck.dealPlayers(hands);
     }
 
-    public int handType(Hand player, ArrayList<Card> community) {
-
-        return 0;
+    /**
+     * Determines the rankings of the players from a HankRanker
+     *
+     * @return an int array who's indexes match the same player indexes as hands. The int represents
+     * the players ranking, where 0 is the best rank, a higher int is a lower rank, and the max
+     * integer means the player has folded.
+     */
+    public int[] rankCardCollections() {
+        //TODO
+        return null;
     }
 
-    public boolean flush(ArrayList<Card> cards) {
-
-        return false;
-    }
-
-    public ArrayList<Integer> winningDecision(ArrayList<Hand> players,
-                                              ArrayList<Card> community,
-                                              ArrayList<Integer> winners,
-                                              int winningHandType){
-
-        return winners;
-    }
 }
