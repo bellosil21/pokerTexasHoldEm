@@ -439,10 +439,12 @@ public class HandRanker {
             if (occurencesPair1 < 2 && card.getRank().getValue() == toCheck1) {
                 toReturn[ind] = new Card(card);
                 ind++;
+                occurencesPair1++;
             }
             else if (occurencesPair2 < 2 && card.getRank().getValue() == toCheck2) {
                 toReturn[ind] = new Card(card);
                 ind++;
+                occurencesPair2++;
             }
 
             if (ind == toReturn.length) {
