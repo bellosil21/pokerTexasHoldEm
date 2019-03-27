@@ -13,9 +13,12 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class PotTracker {
+    private ChipCollection pot;
     private ArrayList<Integer> contributors;
-    private int contribution; 
-    protected ChipCollection pot;
+    private int contribution;
+    private boolean isLocked;
+
+    private static final int DEFAULT_POT = 0;
 
     /**
      * External Citation
@@ -23,42 +26,66 @@ public class PotTracker {
      * solution: Kevin googled that shit.
      */
 
+    /** Default PotTracker Constructor
+     *
+     * Initializes a default pot
+     */
+    public PotTracker() {
+        pot =  new ChipCollection(DEFAULT_POT);
+        contributors = new ArrayList<>();
+        contribution = DEFAULT_POT;
+        isLocked = false;
+    }
 
     /** PotTracker Constructor
      *
-     * @param
+     * @param amount the amount of chips initially in this pot
+     * @param players an array of players who contributed to this amount
      */
-    public PotTracker() {
-        pot =  new ChipCollection(0);
-        contribution = 0; 
+    public PotTracker(int amount, ArrayList<Integer> players) {
+        pot =  new ChipCollection(amount);
+        contributors = new ArrayList<>();
+        contributors.addAll(players);
+        contribution = amount;
+        isLocked = false;
     }
 
     /**
      * Copy constructor
      */
     public PotTracker(PotTracker toCopy) {
-        this.contributors = new ArrayList<Integer>();
+        this.pot = new ChipCollection(toCopy.pot);
 
-        for(int i =0; i<toCopy.contributors.size(); i++){
-            this.contributors.add(toCopy.contributors.get(i));
-        }
-        this.contribution = toCopy.contribution; 
-        this.pot = new ChipCollection(0); 
-        this.pot.addChips(toCopy.pot.getChips());
+        this.contributors = new ArrayList<>();
+        this.contributors.addAll(toCopy.contributors);
+
+        this.contribution = toCopy.contribution;
+        this.isLocked = toCopy.isLocked;
     }
 
-    public void addContributor(int playerID){
-        if(playerID < 0){
-            /* returns a positive integer ID*/
-            this.addContributor(playerID*playerID);
+    /**
+     * If this pot is not locked, add the player to the list of contributors
+     * and return true.
+     *
+     * @param playerID ID of player to contribute
+     * @return true if not locked; otherwise, false
+     */
+    public boolean addContributor(int playerID){
+        if (isLocked) {
+            return false;
         }
         contributors.add(playerID);
+        return true;
     }
 
 
     public ArrayList<Integer> getContributors(){
         return this.contributors;
     }
+
+    public boolean isLocked() { return isLocked; }
+
+    public void lock() { isLocked = true; }
 
     /*
     @Override

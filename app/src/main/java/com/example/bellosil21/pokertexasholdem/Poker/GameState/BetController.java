@@ -5,7 +5,23 @@ import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import java.util.ArrayList;
 
 public class BetController {
-    private ArrayList<PotTracker> pots;
+    private ArrayList<PotTracker> pots; // Keeps track of all the pots.
+    /* A pot at a lower index includes all players, while pots at high
+     * indexes include less players. Assume we only have one pot to begin
+     * with. A new pot is created under two conditions:
+     *      A - a player does not have enough chips to fully call a bet;
+     *          thus, their call makes them have no more chips
+     *      B - a player goes all-in to raise the maximum bet
+     *
+     * Case A:
+     *      This player can only win the bets that match their maximum amount
+     *      contributed. Because they do not have enough to fully call, they
+     *      should not be able to win all the bets in this pot. Hence, a new
+     *      pot needs to added before the current one in the array. This new
+     *      pot will be
+     */
+
+
     private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
     private int maxBet; //added a getter method for this shit bois.
     private boolean isPlayerAllIn;
