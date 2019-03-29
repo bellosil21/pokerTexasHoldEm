@@ -94,13 +94,24 @@ public class BetController {
 
 
     /**
-     * Returns how much the player needs to contribute in order to call.
+     * Returns how much the player needs to contribute in order to call. The
+     * default call amount is the maximum bet minus the player's last bet.
+     * However, if the player's chip amount is smaller than this difference,
+     * the player's chip amount is returned. (If they cannot call the default
+     * amount, they need to go all in)
      *
      * @param playerID the ID of the player
      * @return the amount needed to call
      */
     public int getCallAmount(int playerID) {
-        return maxBet - players.get(playerID).getLastBet();
+        int callAmount = maxBet - players.get(playerID).getLastBet();
+        int playerChips = players.get(playerID).getChips();
+
+        if (callAmount >= playerChips) {
+            return playerChips;
+        }
+
+        return callAmount;
     }
 
     /**
@@ -111,79 +122,52 @@ public class BetController {
      * @return true if the player used up all their funds
      */
     public boolean call(int playerID){
-        //TODO
-        /* we should put a unit test here to test if player chips is the amount we want*/
-        int playerChips = players.get(playerID).getChips();
+        PlayerChipCollection player = players.get(playerID);
 
+        int callAmount = getCallAmount(playerID);
+        addToPot(playerID, callAmount);
 
-        if (playerChips < maxBet) {
-            //since all the chips this player had was not enought, they have put all in.
-            players.get(playerID).removeChips(playerChips);
-            pots.add(new PotTracker()); //check to see if this index should be 1.
-
-            /*this will create the new main pot which will consist only of the playerchips times
-            the number of players.
-             */
-            pots.get(1).pot.addChips(playerChips*numberOfPlayers);
-
-            /*this pot goes to the person with the highest bet if they were to win the round*/
-            pots.get(MAIN_POT_INDEX).pot.addChips(playerChips);
-
-            /*add player to list of contributors in potTracker*/
-            //pots.get(0).addContributor(playerID); is this even neccessary, wouldnt this repeat?
-            /*lastly, let the controller know that someone has all ined.*/
-            isPlayerAllIn = true;
-        } else {
-            players.get(playerID).removeChips(maxBet);
-            pots.get(MAIN_POT_INDEX).pot.addChips(maxBet);
+        int playerChips = player.getChips();
+        if (playerChips == 0) {
+            return true;
         }
 
-        players.get(playerID).setHasCalled(true);
         return false;
     }
 
     /**
-     * Raises the maximum bet if valid. A bet is valid if the player has
-     * enough funds and the betting amount plus the player's last bet is
-     * greater than the maximum bet.
+     * A bet is valid if the player has enough funds and the betting amount
+     * plus the player's last bet is greater than the maximum bet.
      *
-     * If valid, we will update the maximum bet and add the call amount to
-     * the pot.
+     * If valid, we will add the bet amount to the pots
      *
      * @param playerID the ID of the player
      * @param amount the amount the player is betting; this amount should be
-     *               an additional amount to the player's last bet
+     *               the additional amount to the player's last bet
      * @return -1 if the player does have enough to bet or the bet isn't
      *              greater than the maximum bet
      *         0 for a successful bet and the player still has funds left over
      *         1 for a successful bet and the player has no funds left over
      */
     public int raiseBet(int playerID, int amount){
-        if (amount <= maxBet) {
-            return false;
+        PlayerChipCollection player = players.get(playerID);
+        int playerChips = player.getChips();
+
+        // check if bet is valid
+        int accumulativeBet = player.getLastBet() + amount;
+        if (accumulativeBet <= maxBet || playerChips < amount) {
+            return -1;
         }
 
-        if (players.get(playerID).getChips() < amount) {
-            return false;
+        addToPot(playerID, amount);
+
+        // check if the player is out of funds
+        playerChips = player.getChips();
+        if (playerChips == 0) {
+            return 1;
         }
 
-        maxBet = amount;
-        players.get(playerID).removeChips(amount);
-        players.get(playerID).setLastBet(amount);
-        pots.get(MAIN_POT_INDEX).pot.addChips(amount);
-        return true;
-        //pots.get(0).addContributor(playerID);    dont understand purpose.
-        /*
-        // this number represents the players previous during the same
-        // betting phase
-        int lastBet = players.get(playerID).getLastBet();
-        // removes the player's bet amount from his personal pot subtracting
-        // his last bet
-        players.get(playerID).removeChips(maxBet - lastBet);
-        // adds the max bet to the pot
-        /*now update the last bet to the amount*/
-        /*pot.addChips(maxBet); */
-        //return true;
+        return 0;
     }
 
     /**
@@ -223,21 +207,80 @@ public class BetController {
      * The main method to add to the pots array.
      *
      * Before we add anything to the pots, we withdraw the amount from the
-     * player. Then, we determine if this is a Case A of making a new pot.
+     * player. Then, we determine if this is a case A of making a new pot. If
+     * so, add
      *
      *
      */
-    public void addToPot(int playerID, int amount) {
+    private void addToPot(int playerID, int amount) {
+        PlayerChipCollection player = players.get(playerID)
 
+        int nextPotToContributeIndex = player.getLastContributedPot() + 1;
+        int nextPotToContributeAmount =
+                pots.get(nextPotToContributeIndex).getContribution();
+
+        //adjust the player's last bet
+        int accumulativeBet = player.getLastBet() + amount;
+        player.setLastBet(accumulativeBet);
+
+        // determine if this is the highest bet
+        // if so, make a new pot
+        if (accumulativeBet > maxBet) {
+            int newPotContribution = amount - maxBet;
+            PotTracker newPot = new PotTracker(newPotContribution);
+            pots.add(newPot);
+            maxBet = accumulativeBet;
+        }
+
+        // determine if we are trying to add an amount less than the next pot
+        // to contribute
+        else if (amount < nextPotToContributeAmount) {
+            // this is a case A instance of making a new pot
+
+            ArrayList<Integer> newPotContributors =
+                    pots.get(nextPotToContributeIndex).getContributors();
+
+            for (int p : newPotContributors) {
+                players.get(p).incrementLastContributedPot();
+            }
+
+            PotTracker newPot = new PotTracker(amount, newPotContributors);
+            pots.add(nextPotToContributeIndex, newPot);
+        }
+
+        // the pot array is now ready to accept any new contributions
+        addToPotHelper(playerID, amount);
     }
 
     /**
-     * A recursive helper method to
+     * A recursive helper method to add the player to the contributors of the
+     * next pot and subtract the contribution amount from their chip
+     * collection, until we fully contributed the amount.
+     *
+     * All pots should be set up correctly, no matter the case, when this
+     * method is called.
      *
      * @param playerID the ID of the player
      * @param amount the chips left to contribute to the pots
      */
-    private void addToPotHelper(int playerID, int amount){}
+    private void addToPotHelper(int playerID, int amount) {
+        if (amount == 0) {
+            return;
+        }
+
+        PlayerChipCollection player = players.get(playerID);
+
+        int nextPotIndex = player.incrementLastContributedPot();
+        PotTracker nextPot = pots.get(nextPotIndex);
+        int potContribution = nextPot.getContribution();
+
+        player.removeChips(potContribution);
+        nextPot.addContributor(playerID);
+
+        int remaining = amount - potContribution;
+
+        addToPotHelper(playerID, remaining);
+    }
 
     /**
      * distributePots

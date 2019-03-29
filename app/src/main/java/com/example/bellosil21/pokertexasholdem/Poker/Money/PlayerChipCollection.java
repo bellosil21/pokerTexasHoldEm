@@ -49,7 +49,15 @@ public class PlayerChipCollection extends ChipCollection {
         return lastBet;
     }
 
-    public void setLastContributedPot(int pot) {lastContributedPot = pot;}
+    /**
+     * Increments and returns the player's lastContributedPot
+     *
+     * @return the new index of the player's lastContributedPOt
+     */
+    public int incrementLastContributedPot() {
+        lastContributedPot++;
+        return lastContributedPot;
+    }
 
     public int getLastContributedPot() { return lastContributedPot; }
 
