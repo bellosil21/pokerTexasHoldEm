@@ -57,6 +57,11 @@ public class PotTracker {
         contributors.add(playerID);
     }
 
+    public void subtractContribution(int amount) {
+        contribution =- amount;
+    }
+
+
     public boolean isContributor(int playerID) {
         return contributors.contains(playerID);
     }
