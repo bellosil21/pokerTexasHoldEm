@@ -5,57 +5,79 @@ import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import java.util.ArrayList;
 
 public class BetController {
+
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.
     /* A pot at a lower index includes all players, while pots at high
      * indexes include less players. Assume we only have one pot to begin
-     * with. A new pot is created under two conditions:
-     *      A - a player does not have enough chips to fully call a bet;
-     *          thus, their call makes them have no more chips
-     *      B - a player goes all-in to raise the maximum bet
+     * with. A new pot is created under four conditions:
+     *      A - a player does not have enough chips to fully match a pot
+     *          contribution; thus, their call makes them have no more chips
+     *      B - a player raises the maximum bet
+     *      C - a new betting phase has occured
      *
      * Case A:
-     *      This player can only win the bets that match their maximum amount
-     *      contributed. Because they do not have enough to fully call, they
-     *      should not be able to win all the bets in this pot. Hence, a new
-     *      pot needs to added before the current one in the array. This new
-     *      pot will be
+     *      This player can only win the bets that match their maximum
+     *      contribution. Because they do not have enough to fully call, they
+     *      should not be able to win all the bets in this pot. Hence, (1) A
+     *      new pot needs to added before the current one in the array that
+     *      contains the bets that match the this player's amount. This new
+     *      pot will have all of this player's chips times the amount of
+     *      contributors in the original pot plus 1 [playerID's chips *
+     *      (amount original pot's contributors + 1)]. Now, the amount we
+     *      took out of the original pot's amount and contribution per player
+     *      needs to be (2) updated to account the transfer of chips. Also, the
+     *      new pot needs to be (3) locked since this player is all in and
+     *      cannot contribute any more funds.
+     *
+     * Case B:
+     *      When the player raises the maximum bet, we are contributing a new
+     *      amount, so we keep track of this new amount with a new pot.
+     *      First, contribute all we can until there's nothing more to add to
+     *      all the pots. Then, place a new pot at the head of the pot array
+     *      with the amount left over.
+     *
+     * Case C:
+     *      When a new betting phase has occured, we need an empty pot in
+     *      order for players to "check" the pot of 0 contribution.
      */
-
 
     private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
     private int maxBet; //added a getter method for this shit bois.
-    private boolean isPlayerAllIn;
     private int smallBlind;
     private int bigBlind;
-    private int numberOfPlayers;
-    private final int MAIN_POT_INDEX = 0;
-    /*
-    private final int INDEX_0 = 0;
-    private final int INDEX_1 = 1;
-    private final int INDEX_2 = 2;
-    private final int INDEX_3 = 4;
-    */
 
     public BetController(int numPlayers, int smBlind, int bgBlind){
-        if(numPlayers < 2){
-            /** invalid number of players nah?
-             *
-             */
-        }
+        pots = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
             players.add(new PlayerChipCollection(0, i)); //i will be the id of player.
         }
-        pots.add(new PotTracker());
         this.maxBet = 0;
-        this.isPlayerAllIn = false;
         this.smallBlind = smBlind;
         this.bigBlind = bgBlind;
-        this.numberOfPlayers = numPlayers;
     }
 
-    /*not sure what you want this to do*/
-    //will automatically put bets for player index 0 and 1
+    /**
+     * This method sets up the betting phase. A new betting phase does the
+     * following:
+     *  1. reset player's lastBet to be 0
+     *  2. reset maxBet to 0
+     *  3. create a new pot at the tail of the pot array
+     */
+    public void startPhase() {
+        //TODO
+    }
+
+    /**
+     * If the small blind player has enough money, make them
+     * raiseBet by the small blind amount. Otherwise, make them go all in.
+     * Then, if the big blind player has enough money, make them raiseBet by
+     * the big blind amount. Otherwise, make them go all in.
+     *
+     * @param smallBlindID the player ID for the small blind
+     * @param bigBlindID the player ID for the big blind
+     */
     public void forceBlinds(int smallBlindID, int bigBlindID){
+        //TODO
         /*add the small blind and big blind bets to the pot*/
         pots.get(MAIN_POT_INDEX).pot.addChips(smallBlind);
         pots.get(MAIN_POT_INDEX).pot.addChips(bigBlind);
@@ -66,7 +88,26 @@ public class BetController {
 
     }
 
+
+    /**
+     * Returns how much the player needs to contribute in order to call.
+     *
+     * @param playerID the ID of the player
+     * @return the amount needed to call
+     */
+    public int getCallAmount(int playerID) {
+        return maxBet - players.get(playerID).getLastBet();
+    }
+
+    /**
+     * Adds the player's call amount to the pot. Returns a boolean
+     * representing if the player is out of funds
+     *
+     * @param playerID the ID of the player
+     * @return true if the player used up all their funds
+     */
     public boolean call(int playerID){
+        //TODO
         /* we should put a unit test here to test if player chips is the amount we want*/
         int playerChips = players.get(playerID).getChips();
 
@@ -97,23 +138,23 @@ public class BetController {
         return false;
     }
 
-    public boolean check(int playerID){
-        if(playerID < 0){
-            /*invalid player ID*/
-            return false;
-        }
-        if(isPlayerAllIn){
-            /*meaning someone in the round has already bet so checking is unrealistic*/
-            return false;
-        }
-        if(maxBet != 0){
-            /*meaning its not the first turn*/
-            return false;
-        }
-        return true;
-    }
-
-    public boolean raiseBet(int playerID, int amount){
+    /**
+     * Raises the maximum bet if valid. A bet is valid if the player has
+     * enough funds and the betting amount plus the player's last bet is
+     * greater than the maximum bet.
+     *
+     * If valid, we will update the maximum bet and add the call amount to
+     * the pot.
+     *
+     * @param playerID the ID of the player
+     * @param amount the amount the player is betting; this amount should be
+     *               an additional amount to the player's last bet
+     * @return -1 if the player does have enough to bet or the bet isn't
+     *              greater than the maximum bet
+     *         0 for a successful bet and the player still has funds left over
+     *         1 for a successful bet and the player has no funds left over
+     */
+    public int raiseBet(int playerID, int amount){
         if (amount <= maxBet) {
             return false;
         }
@@ -140,6 +181,16 @@ public class BetController {
         /*pot.addChips(maxBet); */
         //return true;
     }
+
+    /**
+     * Contribute all of the player's chips to the pot.
+     *
+     * If the player's chip amount amount plus their last bet is less than
+     * the maximum bet
+     *
+     * @param playerID
+     * @return
+     */
     public boolean allIn(int playerID){
         if(playerID < 0){
             /* invalid player ID*/
@@ -169,6 +220,36 @@ public class BetController {
         return true;
     }
 
+    /**
+     * The main method to add to the pots array.
+     *
+     * Before we add anything to the pots, we withdraw the amount from the
+     * player. Then, we determine if this is a Case A of making a new pot.
+     *
+     *
+     */
+    public void addToPot(int playerID, int amount) {
+
+    }
+
+    /**
+     * A recursive helper method to
+     *
+     * @param playerID the ID of the player
+     * @param amount the chips left to contribute to the pots
+     */
+    private void addToPotHelper(int playerID, int amount)
+
+    /**
+     * Given the ranking of players, we iterate through all the pots in the
+     * array and reward each pot to the contributor of highest rank.
+     *
+     * The best rank is 0 and the worst rank, occurring when a player has
+     * folded, is Integer.MAX
+     *
+     * @param rankings the ranking of each player (int)
+     *
+     */
     public void distributePots(int[] rankings){
         int n;
         ArrayList<Integer> winners;
@@ -203,14 +284,15 @@ public class BetController {
 
 
     /**
-     * helper method for distribute pots.
-     * @return
+     * Helper method for distribute pots
+     *
+     * @return the playerID of the contributor who has the best rank
      */
     private int getHighestRanking(ArrayList<Integer> contributors, int[] rankings){
         /* 0 is the highest possible rank, which makes the for loop weird. */
         int highestRank = rankings[contributors.get(0)];
         for(int i = 0; i < contributors.size(); i++){
-            if(highestRank > rankings[contributors.get(i)]) {
+            if(highestRank < rankings[contributors.get(i)]) {
                 highestRank = rankings[contributors.get(i)];
             }
         }
@@ -225,6 +307,8 @@ public class BetController {
         int allChips = players.get(playerID).getChips();
         return allChips;
     }
+
+
 
     /**
      * This is a helper method for other methods in the BetController class.

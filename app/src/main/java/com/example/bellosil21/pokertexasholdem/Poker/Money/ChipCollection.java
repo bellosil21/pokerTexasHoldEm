@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class ChipCollection implements Serializable {
+public abstract class ChipCollection implements Serializable {
     // the amount of chips contains in the collection
     protected int amount;
 
@@ -42,12 +42,14 @@ public class ChipCollection implements Serializable {
         return amount;
     }
 
-    public void addChips(int toAdd) {
+    public boolean addChips(int toAdd) {
         amount += toAdd;
+        return true;
     }
 
-    public void removeChips(int toRemove) {
+    public boolean removeChips(int toRemove) {
         amount -= toRemove;
+        return true;
     }
 
     /**

@@ -15,6 +15,8 @@ public class PlayerChipCollection extends ChipCollection {
     private int lastContributedPot; // index of the last pot this player
                                     // contributed to
 
+    private static final int DEFAULT_LAST_CONTRIBUTED_POT = -1;
+
     /**
      * Assigns player data to a ChipCollection.
      *
@@ -25,7 +27,7 @@ public class PlayerChipCollection extends ChipCollection {
         super(amount);
         this.playerID = id;
         lastBet = 0;
-        lastContributedPot = 0;
+        lastContributedPot = DEFAULT_LAST_CONTRIBUTED_POT;
     }
 
     /**

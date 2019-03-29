@@ -12,29 +12,29 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PotTracker {
-    private ChipCollection pot;
+public class PotTracker extends ChipCollection {
     private ArrayList<Integer> contributors;
-    private int contribution;
-    private boolean isLocked;
+    /*
+     * External Citation
+     *  Date:     27 March 2019
+     *  Problem:  Did not know how to make an array list of ints.
+     *  Resource: https://stackoverflow.com/questions/8811815/is-it-
+     *            possible-to-assign-numeric-value-to-an-enum-in-java
+     *  Solution: Used the Integer object instead of the primitive type.
+     */
+
+    private int contribution; // bet amount to be added to the pot per player
 
     private static final int DEFAULT_POT = 0;
-
-    /**
-     * External Citation
-     * Problem: needed to make a arraylist of integers
-     * solution: Kevin googled that shit.
-     */
 
     /** Default PotTracker Constructor
      *
      * Initializes a default pot
      */
     public PotTracker() {
-        pot =  new ChipCollection(DEFAULT_POT);
+        super(DEFAULT_POT);
         contributors = new ArrayList<>();
         contribution = DEFAULT_POT;
-        isLocked = false;
     }
 
     /** PotTracker Constructor
@@ -43,54 +43,44 @@ public class PotTracker {
      * @param players an array of players who contributed to this amount
      */
     public PotTracker(int amount, ArrayList<Integer> players) {
-        pot =  new ChipCollection(amount);
+        super(amount);
         contributors = new ArrayList<>();
         contributors.addAll(players);
         contribution = amount;
-        isLocked = false;
     }
 
     /**
      * Copy constructor
      */
     public PotTracker(PotTracker toCopy) {
-        this.pot = new ChipCollection(toCopy.pot);
+        super(toCopy.amount);
 
         this.contributors = new ArrayList<>();
         this.contributors.addAll(toCopy.contributors);
 
         this.contribution = toCopy.contribution;
-        this.isLocked = toCopy.isLocked;
     }
 
-    /**
-     * If this pot is not locked, add the player to the list of contributors
-     * and return true.
-     *
-     * @param playerID ID of player to contribute
-     * @return true if not locked; otherwise, false
-     */
-    public boolean addContributor(int playerID){
-        if (isLocked) {
-            return false;
-        }
+    public void add(int playerID){
         contributors.add(playerID);
-        return true;
+        addChips(contribution);
     }
 
-
-    public ArrayList<Integer> getContributors(){
-        return this.contributors;
+    public boolean isContributor(int playerID) {
+        return contributors.contains(playerID);
     }
 
-    public boolean isLocked() { return isLocked; }
+    public int getContribution() {
+        return contribution;
+    }
 
-    public void lock() { isLocked = true; }
+    public void setContribution(int contribution) {
+        this.contribution = contribution;
+    }
 
-    /*
     @Override
     public String toString() {
-        return "Pot: " + pot + "\nMaximum Bet: " + maxBet;
+        return "Pot: " + amount + ", contributors: " + contributors.toString();
     }
-    */
+
 }
