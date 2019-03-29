@@ -13,7 +13,7 @@ public class BetController {
      *      A - a player does not have enough chips to fully match a pot
      *          contribution; thus, their call makes them have no more chips
      *      B - a player raises the maximum bet
-     *      C - a new betting phase has occured
+     *      C - a new betting phase has occurred.
      *
      * Case A:
      *      This player can only win the bets that match their maximum
@@ -46,6 +46,8 @@ public class BetController {
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
+    private static int mulitplier = 2; //the factor at which the small/big blinds will be
+    // incremented.
 
     public BetController(int numPlayers, int smBlind, int bgBlind){
         pots = new ArrayList<>();
@@ -63,6 +65,7 @@ public class BetController {
      *  1. reset player's lastBet to be 0
      *  2. reset maxBet to 0
      *  3. create a new pot at the tail of the pot array
+     *  does 'tail' mean the last index of the ArrayList
      */
     public void startPhase() {
         //TODO
@@ -90,8 +93,13 @@ public class BetController {
         players.get(smallBlindID).removeChips(smallBlind);
         players.get(bigBlindID).removeChips(bigBlind);
 
+
     }
 
+    public void incrementBlinds(){
+        this.smallBlind = this.smallBlind*mulitplier;
+        this.bigBlind = this.bigBlind*mulitplier;
+    }
 
     /**
      * Returns how much the player needs to contribute in order to call. The
@@ -213,7 +221,7 @@ public class BetController {
      *
      */
     private void addToPot(int playerID, int amount) {
-        PlayerChipCollection player = players.get(playerID)
+        PlayerChipCollection player = players.get(playerID);
 
         int nextPotToContributeIndex = player.getLastContributedPot() + 1;
         int nextPotToContributeAmount =
@@ -397,6 +405,7 @@ public class BetController {
      * (i.e. distributePots() is called).
      */
     private void asynchronousReset(){
+        this.pots.clear();
         this.maxBet = 0;
         this.totalAmount = 0;
     }

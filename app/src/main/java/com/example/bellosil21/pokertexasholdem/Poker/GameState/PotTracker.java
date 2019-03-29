@@ -57,10 +57,6 @@ public class PotTracker {
         contributors.add(playerID);
     }
 
-    public ArrayList<Integer> getContributors() {
-        return contributors;
-    }
-
     public boolean isContributor(int playerID) {
         return contributors.contains(playerID);
     }
