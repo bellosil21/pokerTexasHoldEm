@@ -39,6 +39,10 @@ public class HandRanker {
 
     public HandRanker(Hand player, ArrayList<Card> community){
         cardSet = new ArrayList<Card>();
+        clubs = new ArrayList<Card>();
+        spades = new ArrayList<Card>();
+        diamonds = new ArrayList<Card>();
+        hearts = new ArrayList<Card>();
 
         cardSet.add((Card)player.getHole1());
         cardSet.add((Card)player.getHole2());
@@ -153,9 +157,11 @@ public class HandRanker {
                     highestRank == (nextRank2 + 2) &&
                     highestRank == (nextRank3 + 3) &&
                     highestRank == (lowestRank + 4)) {
-                Card[] straightFlush = {cards.get(i), cards.get(i + 1),
-                        cards.get(i + 2), cards.get(i + 3),
-                        cards.get(i + 4)};
+                Card[] straightFlush = {new Card(cards.get(i)),
+                        new Card(cards.get(i + 1)),
+                        new Card(cards.get(i + 2)),
+                        new Card(cards.get(i + 3)),
+                        new Card(cards.get(i + 4))};
                 return new CardCollection(straightFlush, HandRank.STRAIGHT_FLUSH);
             }
         }
@@ -172,8 +178,8 @@ public class HandRanker {
         // Checks and rankOccurrences array to find the rank that uses all four
         // suits of the card
         int toCheck = -1;
-        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
-            if (rankOccurrences[index] == 4){
+        for (int index = rankOccurrences.length - 1; index >= 0; index--){
+            if (rankOccurrences[index] == FOUR_CARD_HAND){
                 toCheck = index;
                 break;
             }
@@ -187,7 +193,7 @@ public class HandRanker {
         int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
-                toReturn[ind] = card;
+                toReturn[ind] = new Card(card);
                 ind++;
             }
         }
@@ -213,12 +219,20 @@ public class HandRanker {
         // Checks the rankOccurrences array to find the highest rankings that
         // has pairs or triples
         Card[] toReturn = new Card[FIVE_CARD_HAND];
-        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
-            if (rankOccurrences[index] == 2){
-                pair = index;
-            }
-            else if (rankOccurrences[index] == 3){
+        for (int index = rankOccurrences.length - 1; index >= 0; index--){
+            // we first check the better case of triple in order since a
+            // triple can appear as a triple
+
+            // if we already found a pair/triple, we do not want to replace it
+            // with a pair/triple of lower ranking since we wish to return
+            // the best hand
+            if (triple == -1 && rankOccurrences[index] == THREE_CARD_HAND) {
                 triple = index;
+            }
+            else if (pair == -1 && rankOccurrences[index] >= TWO_CARD_HAND) {
+                // if we already found a triple, a triple of the lower rank
+                // can count as the pair
+                pair = index;
             }
 
             if (triple >= 0 && pair >= 0){ break;}
@@ -232,11 +246,12 @@ public class HandRanker {
         int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == triple){
-                toReturn[ind] = card;
+                toReturn[ind] = new Card(card);
                 ind++;
             }
             else if (card.getRank().getValue() == pair){
-                toReturn[ind] = card;
+                toReturn[ind] = new Card(card);
+                ind++;
             }
 
             if (ind == FIVE_CARD_HAND){break;}
@@ -255,48 +270,90 @@ public class HandRanker {
      * with the given cards
      */
     private CardCollection findFlush() {
-        Card[] toReturn = new Card[FIVE_CARD_HAND];
-        int index = 0;
+        CardCollection spadesF = findFlushHelper(spades);
+        CardCollection clubsF = findFlushHelper(clubs);
+        CardCollection diamondsF = findFlushHelper(diamonds);
+        CardCollection heartsF = findFlushHelper(hearts);
 
-        // Checks each suit to find which suit has more than five cards
-        // and adds the highest five cards into the Hand
-        // If none exists, returns null
-        if (spades.size() > FIVE_CARD_HAND){
-            for (Card card: spades){
-                if (index == FIVE_CARD_HAND){break;}
-                toReturn[index] = card;
-                ++index;
-            }
-        }
-        else if (clubs.size() > FIVE_CARD_HAND){
-            for (Card card: clubs){
-                if (index == FIVE_CARD_HAND){break;}
-                toReturn[index] = card;
-                ++index;
-            }
-        }
-        else if (hearts.size() > FIVE_CARD_HAND){
-            for (Card card: hearts){
-                if (index == FIVE_CARD_HAND){break;}
-                toReturn[index] = card;
-                ++index;
-            }
-        }
-        else if (diamonds.size() > FIVE_CARD_HAND){
-            for (Card card: diamonds){
-                if (index == FIVE_CARD_HAND){break;}
-                toReturn[index] = card;
-                ++index;
-            }
-        }
-        else{ return null;}
-
-        // Creates, initializes, and returns a new CardCollection object
-        return new CardCollection(toReturn, HandRank.FLUSH);
+        CardCollection bestF = getHigherCardCollection(spadesF, clubsF);
+        bestF = getHigherCardCollection(bestF, diamondsF);
+        bestF = getHigherCardCollection(bestF, heartsF);
+        return bestF;
     }
 
-    //TODO
-    private CardCollection findStraight() { return null; }
+    /**
+     * Checks the suit array to find which suit has at least five cards
+     * and adds the highest five cards into the Hand If none exists, returns
+     * null.
+     *
+     * @param suitArray an array of Cards of the same suit
+     * @return a CardCollection of a flush if found, else null
+     */
+    private CardCollection findFlushHelper(ArrayList<Card> suitArray) {
+        if (suitArray.size() >= FIVE_CARD_HAND){
+            // we found a suit with five cards
+            // now, get the first five cards in the suit array since they are
+            // the highest ranking (the suit array is in descending order)
+
+            Card[] toReturn = {new Card(suitArray.get(0)),
+                    new Card(suitArray.get(1)), new Card(suitArray.get(2)),
+                    new Card(suitArray.get(3)), new Card(suitArray.get(4))};
+
+            // Creates, initializes, and returns a new CardCollection object
+            return new CardCollection(toReturn, HandRank.FLUSH);
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks rankOccurrences to see if there exist a row of five indexes
+     * where the element is not zero. If so, there is a straight and we need
+     * to find it in the cardSet.
+     *
+     * @return a CardCollection of the best straight, else null
+     */
+    private CardCollection findStraight() {
+        int toCheck = -1; // marker for the highest rank of the straight
+
+        // start at the highest index and only go to index FIVE_CARD_HAND - 1
+        // since the index just left of it will never create a run of 5 cards
+        for (int i = rankOccurrences.length - 1; i >= FIVE_CARD_HAND - 1; i--) {
+            if (rankOccurrences[i] > 0 && rankOccurrences[i - 1] > 0 &&
+                    rankOccurrences[i - 2] > 0 && rankOccurrences[i - 3] > 0&&
+                    rankOccurrences[i - 4] > 0) {
+                toCheck = i;
+                break;
+            }
+        }
+
+        // return null if we didn't find a straight
+        if (toCheck == -1) { return null; }
+
+        Card[] toReturn = new Card[FIVE_CARD_HAND];
+
+        // find card that make up the straight
+
+        // toCheck is decreased once found until all cards the straight is found
+        // because we once want one card of each rank in the straight
+
+        int ind = 0; // tracks how many cards are in the toReturn array
+                     // once it is 5, we found all the cards
+        for (Card card : cardSet) {
+            if (toCheck == card.getRank().getValue()) {
+                toReturn[ind] = new Card(card);
+
+                ind++;
+                toCheck--;
+
+                if (ind == toReturn.length) {
+                    break;
+                }
+            }
+        }
+
+        return new CardCollection(toReturn, HandRank.STRAIGHT);
+    }
 
     /**
      * Checks all given cards to find the hand with the highest
@@ -311,7 +368,7 @@ public class HandRanker {
         // Creates and finds the rank in which three instances of that kind
         // exists
         Card[] toReturn = new Card[THREE_CARD_HAND];
-        for (int index = Card.Rank.NUM_OF_RANKS; index >=0 ; index++){
+        for (int index = rankOccurrences.length - 1; index >=0 ; index--){
             if (rankOccurrences[index] == THREE_CARD_HAND){
                 toCheck = index;
                 break;
@@ -327,7 +384,7 @@ public class HandRanker {
         int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
-                toReturn[ind] = card;
+                toReturn[ind] = new Card(card);
                 ind++;
             }
             if (ind == THREE_CARD_HAND){break;}
@@ -342,7 +399,7 @@ public class HandRanker {
      * Checks all the given cards to find the highest hand involving two
      * pairs of cards for different ranks
      *
-     * @return
+     * @return a CardCollection of two pairs if found, else null.
      */
     private CardCollection findTwoPair() {
 
@@ -351,15 +408,17 @@ public class HandRanker {
         int toCheck1 = -1;
         int toCheck2 = -1;
 
-        // Checks each rank and finds two highest ranks that has pairs in the
-        // hand
+        // Checks each rank and finds two highest ranks that has at least two
+        // cards in the hand
         Card[] toReturn = new Card[FOUR_CARD_HAND];
-        for (int index = Card.Rank.NUM_OF_RANKS; index >= 0; index--){
-            if (rankOccurrences[index] == TWO_CARD_HAND){
+        for (int index = rankOccurrences.length; index >= 0; index--){
+            if (rankOccurrences[index] >= TWO_CARD_HAND){
                 if (toCheck1 < 0) {
                     toCheck1 = index;
                 }
-                else{
+                else {
+                    // if the first occurrence is found, then we found the
+                    // second one and we're done
                     toCheck2 = index;
                     break;
                 }
@@ -371,12 +430,25 @@ public class HandRanker {
 
         // Adds all the cards with either of the two found ranks into the
         // array of cards
-        int ind = 0;
+        int occurencesPair1 = 0; // amount of the first pair added
+        int occurencesPair2 = 0; // amount of the second pair added
+        int ind = 0; // keeps track of the index for the toReturn array
+
+        // find the first two cards of the same pair and only the first two
         for (Card card: cardSet){
-            if (card.getRank().getValue() == toCheck1 ||
-                    card.getRank().getValue() == toCheck2){
-                toReturn[ind] = card;
+            if (occurencesPair1 < 2 && card.getRank().getValue() == toCheck1) {
+                toReturn[ind] = new Card(card);
                 ind++;
+                occurencesPair1++;
+            }
+            else if (occurencesPair2 < 2 && card.getRank().getValue() == toCheck2) {
+                toReturn[ind] = new Card(card);
+                ind++;
+                occurencesPair2++;
+            }
+
+            if (ind == toReturn.length) {
+                break;
             }
         }
 
@@ -385,13 +457,19 @@ public class HandRanker {
         return new CardCollection(toReturn, HandRank.TWO_PAIR);
     }
 
-    //TODO
+    /**
+     * Checks the rankOccurrences array to see if there is a pair. If so, find
+     * the two cards of that rank in the cardSet and return it.
+     *
+     * @return a CardCollection for a pair if found, else null.
+     */
     private CardCollection findOnePair() {
 
         int toCheck = -1;
         Card[] toReturn = new Card[TWO_CARD_HAND];
 
-        for (int index = Card.Rank.NUM_OF_RANKS; index > -1 ; index--){
+        // check if there is a pair
+        for (int index = rankOccurrences.length - 1; index > -1 ; index--){
             if (rankOccurrences[index] == TWO_CARD_HAND){
                 toCheck = index;
                 break;
@@ -400,29 +478,30 @@ public class HandRanker {
 
         if (toCheck == -1){return null;}
 
-        int ind = 0;
+        // find the pair
+        int ind = 0; // keeps track of the index for toReturn
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
-                toReturn[ind] = card;
+                toReturn[ind] = new Card(card);
                 ind++;
-            }
-        }
 
-        for (Card card: cardSet){
-            if (card.getRank().getValue() == toCheck){
-                toReturn[ind] = card;
-                ind++;
+                if (ind == TWO_CARD_HAND){break;}
             }
-            if (ind == TWO_CARD_HAND){break;}
+
         }
         return new CardCollection(toReturn, HandRank.PAIR);
     }
 
-    //TODO
+    /**
+     * Return the first card of the ordered cardSet since it is ordered in
+     * descending rank.
+     *
+     * @return a CardCollection of the best highCard
+     */
     private CardCollection findHighCard() {
         Card[] toReturn = new Card[ONE_CARD_HAND];
 
-        toReturn[0] = cardSet.get(0);
+        toReturn[0] = new Card(cardSet.get(0));
 
         return new CardCollection(toReturn, HandRank.HIGH_CARD);
     }
@@ -489,67 +568,4 @@ public class HandRanker {
         return a;
     }
 
-    //
-
-
-
-    /** storage for now
-    public HandRank handType() {
-
-        boolean flushStatus = flush(this.cardSet);
-
-        int lowestIndex = START;
-
-        ArrayList<Card> hand = new ArrayList<Card>();
-        while (!cardSet.isEmpty()){
-            for (Card card: cardSet) {
-                if (card.getRank().compareTo(
-                        cardSet.get(lowestIndex).getRank()) < 0){
-                    lowestIndex = cardSet.indexOf(card);
-                }
-            }
-            hand.add(cardSet.get(lowestIndex));
-            cardSet.remove(lowestIndex);
-            lowestIndex = START;
-        }
-        return null;
-        //return compareHand();
-    }
-
-    public boolean flush(ArrayList<Card> cards) {
-        int[] suitCount = new int[NUM_OF_SUITS];
-
-        for (Card card: cards){
-            switch(card.getSuit()){
-                case SPADES:
-                    suitCount[0]++;
-                    break;
-                case CLUBS:
-                    suitCount[1]++;
-                    break;
-                case HEART:
-                    suitCount[2]++;
-                    break;
-                case DIAMONDS:
-                    suitCount[3]++;
-                    break;
-            }
-        }
-
-        for (int index = 0; index < NUM_OF_SUITS; index++){
-            if (suitCount[index] >= FLUSH_REQ){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public ArrayList<Integer> winningDecision(ArrayList<Hand> players,
-                                              ArrayList<Card> community,
-                                              ArrayList<Integer> winners,
-                                              int winningHandType){
-
-        return winners;
-    }
-     */
 }

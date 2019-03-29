@@ -12,58 +12,75 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PotTracker {
+public class PotTracker extends ChipCollection {
     private ArrayList<Integer> contributors;
-    private int contribution; 
-    protected ChipCollection pot;
-
-    /**
+    /*
      * External Citation
-     * Problem: needed to make a arraylist of integers
-     * solution: Kevin googled that shit.
+     *  Date:     27 March 2019
+     *  Problem:  Did not know how to make an array list of ints.
+     *  Resource: https://stackoverflow.com/questions/8811815/is-it-
+     *            possible-to-assign-numeric-value-to-an-enum-in-java
+     *  Solution: Used the Integer object instead of the primitive type.
      */
 
+    private int contribution; // bet amount to be added to the pot per player
+
+    private static final int DEFAULT_POT = 0;
+
+    /** Default PotTracker Constructor
+     *
+     * Initializes a default pot
+     */
+    public PotTracker() {
+        super(DEFAULT_POT);
+        contributors = new ArrayList<>();
+        contribution = DEFAULT_POT;
+    }
 
     /** PotTracker Constructor
      *
-     * @param
+     * @param amount the amount of chips initially in this pot
+     * @param players an array of players who contributed to this amount
      */
-    public PotTracker() {
-        pot =  new ChipCollection(0);
-        contribution = 0; 
+    public PotTracker(int amount, ArrayList<Integer> players) {
+        super(amount);
+        contributors = new ArrayList<>();
+        contributors.addAll(players);
+        contribution = amount;
     }
 
     /**
      * Copy constructor
      */
     public PotTracker(PotTracker toCopy) {
-        this.contributors = new ArrayList<Integer>();
+        super(toCopy.amount);
 
-        for(int i =0; i<toCopy.contributors.size(); i++){
-            this.contributors.add(toCopy.contributors.get(i));
-        }
-        this.contribution = toCopy.contribution; 
-        this.pot = new ChipCollection(0); 
-        this.pot.addChips(toCopy.pot.getChips());
+        this.contributors = new ArrayList<>();
+        this.contributors.addAll(toCopy.contributors);
+
+        this.contribution = toCopy.contribution;
     }
 
-    public void addContributor(int playerID){
-        if(playerID < 0){
-            /* returns a positive integer ID*/
-            this.addContributor(playerID*playerID);
-        }
+    public void add(int playerID){
         contributors.add(playerID);
+        addChips(contribution);
     }
 
-
-    public ArrayList<Integer> getContributors(){
-        return this.contributors;
+    public boolean isContributor(int playerID) {
+        return contributors.contains(playerID);
     }
 
-    /*
+    public int getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(int contribution) {
+        this.contribution = contribution;
+    }
+
     @Override
     public String toString() {
-        return "Pot: " + pot + "\nMaximum Bet: " + maxBet;
+        return "Pot: " + amount + ", contributors: " + contributors.toString();
     }
-    */
+
 }

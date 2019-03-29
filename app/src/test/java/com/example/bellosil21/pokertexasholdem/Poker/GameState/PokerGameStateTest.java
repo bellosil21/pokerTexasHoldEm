@@ -90,7 +90,6 @@ public class PokerGameStateTest {
         playerID = 1234;
         gameState.call(playerID);
         assertEquals(playerID, playersChips.get(playerID));
-
     }
 
     @Test
