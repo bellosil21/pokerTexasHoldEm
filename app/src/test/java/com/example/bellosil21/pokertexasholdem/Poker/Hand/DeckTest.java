@@ -53,5 +53,7 @@ public class DeckTest {
 
     @Test
     public void dealPlayers() {
+        ArrayList<Hand> players = new ArrayList<Hand>();
+
     }
 }
