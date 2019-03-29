@@ -73,6 +73,7 @@ public class PotTracker extends ChipCollection {
     public int getContribution() {
         return contribution;
     }
+    public ArrayList<Integer> getContributors(){return this.contributors;}
 
     public void setContribution(int contribution) {
         this.contribution = contribution;

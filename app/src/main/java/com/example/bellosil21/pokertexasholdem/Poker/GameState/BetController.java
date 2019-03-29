@@ -43,6 +43,7 @@ public class BetController {
 
     private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
     private int maxBet; //added a getter method for this shit bois.
+    private int totalAmount;
     private int smallBlind;
     private int bigBlind;
 
@@ -65,6 +66,9 @@ public class BetController {
      */
     public void startPhase() {
         //TODO
+        /* FYI THERE IS A METHOD AT THE BOTTOM OF THE PAGE THAT RESETS THE MAXBET AND TOTALAMOUNT
+         TO 0*/
+
     }
 
     /**
@@ -183,18 +187,17 @@ public class BetController {
     }
 
     /**
-     * Contribute all of the player's chips to the pot.
+     * allIn
+     * This is the method that will be called when a player all in's. It will take in the
+     * playerID index and call methods that will extract all the chips from the given player into
+     * a local variable. Than the addToPot method will be called.
      *
-     * If the player's chip amount amount plus their last bet is less than
-     * the maximum bet
-     *
-     * @param playerID
-     * @return
+     * @param playerID The player that has declared an all in action.
      */
-    public boolean allIn(int playerID){
+    public void allIn(int playerID){
         if(playerID < 0){
             /* invalid player ID*/
-            return false;
+            return;
         }
 
         int allChips = players.get(playerID).getChips();
@@ -203,21 +206,17 @@ public class BetController {
         if(allChips > maxBet){
             maxBet = allChips;
         }
-        else{
-            pots.add(new PotTracker());
-            pots.get(pots.size()-1).pot.addChips(allChips);
-        }
+
+        addToPot(playerID, allChips);
 
         /*remove all the chips from given player object.*/
-        players.get(playerID).removeChips(allChips);
+        //players.get(playerID).removeChips(allChips); //is done in addToPot
 
         /*set isAllIn variable to true*/
-        isPlayerAllIn = true;
+        //isPlayerAllIn = true;
 
         /*set players last bet to this all in amount*/
-        players.get(playerID).setLastBet(allChips);
-
-        return true;
+        //players.get(playerID).setLastBet(allChips); //done in addToPot
     }
 
     /**
@@ -238,31 +237,49 @@ public class BetController {
      * @param playerID the ID of the player
      * @param amount the chips left to contribute to the pots
      */
-    private void addToPotHelper(int playerID, int amount)
+    private void addToPotHelper(int playerID, int amount){}
 
     /**
-     * Given the ranking of players, we iterate through all the pots in the
-     * array and reward each pot to the contributor of highest rank.
+     * distributePots
+     * Given the ranking of players, we iterate through all the pots in the array and reward each
+     * pot to the contributor of highest rank.
+     *
+     * This method will take in an array of integers that symbolize the type of winning hand if
+     * -1. than folded if two or more integers repeat, than split the pot.
      *
      * The best rank is 0 and the worst rank, occurring when a player has
      * folded, is Integer.MAX
      *
-     * @param rankings the ranking of each player (int)
+     * @param rankings the sorted array of winning hand rankings.
      *
      */
     public void distributePots(int[] rankings){
+
+        for(PotTracker p: pots){
+            ArrayList<Integer> winners = getHighestRankingPlayers(p.getContributors(), rankings);
+            int amountInPot = p.getContribution();
+            int contributorsPerPot = p.getContributors().size();
+            int potTotal = amountInPot * contributorsPerPot;
+            int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get.
+
+            for(int i: winners){
+                players.get(i).addChips(chipsWon);
+            }
+        }
+        /*reset maxBet and totalAmount */
+        asynchronousReset();
+        /*
         int n;
         ArrayList<Integer> winners;
         for(PotTracker p : pots){
             winners = new ArrayList<>();
-            n = getHighestRanking(p.getContributors(), rankings);
+            n = getHighestRankingPlayers(p.getContributors(), rankings);
                 for(int i = 0; i<rankings.length; i++){
                     if(rankings[i] == n){
                         winners.add(i);
                     }
                 }
                int money = p.pot.getChips();
-            /* noe iterate through all the winners and distribute pots accordingly. */
             if(winners.size() >1){
                 //split money into groups equal to the amount of winners.
                 money = money/winners.size();
@@ -274,22 +291,29 @@ public class BetController {
                 players.get(winners.get(0)).addChips(money);
             }
         }
-        /*reset maxbet and isPlayerAllin*/
-       asynchronousReset();
+        */
     }
-    /* this method will take in an array of integers that symbolize the type of winning hand
-    * if -1. than folded
-    * if two or more integers reapeat, than split the pot.
-    */
+
 
 
     /**
-     * Helper method for distribute pots
+     * getHighestRankingPlayers
+     * Helper method for distribute pots; this method takes in the contributors for a given
+     * PotTracker object and the rankings for each one of them. The goal of this method is to return
+     * the winner or winners from the list of contributors. This will help the distributePots()
+     * method decide who to give the chips to.
      *
-     * @return the playerID of the contributor who has the best rank
+     * Side Note: rankings array returns a sorted array of each player's hand ranking.
+     * This is why if there are four players: 0, 1, 2, 3, and rankings are lets say
+     * 1, 0, 1, 2, they are parallel: 0-1, 1-0, 2-1, 3-2 etc.
+     *
+     * @return An array list of the best ranking hands from a list of contributors of a
+     * potTracker object.
      */
-    private int getHighestRanking(ArrayList<Integer> contributors, int[] rankings){
+    private ArrayList<Integer> getHighestRankingPlayers(ArrayList<Integer> contributors,
+                                                    int[] rankings){
         /* 0 is the highest possible rank, which makes the for loop weird. */
+        /*
         int highestRank = rankings[contributors.get(0)];
         for(int i = 0; i < contributors.size(); i++){
             if(highestRank < rankings[contributors.get(i)]) {
@@ -297,6 +321,19 @@ public class BetController {
             }
         }
         return highestRank;
+        */
+        ArrayList<Integer> highestRanks = new ArrayList<Integer>();
+        int highestRank = rankings[contributors.get(0)];
+        for(int i = 0; i< contributors.size(); i++){
+            if(highestRank < rankings[contributors.get(i)]){
+                highestRanks.add(rankings[contributors.get(i)]);
+            }
+            else if(highestRank == rankings[contributors.get(i)]){
+                highestRanks.add(rankings[contributors.get(i)]);
+            }
+        }
+        return highestRanks; //returns an array list of the winner{s) that 'the pot' needs to
+        //be split between.
     }
 
     public int getMaxBet(){
@@ -317,7 +354,7 @@ public class BetController {
      * (i.e. distributePots() is called).
      */
     private void asynchronousReset(){
-        maxBet = 0;
-        isPlayerAllIn = false;
+        this.maxBet = 0;
+        this.totalAmount = 0;
     }
 }
