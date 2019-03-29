@@ -33,8 +33,8 @@ public class BetController {
      *      with the amount left over.
      */
 
-    private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
-    private int maxBet; //added a getter method for this shit bois.
+    private ArrayList<PlayerChipCollection> players;
+    private int maxBet;
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
