@@ -171,7 +171,7 @@ public class HandRanker {
     /**
      * Finds the best Four of a Kind hand
      *
-     * @return the best FOur of a Kind Card Collection
+     * @return the best Four of a Kind Card Collection
      */
     private CardCollection findFourOfAKind() {
 
