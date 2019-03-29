@@ -12,6 +12,8 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class TurnTracker {
+
+    /** instance vars **/
     private ArrayDeque<Integer> activePlayers; // players who haven't taken a
     // turn in this phase
     private ArrayDeque<Integer> promptedPlayers; // players who taken a turn in
@@ -37,6 +39,9 @@ public class TurnTracker {
      *  Resource: https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html
      *  Solution: We used an ArrayDeque found in java's javadoc.
      */
+
+    /** constants **/
+    private static final int PLAYERS_FOR_GAME_OVER = 1;
 
     /**
      * The tracker requires the total amount of players and the player to
@@ -215,20 +220,6 @@ public class TurnTracker {
     }
 
     /**
-     * Requirement: This function must be called before next round and after
-     * we updated the remaining players array.
-     *
-     * Checks to see if there is a one person difference between numPlayers
-     * and the size of removed players. If so, the game is over and return
-     * the player ID of the player not removed.
-     *
-     * @return -1 if the game is over, else the playerID of the remaining player
-     */
-    public int isGameOver() {
-        //TODO
-    }
-
-    /**
      * Requirement: This function must be called after the removed players
      * array has been updated and we check to see if someone won (one player
      * remaining in total)
@@ -238,19 +229,16 @@ public class TurnTracker {
      * cleared.
      *
      * Next, add player into the active queue until there is a numPlayer
-     * amount of them, followed by removing players who lost or left. Then,
-     * increment the dealer ID (being within mod numPlayers to stay within index
-     * bounds) until it matches to an active player.
+     * amount of them, followed by removing players who lost or left.
      *
-     * We return two integers in an array. The first being the playerID of
-     * the small blind, and the second being the playerID of the big blind.
-     * We poll these players from the front of the active queue and then
-     * place them at the end of the active queue.
+     * If there is one person left in the active players array, the game is
+     * over and return the index of the player left in the array. They won.
+     * Otherwise, return -1.
      *
-     * @return an int array with two element; the first being the playerID of
-     * the small blind and the second being the playerID of the big blind.
+     * @return -1 if there is more than one player left in active players;
+     *         otherwise, return the playerID of the only player remaining
      */
-    public int[] nextRound(){
+    public int nextRound(){
         promptedPlayers.clear();
         activePlayers.clear();
         allInPlayers.clear();
@@ -264,6 +252,32 @@ public class TurnTracker {
             activePlayers.remove(i);
         }
 
+        if (activePlayers.size() > PLAYERS_FOR_GAME_OVER) {
+            return -1;
+        }
+
+        return activePlayers.pop();
+    }
+
+    /**
+     * Requirement: nextRound() has been called prior to this function and
+     * nextRound() returns -1, meaning that there is more than one player
+     * left in the game.
+     *
+     * Returns the playerID of the smallBlind and bigBlind from the dealerID
+     *
+     * Increment the dealer ID (being within mod numPlayers to stay within index
+     * bounds) until it matches to an active player.
+     *
+     * We return two integers in an array. The first being the playerID of
+     * the small blind, and the second being the playerID of the big blind.
+     * We poll these players from the front of the active queue and then
+     * place them at the end of the active queue.
+     *
+     * @return an int array with two element; the first being the playerID of
+     * the small blind and the second being the playerID of the big blind.
+     */
+    public int[] determineBlinds() {
         dealerID = (dealerID+1)%numPlayers;
         while(!activePlayers.contains(dealerID)){
             dealerID = (dealerID+1)%numPlayers;
