@@ -454,7 +454,4 @@ public class PokerHumanPlayer extends GameHumanPlayer
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
-
-
-
 }
