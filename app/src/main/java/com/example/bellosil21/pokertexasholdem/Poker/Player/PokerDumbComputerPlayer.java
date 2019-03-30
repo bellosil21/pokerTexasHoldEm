@@ -2,16 +2,13 @@ package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import com.example.bellosil21.pokertexasholdem.Game.Game;
 import com.example.bellosil21.pokertexasholdem.Game.GameComputerPlayer;
-import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
-import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameOverInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 
-import java.util.logging.Handler;
 
 /**
  * The "dumb" AI for Poker
