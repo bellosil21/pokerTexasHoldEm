@@ -12,10 +12,14 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class TurnTracker {
+
+    /** instance vars **/
     private ArrayDeque<Integer> activePlayers; // players who haven't taken a
     // turn in this phase
     private ArrayDeque<Integer> promptedPlayers; // players who taken a turn in
     // this phase
+    private ArrayList<Integer> allInPlayers; // players who have committed
+    // their whole chip collection to the pot
     private ArrayList<Integer> foldedPlayers; // players who folded and no
     // longer in this round
     private ArrayList<Integer> sittingOutPlayers; // players who are sitting out
@@ -36,6 +40,9 @@ public class TurnTracker {
      *  Solution: We used an ArrayDeque found in java's javadoc.
      */
 
+    /** constants **/
+    private static final int PLAYERS_FOR_GAME_OVER = 1;
+
     /**
      * The tracker requires the total amount of players and the player to
      * take the first smallBlind.
@@ -46,6 +53,7 @@ public class TurnTracker {
     public TurnTracker(int numPlayers, int dealerID) {
         this.activePlayers = new ArrayDeque<Integer>();
         this.promptedPlayers = new ArrayDeque<Integer>();
+        this.allInPlayers = new ArrayList<Integer>();
         this.foldedPlayers = new ArrayList<Integer>();
         this.sittingOutPlayers = new ArrayList<Integer>();
         this.removedPlayers = new ArrayList<Integer>();
@@ -59,6 +67,11 @@ public class TurnTracker {
     public TurnTracker(TurnTracker toCopy) {
         this.activePlayers = toCopy.activePlayers.clone();
         this.promptedPlayers = toCopy.promptedPlayers.clone();
+
+        this.allInPlayers = new ArrayList<>();
+        for (int i : toCopy.allInPlayers) {
+            this.allInPlayers.add(i);
+        }
 
         this.foldedPlayers = new ArrayList<>();
         for (int i : toCopy.foldedPlayers) {
@@ -127,6 +140,18 @@ public class TurnTracker {
     }
 
     /**
+     * Removes the player from being further prompted for this round. This
+     * player is still in the round.
+     *
+     * @param playerID the ID of the player who went all in
+     */
+    public void allIn(int playerID) {
+        if (!allInPlayers.contains(playerID)) {
+            allInPlayers.add(playerID);
+        }
+    }
+
+    /**
      * Removes a player from the game. This player will no longer be involved
      * in the game.
      *
@@ -162,19 +187,86 @@ public class TurnTracker {
      *
      * We maintain the order of the queue by taking the first player in the
      * prompted queue and adding them into the back of the active queue.
+     *
+     * @return true if there is still players to prompt
      */
-    public void promptPlayers(){
+    public boolean promptPlayers() {
+        if (promptedPlayers.isEmpty()) {
+            return false;
+        }
         while(promptedPlayers.isEmpty() == false){
             activePlayers.offer(promptedPlayers.poll());
         }
+        return true;
     }
 
     /**
+     * If everyone but one player has folded, return the playerID that is still
+     * left in the game.
+     *
+     * This player is either a prompted player, or is an allIn player
+     *
+     * @return -1 if more than one player remain; otherwise, return
+     *          the playerID of the last player remaining
+     */
+    public int isRoundOver() {
+        if (promptedPlayers.size() + allInPlayers.size() > 1) {
+            return -1;
+        }
+        if (!promptedPlayers.isEmpty()) {
+            return promptedPlayers.poll();
+        }
+        return allInPlayers.get(0);
+    }
+
+    /**
+     * Requirement: This function must be called after the removed players
+     * array has been updated and we check to see if someone won (one player
+     * remaining in total)
+     *
      * Resets the turn order for the next round with players still in the game.
-     * First, the prompted and active player queue is cleared. Next, add
-     * player into the active queue until there is a numPlayer amount of
-     * them, followed by removing players who lost or left. Then, increment
-     * the dealer ID (being within mod numPlayers to stay within index
+     * First, the prompted, active, allIn, and folded player arrays are
+     * cleared.
+     *
+     * Next, add player into the active queue until there is a numPlayer
+     * amount of them, followed by removing players who lost or left.
+     *
+     * If there is one person left in the active players array, the game is
+     * over and return the index of the player left in the array. They won.
+     * Otherwise, return -1.
+     *
+     * @return -1 if there is more than one player left in active players;
+     *         otherwise, return the playerID of the only player remaining
+     */
+    public int nextRound(){
+        promptedPlayers.clear();
+        activePlayers.clear();
+        allInPlayers.clear();
+        foldedPlayers.clear();
+
+        for(int i=0; i<numPlayers; i++){
+            activePlayers.add(i);
+        }
+
+        for (int i: removedPlayers){
+            activePlayers.remove(i);
+        }
+
+        if (activePlayers.size() > PLAYERS_FOR_GAME_OVER) {
+            return -1;
+        }
+
+        return activePlayers.pop();
+    }
+
+    /**
+     * Requirement: nextRound() has been called prior to this function and
+     * nextRound() returns -1, meaning that there is more than one player
+     * left in the game.
+     *
+     * Returns the playerID of the smallBlind and bigBlind from the dealerID
+     *
+     * Increment the dealer ID (being within mod numPlayers to stay within index
      * bounds) until it matches to an active player.
      *
      * We return two integers in an array. The first being the playerID of
@@ -185,18 +277,7 @@ public class TurnTracker {
      * @return an int array with two element; the first being the playerID of
      * the small blind and the second being the playerID of the big blind.
      */
-    public int[] nextRound(){
-        promptedPlayers.clear();
-        activePlayers.clear();
-
-        for(int i=0; i<numPlayers; i++){
-            activePlayers.add(i);
-        }
-
-        for (int i: removedPlayers){
-            activePlayers.remove(i);
-        }
-
+    public int[] determineBlinds() {
         dealerID = (dealerID+1)%numPlayers;
         while(!activePlayers.contains(dealerID)){
             dealerID = (dealerID+1)%numPlayers;
@@ -209,13 +290,6 @@ public class TurnTracker {
         activePlayers.offer(blinds[1]);
 
         return blinds;
-    }
-
-    /**
-     * Returns the number of players still in the game
-     */
-    public int getRemainingPlayers() {
-        return activePlayers.size() + promptedPlayers.size();
     }
 
     @Override

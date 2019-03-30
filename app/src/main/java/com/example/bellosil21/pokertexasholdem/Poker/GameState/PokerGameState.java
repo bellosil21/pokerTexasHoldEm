@@ -87,7 +87,7 @@ public class PokerGameState implements Serializable {
 
         //bets = new PotTracker(playersChips);
 
-        turn = new TurnTracker(playersChips, dealerID);
+        turn = new TurnTracker(numPlayers, dealerID);
     }
 
     /**

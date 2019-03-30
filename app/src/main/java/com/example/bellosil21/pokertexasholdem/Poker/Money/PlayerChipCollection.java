@@ -61,6 +61,10 @@ public class PlayerChipCollection extends ChipCollection {
 
     public int getLastContributedPot() { return lastContributedPot; }
 
+    public void resetLastContributedPot() {
+        lastContributedPot = DEFAULT_LAST_CONTRIBUTED_POT;
+    }
+
     /**
      * Prints the status of the collection.
      *

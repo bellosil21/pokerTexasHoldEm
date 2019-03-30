@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class BetController {
 
+    /** instance vars **/
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.
     /* A pot at a lower index includes all players, while pots at high
      * indexes include less players. Assume we only have one pot to begin
@@ -13,21 +14,16 @@ public class BetController {
      *      A - a player does not have enough chips to fully match a pot
      *          contribution; thus, their call makes them have no more chips
      *      B - a player raises the maximum bet
-     *      C - a new betting phase has occurred.
      *
      * Case A:
      *      This player can only win the bets that match their maximum
      *      contribution. Because they do not have enough to fully call, they
      *      should not be able to win all the bets in this pot. Hence, (1) A
      *      new pot needs to added before the current one in the array that
-     *      contains the bets that match the this player's amount. This new
-     *      pot will have all of this player's chips times the amount of
-     *      contributors in the original pot plus 1 [playerID's chips *
-     *      (amount original pot's contributors + 1)]. Now, the amount we
-     *      took out of the original pot's amount and contribution per player
-     *      needs to be (2) updated to account the transfer of chips. Also, the
-     *      new pot needs to be (3) locked since this player is all in and
-     *      cannot contribute any more funds.
+     *      contains the contribution that match the this player's amount.
+     *      (2) This new pot will have the contributors of the pot that comes
+     *      after it. Finally, (3) subtract the new pot's contribution from
+     *      the next pots contribution.
      *
      * Case B:
      *      When the player raises the maximum bet, we are contributing a new
@@ -35,70 +31,89 @@ public class BetController {
      *      First, contribute all we can until there's nothing more to add to
      *      all the pots. Then, place a new pot at the head of the pot array
      *      with the amount left over.
-     *
-     * Case C:
-     *      When a new betting phase has occured, we need an empty pot in
-     *      order for players to "check" the pot of 0 contribution.
      */
 
-    private ArrayList<PlayerChipCollection> players; //setting a getter method for this???
-    private int maxBet; //added a getter method for this shit bois.
+    private ArrayList<PlayerChipCollection> players;
+    private int maxBet;
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
-    private static int mulitplier = 2; //the factor at which the small/big blinds will be
-    // incremented.
+
+    /** constants **/
+    private static final int MULITPLIER = 2; // the factor at which the
+                                             // small/big blinds will be
+                                             // incremented.
+    private static final int DEFAULT_CHIP_AMOUNT = 0;
 
     public BetController(int numPlayers, int smBlind, int bgBlind){
         pots = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
             players.add(new PlayerChipCollection(0, i)); //i will be the id of player.
         }
-        this.maxBet = 0;
+        this.maxBet = DEFAULT_CHIP_AMOUNT;
         this.smallBlind = smBlind;
         this.bigBlind = bgBlind;
+        this.totalAmount = DEFAULT_CHIP_AMOUNT;
     }
 
     /**
-     * This method sets up the betting phase. A new betting phase does the
-     * following:
-     *  1. reset player's lastBet to be 0
-     *  2. reset maxBet to 0
-     *  3. create a new pot at the tail of the pot array
-     *  does 'tail' mean the last index of the ArrayList
+     * This method sets up the betting phase by resetting the player's last
+     * bets to 0
      */
     public void startPhase() {
-        //TODO
-        /* FYI THERE IS A METHOD AT THE BOTTOM OF THE PAGE THAT RESETS THE MAXBET AND TOTALAMOUNT
-         TO 0*/
-
+        for (PlayerChipCollection p : players) {
+            p.setLastBet(0);
+        }
     }
 
     /**
      * If the small blind player has enough money, make them
      * raiseBet by the small blind amount. Otherwise, make them go all in.
+     *
+     *
+     * @param smallBlindID the player ID for the small blind
+     * @return true if the player was forced to go all in
+     */
+    public boolean forceSmallBlinds(int smallBlindID){
+        int smallPlayerChips = players.get(smallBlindID).getChips();
+
+        if (smallPlayerChips <= smallBlind) {
+            allIn(smallBlindID);
+            return true;
+        }
+
+        raiseBet(smallBlindID, smallBlind);
+
+        return false;
+    }
+
+    /**
      * Then, if the big blind player has enough money, make them raiseBet by
      * the big blind amount. Otherwise, make them go all in.
      *
-     * @param smallBlindID the player ID for the small blind
      * @param bigBlindID the player ID for the big blind
+     * @return true if the player was forced to go all in
      */
-    public void forceBlinds(int smallBlindID, int bigBlindID){
-        //TODO
-        /*add the small blind and big blind bets to the pot*/
-        pots.get(MAIN_POT_INDEX).pot.addChips(smallBlind);
-        pots.get(MAIN_POT_INDEX).pot.addChips(bigBlind);
+    public boolean forceBigBlinds(int bigBlindID){
+        int bigPlayerChips = players.get(bigBlindID).getChips();
 
-        /*remove the chips from the big blind and small blind players*/
-        players.get(smallBlindID).removeChips(smallBlind);
-        players.get(bigBlindID).removeChips(bigBlind);
+        if (bigPlayerChips <= smallBlind) {
+            allIn(bigBlindID);
+            return true;
+        }
 
+        raiseBet(bigBlindID, bigBlind);
 
+        return false;
     }
 
     public void incrementBlinds(){
-        this.smallBlind = this.smallBlind*mulitplier;
-        this.bigBlind = this.bigBlind*mulitplier;
+        this.smallBlind = this.smallBlind * MULITPLIER;
+        this.bigBlind = this.bigBlind * MULITPLIER;
+    }
+
+    public int getTotalAmount() {
+        return totalAmount;
     }
 
     /**
@@ -223,9 +238,10 @@ public class BetController {
     private void addToPot(int playerID, int amount) {
         PlayerChipCollection player = players.get(playerID);
 
-        int nextPotToContributeIndex = player.getLastContributedPot() + 1;
-        int nextPotToContributeAmount =
-                pots.get(nextPotToContributeIndex).getContribution();
+        int nextPotIndex = player.getLastContributedPot() + 1;
+        PotTracker nextPot = pots.get(nextPotIndex);
+
+        int nextPotContribution = nextPot.getContribution();
 
         //adjust the player's last bet
         int accumulativeBet = player.getLastBet() + amount;
@@ -242,18 +258,20 @@ public class BetController {
 
         // determine if we are trying to add an amount less than the next pot
         // to contribute
-        else if (amount < nextPotToContributeAmount) {
+        else if (amount < nextPotContribution) {
             // this is a case A instance of making a new pot
 
             ArrayList<Integer> newPotContributors =
-                    pots.get(nextPotToContributeIndex).getContributors();
+                    nextPot.getContributors();
 
             for (int p : newPotContributors) {
                 players.get(p).incrementLastContributedPot();
             }
 
             PotTracker newPot = new PotTracker(amount, newPotContributors);
-            pots.add(nextPotToContributeIndex, newPot);
+            pots.add(nextPotIndex, newPot);
+
+            nextPot.subtractContribution(amount);
         }
 
         // the pot array is now ready to accept any new contributions
@@ -282,6 +300,7 @@ public class BetController {
         PotTracker nextPot = pots.get(nextPotIndex);
         int potContribution = nextPot.getContribution();
 
+        totalAmount =+ potContribution;
         player.removeChips(potContribution);
         nextPot.addContributor(playerID);
 
@@ -399,14 +418,16 @@ public class BetController {
 
 
     /**
-     * This is a helper method for other methods in the BetController class.
-     * This basically resets the maxBet variable to 0 and the isPlayerAllIn boolean to false.
-     * examples of where this would be called would include when the round is over
-     * (i.e. distributePots() is called).
+     * This resets the BetController at the end of a round. The pot array is
+     * emptied, the maximum bet is reset, the total bet amount is reset, and
+     * the player's lastContributedPot is reset.
      */
-    private void asynchronousReset(){
+    public void asynchronousReset(){
         this.pots.clear();
-        this.maxBet = 0;
-        this.totalAmount = 0;
+        this.maxBet = DEFAULT_CHIP_AMOUNT;
+        this.totalAmount = DEFAULT_CHIP_AMOUNT;
+        for (PlayerChipCollection p : players) {
+            p.resetLastContributedPot();
+        }
     }
 }
