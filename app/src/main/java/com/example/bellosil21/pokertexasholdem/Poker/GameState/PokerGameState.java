@@ -293,10 +293,6 @@ public class PokerGameState extends GameState {
         return finalRanks;
     }
 
-    public ArrayList<Hand> getHands() {
-        return hands;
-    }
-
     public BetController getBetController() {
         return betController;
     }
@@ -372,4 +368,5 @@ public class PokerGameState extends GameState {
         return communityCards;
     }
 
+    public ArrayList<Hand> getHands(){ return hands; }
 }
