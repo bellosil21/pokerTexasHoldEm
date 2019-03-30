@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerGameState extends GameState implements Serializable {
+public class PokerGameState extends GameState {
 
     /**
      * instance variables
@@ -41,6 +41,7 @@ public class PokerGameState extends GameState implements Serializable {
     private static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
+    private static final long serialVersionUID = -8269749892027578792L;
 
     /**
      * Creates and initialize a new PokerGameState from given options.
@@ -172,5 +173,13 @@ public class PokerGameState extends GameState implements Serializable {
     public int[] rankCardCollections() {
         //TODO
         return null;
+    }
+
+    public BetController getBetController() {
+        return betController;
+    }
+
+    public TurnTracker getTurnTracker() {
+        return turnTracker;
     }
 }

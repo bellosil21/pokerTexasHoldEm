@@ -40,10 +40,15 @@ public class BetController {
     private int bigBlind;
 
     /** constants **/
+    public static final int RAISE_INVALID = -1;
+    public static final int RAISE_FUNDS_LEFT = 0;
+    public static final int RAISE_NO_FUNDS_LEFT = 1;
+
     private static final int MULTIPLIER = 2; // the factor at which the
                                              // small/big blinds will be
                                              // incremented.
     private static final int DEFAULT_POT_AMOUNT = 0;
+
 
     public BetController(int numPlayers, int startingChips, int smBlind,
                          int bgBlind){
@@ -161,6 +166,8 @@ public class BetController {
      * Adds the player's call amount to the pot. Returns a boolean
      * representing if the player is out of funds
      *
+     * If the call amount is 0, return true (check for the "check" action
+     *
      * @param playerID the ID of the player
      * @return true if the player used up all their funds
      */
@@ -168,6 +175,11 @@ public class BetController {
         PlayerChipCollection player = players.get(playerID);
 
         int callAmount = getCallAmount(playerID);
+
+        if(callAmount == 0) {
+            return false;
+        }
+
         addToPot(playerID, callAmount);
 
         int playerChips = player.getChips();
@@ -175,6 +187,17 @@ public class BetController {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     * Determine if we can perform a check action on the pot
+     * @return true if maxBet is 0 (we can check the pot); otherwise, false
+     */
+    public boolean check() {
+        if (maxBet == 0) {
+            return  true;
+        }
         return false;
     }
 
@@ -199,7 +222,7 @@ public class BetController {
         // check if bet is valid
         int accumulativeBet = player.getLastBet() + amount;
         if (accumulativeBet <= maxBet || playerChips < amount) {
-            return -1;
+            return RAISE_INVALID;
         }
 
         addToPot(playerID, amount);
@@ -207,10 +230,10 @@ public class BetController {
         // check if the player is out of funds
         playerChips = player.getChips();
         if (playerChips == 0) {
-            return 1;
+            return RAISE_NO_FUNDS_LEFT;
         }
 
-        return 0;
+        return RAISE_FUNDS_LEFT;
     }
 
     /**

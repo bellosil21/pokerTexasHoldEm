@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.Hand;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Stores a standard 52 deck of cards.
@@ -17,6 +18,7 @@ public class Deck implements Serializable {
 
     /**
      * A deck is composed of all permutations of suits and rankings of a card.
+     * A deck is also shuffled randomly.
      */
     public Deck() {
         deckOfCards = new ArrayList<Card>();
@@ -27,7 +29,7 @@ public class Deck implements Serializable {
             }
         }
 
-        /**
+        /*
          * External Citation
          *  Date:     22 Feburary 2019
          *  Problem:  Did not know how to enumerate through all enums in a type.
@@ -35,6 +37,8 @@ public class Deck implements Serializable {
          *            a-for-loop-to-iterate-over-an-enum-in-java
          *  Solution: Implemented the code in this example.
          */
+
+        Collections.shuffle(deckOfCards);
     }
 
     /**

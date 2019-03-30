@@ -6,6 +6,12 @@ import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.LocalGame;
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 
 public class PokerLocalGame extends LocalGame {
 
@@ -32,36 +38,127 @@ public class PokerLocalGame extends LocalGame {
 
         PokerGameState stateForPlayer;
 
-        if (p instanceof GameHumanPlayer) {
-            ((GameHumanPlayer)p).
+        // make the copy of the game for the player
+        for (int i = 0; i < this.players.length; i++) {
+            if (this.players[i].equals(p)) {
+                stateForPlayer = new PokerGameState(state, i);
+                p.sendInfo(stateForPlayer);
+                break;
+            }
         }
 
-        // make a copy of the state; null out all cards except for the
-        // top card in the middle deck
-         = new PokerGameState(state, p.); // copy
-        // of state
-        stateForPlayer.nullAllButTopOf2(); // put nulls except for visible card
-
-        // send the modified copy of the state to the player
-        p.sendInfo(stateForPlayer);
     }
 
+    /**
+     * whether a player is allowed to move
+     *
+     * @param playerIdx
+     * 		the player-number of the player in question
+     */
     @Override
     protected boolean canMove(int playerIdx) {
+        int activePlayer = state.getTurnTracker().getActivePlayerID();
+        if (activePlayer == playerIdx) {
+            return true;
+        }
         return false;
     }
 
+    /**
+     * checks whether the game is over; if so, returns a string giving the result
+     *
+     * @result
+     * 		the end-of-game message, or null if the game is not over
+     */
     @Override
     protected String checkIfGameOver() {
-        return null;
+        int check = state.getTurnTracker().checkIfGameOver();
+        if (check > 0) {
+            return null;
+        }
+
+        return this.playerNames[check] + " is the winner!";
+
     }
 
+    /**
+     * makes a move on behalf of a player
+     *
+     * @param action
+     * 		the action denoting the move to be made
+     * @return
+     * 		true if the move was legal; false otherwise
+     */
     @Override
     protected boolean makeMove(GameAction action) {
-        return false;
+        boolean isValid = false;
+
+        // ALL IN
+        if (action instanceof PokerAllIn) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            state.getBetController().allIn(playerID);
+            isValid = true;
+        }
+
+        // CALL
+        else if (action instanceof PokerCall) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            boolean usedAllFunds = state.getBetController().call(playerID);
+
+            // we need to keep track if the player used all their funds
+            if (usedAllFunds) {
+                state.getTurnTracker().allIn();
+            }
+
+            isValid = true;
+        }
+
+        // CHECK
+        else if (action instanceof PokerCheck) {
+            isValid = state.getBetController().check();
+        }
+
+        // FOLD
+        else if (action instanceof PokerFold) {
+            state.getTurnTracker().fold();
+
+            isValid = true;
+        }
+
+        // RAISE BET
+        else if (action instanceof PokerRaiseBet) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
+
+            int raiseReturn = state.getBetController().raiseBet(playerID,
+                    raiseAmount);
+
+            if (raiseReturn == BetController.RAISE_INVALID) {
+                isValid = false;
+            }
+            else if (raiseReturn == BetController.RAISE_NO_FUNDS_LEFT) {
+                state.getTurnTracker().allIn();
+                isValid = true;
+            }
+            else if (raiseReturn == BetController.RAISE_FUNDS_LEFT) {
+                isValid = true;
+            }
+            else {
+                // this should never happen
+                isValid = false;
+            }
+        }
+
+        // SHOW HIDE CARDS
+        else if (action instanceof PokerShowHideCards) {
+
+        }
+
+
+        return isValid;
     }
 
-    /** Game Actions */
+    /* Game Actions */
 
     /**
      * Submits a bet if it's the player's turn and goes to the next turn.
