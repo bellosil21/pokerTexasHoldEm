@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
+import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
 import java.util.ArrayList;
 
@@ -83,12 +84,13 @@ public class BetController {
 
     /**
      * This method sets up the betting phase by resetting the player's last
-     * bets to 0
+     * bets to 0, and setting the maxBet to 0
      */
     public void startPhase() {
         for (PlayerChipCollection p : players) {
-            p.setLastBet(0);
+            p.setLastBet(DEFAULT_POT_AMOUNT);
         }
+        maxBet = DEFAULT_POT_AMOUNT;
     }
 
     /**
@@ -192,13 +194,11 @@ public class BetController {
 
     /**
      * Determine if we can perform a check action on the pot
-     * @return true if maxBet is 0 (we can check the pot); otherwise, false
+     * @param playerID ID of the player
+     * @return true if getCallAmount is 0; otherwise, false
      */
-    public boolean check() {
-        if (maxBet == 0) {
-            return  true;
-        }
-        return false;
+    public boolean check(int playerID) {
+        return (getCallAmount(playerID) == 0);
     }
 
     /**
@@ -243,21 +243,23 @@ public class BetController {
      * a local variable. Than the addToPot method will be called.
      *
      * @param playerID The player that has declared an all in action.
+     * @return true if the all in changed the maxBet
      */
-    public void allIn(int playerID){
-        if(playerID < 0){
-            /* invalid player ID*/
-            return;
-        }
+    public boolean allIn(int playerID){
+        boolean maxBetChanged = false;
+        PlayerChipCollection player = players.get(playerID);
 
-        int allChips = players.get(playerID).getChips();
+        int allChips = player.getChips();
 
         /*check to see if all in is the largest bet*/
-        if(allChips > maxBet){
-            maxBet = allChips;
+        int accumulativeBet = player.getLastBet() + allChips;
+        if(accumulativeBet > maxBet){
+            maxBet = accumulativeBet;
+            maxBetChanged = true;
         }
 
         addToPot(playerID, allChips);
+        return maxBetChanged;
 
         /*remove all the chips from given player object.*/
         //players.get(playerID).removeChips(allChips); //is done in addToPot
@@ -435,11 +437,14 @@ public class BetController {
         }
         return highestRank;
         */
-        ArrayList<Integer> highestRanks = new ArrayList<Integer>();
+        ArrayList<Integer> highestRanks = new ArrayList<>();
         int highestRank = rankings[contributors.get(0)];
         for(int i = 0; i< contributors.size(); i++){
             if(highestRank < rankings[contributors.get(i)]){
-                highestRanks.add(rankings[contributors.get(i)]);
+                highestRanks.clear();
+                int newRank = rankings[contributors.get(i)];
+                highestRank = newRank;
+                highestRanks.add(newRank);
             }
             else if(highestRank == rankings[contributors.get(i)]){
                 highestRanks.add(rankings[contributors.get(i)]);
@@ -462,8 +467,7 @@ public class BetController {
     }
 
     public int getPlayerChips(int playerID){
-        int allChips = players.get(playerID).getChips();
-        return allChips;
+        return players.get(playerID).getChips();
     }
 
     /**
