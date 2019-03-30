@@ -41,7 +41,9 @@ public class PokerGameState extends GameState {
     // controls and tracks the bets and pots
     private BetController betController;
 
-    /** constant */
+    /**
+     * constant
+     */
     private static final int INIT_PHASE_NUM = 0;
     private static final int PHASE_PRE_FLOP = 0;
     private static final int PHASE_FLOP = 1;
@@ -129,17 +131,13 @@ public class PokerGameState extends GameState {
     public void nextPhase() {
         if (numPhase == PHASE_PRE_FLOP) {
             phasePreFlop();
-        }
-        else if (numPhase == PHASE_FLOP) {
+        } else if (numPhase == PHASE_FLOP) {
             phaseFlop();
-        }
-        else if (numPhase == PHASE_TURN) {
+        } else if (numPhase == PHASE_TURN) {
             phaseTurn();
-        }
-        else if (numPhase == PHASE_RIVER) {
+        } else if (numPhase == PHASE_RIVER) {
             phaseRiver();
-        }
-        else {
+        } else {
             // should never occur
         }
     }
@@ -256,8 +254,7 @@ public class PokerGameState extends GameState {
                 HandRanker ranker = new HandRanker(hands.get(i),
                         communityCards);
                 finalHands.add(i, ranker.computeHandRank());
-            }
-            else {
+            } else {
                 finalHands.add(i, null);
             }
         }
@@ -268,7 +265,7 @@ public class PokerGameState extends GameState {
         Collections.sort(sortedFinalHands, new SortByCardCollection());
 
         int[] finalRanks = new int[numPlayers]; // stores the ranks to be
-                                                // returned
+        // returned
 
         // rank each player according to this sorted array
         // if multiple people match a sorted hand, they have the same
@@ -282,8 +279,7 @@ public class PokerGameState extends GameState {
                 // assigned players who folded the max int
                 if (finalHandPlayer == null) {
                     finalRanks[playerID] = Integer.MAX_VALUE;
-                }
-                else {
+                } else {
                     int compare = finalHandPlayer.compareTo(bestHandForRank);
                     if (compare == 0) {
                         finalRanks[playerID] = i;
@@ -295,10 +291,6 @@ public class PokerGameState extends GameState {
         } // sorted CardCollections looop
 
         return finalRanks;
-    }
-
-    public ArrayList<Hand> getHands() {
-        return hands;
     }
 
     public BetController getBetController() {
@@ -351,8 +343,30 @@ public class PokerGameState extends GameState {
         // money they have
         for (int i = 0; i < numPlayers; i++) {
             toReturn += "\nPlayer " + (i + 1) + ": " + betController.getPlayerChips(i);
-        };
+        }
+        ;
 
         return toReturn;
     }
+
+    /**
+     * Gets a player's current chip amount
+     *
+     * @param playerNum - Index of player to return
+     * @return amount of chips the player has
+     */
+    public int getChips(int playerNum) {
+        return betController.getPlayerChips(playerNum);
+    }
+
+    /**
+     * Gets and returns all Cards so far laid out in the table
+     *
+     * @return ArrayList containing all the community Cards
+     */
+    public ArrayList<Card> getCommunityCards() {
+        return communityCards;
+    }
+
+    public ArrayList<Hand> getHands(){ return hands; }
 }

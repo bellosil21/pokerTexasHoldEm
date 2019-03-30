@@ -39,6 +39,7 @@ public class PokerGameStateTest {
 
     @Test
     public void fold() {
+        /*
         PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
         int playerID =  myGameState.getTurn().getActivePlayerID();
         boolean ans = true;
@@ -50,6 +51,15 @@ public class PokerGameStateTest {
         assertEquals(ans,val);
         assertEquals(ans2, val2);
         assertEquals(playerID, 0);
+        */
+
+        PokerGameState myGameState = new PokerGameState(0, 100, 200, 4);
+        int playerID = myGameState.getTurnTracker().getActivePlayerID();
+        boolean ans = true;
+        boolean val;
+        val = myGameState.
+
+
     }
 
     @Test

@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Turn: Player 4"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="30dp"
             app:fontFamily="@font/anton" />
 
@@ -80,7 +80,7 @@
             android:layout_toRightOf="@id/player2Name"
             android:layout_marginHorizontal="10dp"
             android:text="$500"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -101,7 +101,7 @@
             android:layout_above="@+id/player2"
             android:layout_alignLeft="@id/player2"
             android:text="Player 2"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -112,7 +112,7 @@
             android:layout_below="@id/player2"
             android:layout_alignLeft="@id/player2"
             android:text="Last Move:"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -121,10 +121,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/player2"
-            android:layout_toRightOf="@id/player2LM"
             android:layout_marginHorizontal="10dp"
+            android:layout_toRightOf="@id/player2LM"
             android:text="Fold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -146,7 +146,7 @@
             android:layout_toRightOf="@id/player3Name"
             android:layout_marginHorizontal="10dp"
             android:text="$500"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -158,7 +158,7 @@
             android:layout_alignLeft="@id/player3"
             android:layout_marginBottom="70dp"
             android:text="Last Move:"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -171,7 +171,7 @@
             android:layout_marginBottom="70dp"
             android:layout_marginHorizontal="10dp"
             android:text="Call"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -182,7 +182,7 @@
             android:layout_above="@+id/player3"
             android:layout_alignLeft="@id/player3"
             android:text="Player 3"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -204,7 +204,7 @@
             android:layout_toRightOf="@id/player4Name"
             android:layout_marginHorizontal="10dp"
             android:text="$500"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -215,7 +215,7 @@
             android:layout_above="@+id/player4"
             android:layout_alignLeft="@id/player4"
             android:text="Player 4"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -226,7 +226,7 @@
             android:layout_below="@id/player4"
             android:layout_alignLeft="@id/player4"
             android:text="Last Move:"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -238,7 +238,7 @@
             android:layout_toRightOf="@id/player4LM"
             android:layout_marginHorizontal="10dp"
             android:text="Bet $100"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
 
@@ -266,7 +266,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_jc" />
 
         <ImageView
             android:id="@+id/flop2"
@@ -275,7 +275,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/flop1"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_2c" />
 
         <ImageView
             android:id="@+id/flop3"
@@ -284,7 +284,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/flop2"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_3s" />
 
         <ImageView
             android:id="@+id/turn"
@@ -293,7 +293,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/flop1"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_qd" />
 
         <ImageView
             android:id="@+id/river"
@@ -302,7 +302,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/turn"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_7c" />
 
         <ImageView
             android:id="@+id/chipStack"
@@ -324,7 +324,7 @@
             android:layout_toRightOf="@id/chipStack"
             android:text="$1000"
             android:textSize="32dp"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             app:fontFamily="@font/anton" />
 
         <TextView
@@ -335,7 +335,7 @@
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/chipStack"
             android:text="Total Pot:"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="32dp"
             app:fontFamily="@font/anton" />
 
@@ -384,9 +384,9 @@
                     android:ems="10"
                     android:hint="Place Bets"
                     android:inputType="number"
-                    android:textColor="@color/Yellow"
+                    android:textColor="@android:color/holo_orange_light"
                     android:textColorHighlight="@android:color/darker_gray"
-                    android:textColorHint="@color/Yellow"
+                    android:textColorHint="@android:color/holo_orange_light"
                     app:fontFamily="@font/anton" />
 
             </LinearLayout>
@@ -434,7 +434,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@drawable/background"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_3h" />
 
         <ImageView
             android:id="@+id/userSecCard"
@@ -443,7 +443,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@drawable/background"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_jc" />
 
         <Space
             android:layout_width="wrap_content"
@@ -495,7 +495,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/player1"
                     android:text="Player 1"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:textSize="20dp"
                     app:fontFamily="@font/anton" />
 
@@ -503,22 +503,10 @@
                     android:id="@+id/player1LM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/player1Name"
-                    android:layout_marginHorizontal="10dp"
-                    android:text="Last Move:"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"
-                    app:fontFamily="@font/anton" />
-
-                <TextView
-                    android:id="@+id/player1Move"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/player1LM"
-                    android:layout_marginHorizontal="5dp"
-                    android:text="Call"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"
+                    android:layout_weight="1"
+                    android:text="$500"
+                    android:textColor="@android:color/holo_orange_light"
+                    android:textSize="30dp"
                     app:fontFamily="@font/anton" />
             </LinearLayout>
 
