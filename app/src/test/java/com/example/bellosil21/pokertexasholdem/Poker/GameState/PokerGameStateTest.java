@@ -8,18 +8,8 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 public class PokerGameStateTest {
 
-    @Test
-    public String toString() {
-        return null;
-    }
 
     @Test
     public void placeBets() {
@@ -50,15 +40,16 @@ public class PokerGameStateTest {
     @Test
     public void fold() {
         PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
-
+        int playerID =  myGameState.getTurn().getActivePlayerID();
         boolean ans = true;
         boolean ans2 = false;
         boolean val;
         boolean val2;
         val =  myGameState.fold(0);
-        val2 = myGameState.fold(3);
+        val2 = myGameState.fold(1);
         assertEquals(ans,val);
         assertEquals(ans2, val2);
+        assertEquals(playerID, 0);
     }
 
     @Test
@@ -68,17 +59,17 @@ public class PokerGameStateTest {
     @Test
     public void check() {
         PokerGameState myGameState = new PokerGameState(0,100, 200, 4);
-        ArrayList<PlayerChipCollection> players = new ArrayList<>();
-        //TurnTracker turn = new TurnTracker();
+        int playerID = myGameState.getTurn().getActivePlayerID();
+
         boolean ans = true;
         boolean ans2 = false;
         boolean val1;
         boolean val2;
         val1 = myGameState.check(0);
-        val2 = myGameState.check(3); //should be false bc not current turn.
+        val2 = myGameState.check(1); //should be false bc not current turn.
         assertEquals(ans, val1);
         assertEquals(ans2, val2);
-
+        assertEquals(playerID, 0);
     }
 
     @Test
@@ -86,7 +77,7 @@ public class PokerGameStateTest {
         PokerGameState gameState = new PokerGameState(100,1,5,4);
         ArrayList<PlayerChipCollection> playersChips = null;
         int playerID = 0;
-        TurnTracker turn = new TurnTracker(playersChips, playerID);
+        //TurnTracker turn = new TurnTracker(playersChips, playerID);
         playerID = 1234;
         gameState.call(playerID);
         assertEquals(playerID, playersChips.get(playerID));

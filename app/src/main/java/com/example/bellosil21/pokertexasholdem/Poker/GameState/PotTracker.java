@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import com.example.bellosil21.pokertexasholdem.Poker.Money.ChipCollection;
-
 import java.util.ArrayList;
 
 /**
@@ -12,7 +10,7 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PotTracker extends ChipCollection {
+public class PotTracker {
     private ArrayList<Integer> contributors;
     /*
      * External Citation
@@ -25,16 +23,13 @@ public class PotTracker extends ChipCollection {
 
     private int contribution; // bet amount to be added to the pot per player
 
-    private static final int DEFAULT_POT = 0;
-
     /** Default PotTracker Constructor
      *
      * Initializes a default pot
      */
-    public PotTracker() {
-        super(DEFAULT_POT);
+    public PotTracker(int amount) {
         contributors = new ArrayList<>();
-        contribution = DEFAULT_POT;
+        contribution = amount;
     }
 
     /** PotTracker Constructor
@@ -43,7 +38,6 @@ public class PotTracker extends ChipCollection {
      * @param players an array of players who contributed to this amount
      */
     public PotTracker(int amount, ArrayList<Integer> players) {
-        super(amount);
         contributors = new ArrayList<>();
         contributors.addAll(players);
         contribution = amount;
@@ -53,18 +47,20 @@ public class PotTracker extends ChipCollection {
      * Copy constructor
      */
     public PotTracker(PotTracker toCopy) {
-        super(toCopy.amount);
-
         this.contributors = new ArrayList<>();
         this.contributors.addAll(toCopy.contributors);
 
         this.contribution = toCopy.contribution;
     }
 
-    public void add(int playerID){
+    public void addContributor(int playerID){
         contributors.add(playerID);
-        addChips(contribution);
     }
+
+    public void subtractContribution(int amount) {
+        contribution =- amount;
+    }
+
 
     public boolean isContributor(int playerID) {
         return contributors.contains(playerID);
@@ -73,14 +69,11 @@ public class PotTracker extends ChipCollection {
     public int getContribution() {
         return contribution;
     }
-
-    public void setContribution(int contribution) {
-        this.contribution = contribution;
-    }
+    public ArrayList<Integer> getContributors(){return this.contributors;}
 
     @Override
     public String toString() {
-        return "Pot: " + amount + ", contributors: " + contributors.toString();
+        return "Contribution: " + contribution + ", contributors: " + contributors.toString();
     }
 
 }
