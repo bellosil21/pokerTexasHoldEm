@@ -107,7 +107,7 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 	 * Sets this player as the one attached to the GUI. Saves the
 	 * activity, then invokes subclass-specific method.
 	 */
-	public final void gameSetAsGui(GameMainActivity a) {
+	public void gameSetAsGui(GameMainActivity a) {
 
 			myActivity = a;
 			setAsGui(a);
@@ -321,7 +321,7 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 	 * 
 	 * @return true, since this player needs to be running as a GUI
 	 */
-	public final boolean requiresGui() {
+	public boolean requiresGui() {
 		return true;
 	}
 	
@@ -330,7 +330,7 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 	 * 
 	 * @return true, since this player actually needs to be running as a GUI
 	 */	
-	public final boolean supportsGui() {
+	public boolean supportsGui() {
 		return true;
 	}
 

@@ -73,15 +73,6 @@ public class Controller implements OnClickListener, SeekBar.OnSeekBarChangeListe
     }
     @Override
     public void onClick(View v) {
-        if (v == foldButton){
-
-        }
-        else if (v == callCheckButton){
-
-        }
-        else if (v == betButton){
-
-        }
     }
 
 
@@ -89,7 +80,6 @@ public class Controller implements OnClickListener, SeekBar.OnSeekBarChangeListe
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
 
-        chipBetText.setText(""+progress);
 
     }
 

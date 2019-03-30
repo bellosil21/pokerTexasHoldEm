@@ -10,7 +10,6 @@ package com.example.bellosil21.pokertexasholdem.Poker.Money;
  */
 public class PlayerChipCollection extends ChipCollection {
 
-    private int playerID;
     private int lastBet; // keep track of most recent bet in case of a raise
     private int lastContributedPot; // index of the last pot this player
                                     // contributed to
@@ -21,11 +20,9 @@ public class PlayerChipCollection extends ChipCollection {
      * Assigns player data to a ChipCollection.
      *
      * @param amount The amount of starting chips in the collection
-     * @param id     The player's id
      */
-    public PlayerChipCollection(int amount, int id) {
+    public PlayerChipCollection(int amount) {
         super(amount);
-        this.playerID = id;
         lastBet = 0;
         lastContributedPot = DEFAULT_LAST_CONTRIBUTED_POT;
     }
@@ -35,7 +32,6 @@ public class PlayerChipCollection extends ChipCollection {
      */
     public PlayerChipCollection(PlayerChipCollection toCopy) {
         super(toCopy.amount);
-        this.playerID = toCopy.playerID;
         lastBet = toCopy.lastBet;
         lastContributedPot = toCopy.lastContributedPot;
     }
@@ -72,6 +68,7 @@ public class PlayerChipCollection extends ChipCollection {
      */
     @Override
     public String toString() {
-        return super.toString() + ", playerID is " + playerID;
+        return super.toString() + ", lastBet " + lastBet + ", lastPot "
+                + lastContributedPot;
     }
 }

@@ -40,20 +40,40 @@ public class BetController {
     private int bigBlind;
 
     /** constants **/
-    private static final int MULITPLIER = 2; // the factor at which the
+    private static final int MULTIPLIER = 2; // the factor at which the
                                              // small/big blinds will be
                                              // incremented.
-    private static final int DEFAULT_CHIP_AMOUNT = 0;
+    private static final int DEFAULT_POT_AMOUNT = 0;
 
-    public BetController(int numPlayers, int smBlind, int bgBlind){
+    public BetController(int numPlayers, int startingChips, int smBlind,
+                         int bgBlind){
         pots = new ArrayList<>();
+
+        players = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
-            players.add(new PlayerChipCollection(0, i)); //i will be the id of player.
+            players.add(new PlayerChipCollection(startingChips));
         }
-        this.maxBet = DEFAULT_CHIP_AMOUNT;
+
+        this.maxBet = DEFAULT_POT_AMOUNT;
         this.smallBlind = smBlind;
         this.bigBlind = bgBlind;
-        this.totalAmount = DEFAULT_CHIP_AMOUNT;
+        this.totalAmount = DEFAULT_POT_AMOUNT;
+    }
+
+    /**
+     * Copy constructor
+     */
+    public BetController(BetController toCopy) {
+        pots = new ArrayList<>();
+        pots.addAll(toCopy.pots);
+
+        players = new ArrayList<>();
+        players.addAll(toCopy.players);
+
+        maxBet = toCopy.maxBet;
+        totalAmount = toCopy.totalAmount;
+        smallBlind = toCopy.smallBlind;
+        bigBlind = toCopy.bigBlind;
     }
 
     /**
@@ -108,8 +128,8 @@ public class BetController {
     }
 
     public void incrementBlinds(){
-        this.smallBlind = this.smallBlind * MULITPLIER;
-        this.bigBlind = this.bigBlind * MULITPLIER;
+        this.smallBlind = this.smallBlind * MULTIPLIER;
+        this.bigBlind = this.bigBlind * MULTIPLIER;
     }
 
     public int getTotalAmount() {
@@ -410,12 +430,18 @@ public class BetController {
         return this.maxBet;
     }
 
+    public int getSmallBlind() {
+        return smallBlind;
+    }
+
+    public int getBigBlind() {
+        return bigBlind;
+    }
+
     public int getPlayerChips(int playerID){
         int allChips = players.get(playerID).getChips();
         return allChips;
     }
-
-
 
     /**
      * This resets the BetController at the end of a round. The pot array is
@@ -424,8 +450,8 @@ public class BetController {
      */
     public void asynchronousReset(){
         this.pots.clear();
-        this.maxBet = DEFAULT_CHIP_AMOUNT;
-        this.totalAmount = DEFAULT_CHIP_AMOUNT;
+        this.maxBet = DEFAULT_POT_AMOUNT;
+        this.totalAmount = DEFAULT_POT_AMOUNT;
         for (PlayerChipCollection p : players) {
             p.resetLastContributedPot();
         }
