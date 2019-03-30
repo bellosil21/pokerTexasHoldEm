@@ -495,6 +495,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/player1"
                     android:text="Player 1"
+                    android:layout_weight="1"
                     android:textColor="@android:color/white"
                     android:textSize="20dp"
                     app:fontFamily="@font/anton" />
@@ -504,9 +505,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="$500"
-                    android:textColor="@android:color/holo_orange_light"
-                    android:textSize="30dp"
+                    android:text="Last Move:"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
+                    app:fontFamily="@font/anton" />
+
+                <TextView
+                    android:id="@+id/player1Move"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Call"
+                    android:layout_toRightOf="@id/player1LM"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
                     app:fontFamily="@font/anton" />
             </LinearLayout>
 
