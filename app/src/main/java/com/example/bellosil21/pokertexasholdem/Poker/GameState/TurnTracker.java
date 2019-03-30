@@ -292,6 +292,10 @@ public class TurnTracker {
         return blinds;
     }
 
+    public int getDealerID() {
+        return dealerID;
+    }
+
     @Override
     public String toString() {
         return "Current Turn: Player " + getActivePlayerID();
