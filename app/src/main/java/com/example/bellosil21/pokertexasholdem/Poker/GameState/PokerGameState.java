@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerGameState implements Serializable {
+public class PokerGameState extends GameState implements Serializable {
 
     /**
      * instance variables
