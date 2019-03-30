@@ -1,4 +1,4 @@
-package com.example.bellosil21.pokertexasholdem.Poker.GameState;
+package com.example.bellosil21.pokertexasholdem.Poker.Money;
 
 import java.util.ArrayList;
 
