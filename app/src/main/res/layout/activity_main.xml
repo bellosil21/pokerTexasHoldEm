@@ -68,8 +68,65 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Turn: Player 4"
-            android:textColor="@color/black"
-            android:textSize="30dp" />
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player2Chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/player2"
+            android:layout_toRightOf="@id/player2Name"
+            android:layout_marginHorizontal="10dp"
+            android:text="$500"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <ImageView
+            android:id="@+id/player2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="150dp"
+            android:layout_toLeftOf="@id/flop3"
+            android:background="@android:color/holo_purple"
+            app:srcCompat="@drawable/player" />
+
+        <TextView
+            android:id="@+id/player2Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/player2"
+            android:layout_alignLeft="@id/player2"
+            android:text="Player 2"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player2LM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player2"
+            android:layout_alignLeft="@id/player2"
+            android:text="Last Move:"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player2Move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player2"
+            android:layout_toRightOf="@id/player2LM"
+            android:layout_marginHorizontal="10dp"
+            android:text="Fold"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
 
         <ImageView
             android:id="@+id/player3"
@@ -77,44 +134,64 @@
             android:layout_height="40dp"
             android:layout_above="@id/flop1"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="100dp"
             android:background="#00ffb7"
-            app:srcCompat="@drawable/player" />
-
-        <TextView
-            android:id="@+id/player2Chips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/player2"
-            android:layout_below="@id/player2"
-            android:text="$500"
-            android:textSize="20dp" />
-
-        <ImageView
-            android:id="@+id/player2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="50dp"
-            android:layout_toLeftOf="@id/flop3"
-            android:background="@android:color/holo_purple"
             app:srcCompat="@drawable/player" />
 
         <TextView
             android:id="@+id/player3Chips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/player3"
-            android:layout_toRightOf="@id/player3"
+            android:layout_above="@id/player3"
+            android:layout_toRightOf="@id/player3Name"
+            android:layout_marginHorizontal="10dp"
             android:text="$500"
-            android:textSize="20dp" />
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player3LM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/flop1"
+            android:layout_alignLeft="@id/player3"
+            android:layout_marginBottom="70dp"
+            android:text="Last Move:"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player3Move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/flop1"
+            android:layout_toRightOf="@id/player3LM"
+            android:layout_marginBottom="70dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="Call"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player3Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/player3"
+            android:layout_alignLeft="@id/player3"
+            android:text="Player 3"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
 
         <ImageView
             android:id="@+id/player4"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="150dp"
             android:layout_toRightOf="@id/river"
             android:background="@android:color/holo_orange_light"
             app:srcCompat="@drawable/player" />
@@ -123,11 +200,47 @@
             android:id="@+id/player4Chips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/player4"
-            android:layout_below="@id/player4"
+            android:layout_above="@id/player4"
+            android:layout_toRightOf="@id/player4Name"
+            android:layout_marginHorizontal="10dp"
             android:text="$500"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="20dp" />
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player4Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/player4"
+            android:layout_alignLeft="@id/player4"
+            android:text="Player 4"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player4LM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player4"
+            android:layout_alignLeft="@id/player4"
+            android:text="Last Move:"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/player4Move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player4"
+            android:layout_toRightOf="@id/player4LM"
+            android:layout_marginHorizontal="10dp"
+            android:text="Bet $100"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:fontFamily="@font/anton" />
 
         <ImageView
             android:id="@+id/imageView7"
@@ -135,7 +248,8 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/player4"
-            app:srcCompat="@drawable/dealer" />
+            app:srcCompat="@drawable/dealer"
+            android:layout_toRightOf="@+id/player4" />
 
         <ImageView
             android:id="@+id/logo"
@@ -205,10 +319,25 @@
             android:id="@+id/totalPot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/turn"
+            android:layout_below="@id/flop1"
+            android:layout_marginTop="40dp"
             android:layout_toRightOf="@id/chipStack"
             android:text="$1000"
-            android:textSize="32dp" />
+            android:textSize="32dp"
+            android:textColor="@color/white"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/pot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/flop1"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/chipStack"
+            android:text="Total Pot:"
+            android:textColor="@color/white"
+            android:textSize="32dp"
+            app:fontFamily="@font/anton" />
 
     </RelativeLayout>
 
@@ -255,9 +384,10 @@
                     android:ems="10"
                     android:hint="Place Bets"
                     android:inputType="number"
-                    android:textColor="@android:color/holo_orange_light"
+                    android:textColor="@color/Yellow"
                     android:textColorHighlight="@android:color/darker_gray"
-                    android:textColorHint="@android:color/holo_orange_light" />
+                    android:textColorHint="@color/Yellow"
+                    app:fontFamily="@font/anton" />
 
             </LinearLayout>
 
@@ -272,14 +402,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="SHOW/HIDE CARDS" />
+                    android:text="SHOW CARDS" />
+
+                <Button
+                    android:id="@+id/fold_foldButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="FOLD" />
 
                 <Button
                     android:id="@+id/fold_sitoutButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="FOLD/SIT OUT" />
+                    android:text="SIT OUT" />
 
             </LinearLayout>
 
@@ -296,7 +433,7 @@
             android:layout_height="175dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/background"
             app:srcCompat="@drawable/sample_card" />
 
         <ImageView
@@ -305,7 +442,7 @@
             android:layout_height="175dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/background"
             app:srcCompat="@drawable/sample_card" />
 
         <Space
@@ -328,7 +465,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/playerImage"
+                    android:id="@+id/player1"
                     android:layout_width="20dp"
                     android:layout_height="64dp"
                     android:layout_weight="1"
@@ -336,21 +473,32 @@
                     app:srcCompat="@drawable/player" />
 
                 <TextView
+                    android:id="@+id/player1Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/player1"
+                    android:text="Player 1"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    app:fontFamily="@font/anton" />
+
+                <TextView
                     android:id="@+id/currChips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="$500"
-                    android:textColor="@android:color/holo_orange_light"
-                    android:textSize="30dp" />
+                    android:textColor="@color/Yellow"
+                    android:textSize="30dp"
+                    app:fontFamily="@font/anton" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_weight="10"
-                android:orientation="horizontal"
-                android:layout_gravity="top">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/betButton"
