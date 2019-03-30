@@ -31,16 +31,14 @@ public class Controller implements OnClickListener, SeekBar.OnSeekBarChangeListe
     private Button foldButton;
     private Button betButton;
     private Button callCheckButton;
-    private Button hideCardsButton;
-    private Button showCardsButton;
+    private Button shoHideCardsButton;
 
     public Controller(TextView player1Chips, TextView player2Chips,
                       TextView player3Chips, TextView player4Chips,
                       TextView turnTracker, TextView pot,
                       EditText chipBetText, SeekBar chipBetSeekbar,
                       Button foldButton, Button callCheckButton,
-                      Button betButton, Button hideCardsButton,
-                      Button showCardsButton){
+                      Button betButton, Button shohideCardsButton){
 
         // Setting all TextViews to local variables
         this.player1Chips = player1Chips;
@@ -61,9 +59,8 @@ public class Controller implements OnClickListener, SeekBar.OnSeekBarChangeListe
         this.betButton.setOnClickListener(this);
         this.callCheckButton = callCheckButton;
         this.callCheckButton.setOnClickListener(this);
-        this.hideCardsButton = hideCardsButton;
-        this.hideCardsButton.setOnClickListener(this);
-        this.showCardsButton = showCardsButton;
+        this.shoHideCardsButton = shohideCardsButton;
+        this.shoHideCardsButton.setOnClickListener(this);
         this.foldButton.setOnClickListener(this);
 
 

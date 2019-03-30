@@ -49,7 +49,7 @@ public abstract class GamePlayerType implements Cloneable /*, Serializable*/ {
 		try {
 			return super.clone();
 		} catch (Exception e) {
-			return null; // failure!
+			return null; // failure! lmao!
 		}
 	}
 	

@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button foldButton;
     private Button betButton;
     private Button callCheckButton;
-    private Button hideCardsButton;
-    private Button showCardsButton;
+    private Button shoHideCardsButton;
 
     Controller gameControl;
 
@@ -75,16 +74,16 @@ public class MainActivity extends AppCompatActivity {
         turnTracker = findViewById(R.id.turnText);
 
         // Initialize the buttons for player's actions
-        foldButton = findViewById(R.id.foldButton);
+        foldButton = findViewById(R.id.fold_sitoutButton);
         callCheckButton = findViewById(R.id.callButton);
         betButton = findViewById(R.id.betButton);
-        showCardsButton = findViewById(R.id.showButton);
-        hideCardsButton = findViewById(R.id.hideButton);
+        shoHideCardsButton = findViewById(R.id.showHideCardsButton);
+
 
         gameControl = new Controller(player1Chips, player2Chips, player3Chips
                 , player4Chips, turnTracker, jackpot, chipBetText,
                 chipBetSeekbar, foldButton, callCheckButton, betButton,
-                hideCardsButton, showCardsButton);
+                shoHideCardsButton);
 
         setContentView(R.layout.activity_main);
 
