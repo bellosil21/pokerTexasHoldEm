@@ -21,7 +21,7 @@ public class Deck implements Serializable {
      * A deck is also shuffled randomly.
      */
     public Deck() {
-        deckOfCards = new ArrayList<Card>();
+        deckOfCards = new ArrayList<>();
         for (Card.Suit s : Card.Suit.values()) {
             for (Card.Rank r : Card.Rank.values()) {
                 Card newCard = new Card(s, r);
@@ -69,6 +69,16 @@ public class Deck implements Serializable {
             h.setHole2(deckOfCards.remove(0));
         }
     }
+
+    /**
+     * Get a card from the top of the deck after we burned a card
+     */
+    public Card getACard() {
+        deckOfCards.remove(0);
+        return deckOfCards.remove(0);
+    }
+
+
 
     /**
      * Describes the deck.

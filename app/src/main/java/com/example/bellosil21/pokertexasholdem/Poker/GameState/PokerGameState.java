@@ -4,9 +4,13 @@ import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
+import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
+import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.SortByCardCollection;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * Defines the game state to play Poker.
  *
@@ -28,6 +32,8 @@ public class PokerGameState extends GameState {
     private ArrayList<Card> communityCards;
     // current round
     private int roundNumber;
+    // the current phase
+    private int numPhase;
     // number of players in the game
     private int numPlayers;
     // tracks whose turn it is
@@ -35,12 +41,19 @@ public class PokerGameState extends GameState {
     // controls and tracks the bets and pots
     private BetController betController;
 
-    /**
-     * constants
-     */
+    /** constant */
+    private static final int INIT_PHASE_NUM = 0;
+    private static final int PHASE_PRE_FLOP = 0;
+    private static final int PHASE_FLOP = 1;
+    private static final int PHASE_TURN = 2;
+    private static final int PHASE_RIVER = 3;
+
+    private static final int CARDS_FLOP = 3;
+
     private static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
+    private static final int ROUNDS_PER_BLIND_INCREMENT = 5;
     private static final long serialVersionUID = -8269749892027578792L;
 
     /**
@@ -70,6 +83,8 @@ public class PokerGameState extends GameState {
                 startingChips, startingSmall, startingBig);
 
         turnTracker = new TurnTracker(numPlayers, INIT_DEALER_ID);
+
+        numPhase = INIT_PHASE_NUM;
     }
 
     /**
@@ -107,6 +122,191 @@ public class PokerGameState extends GameState {
         turnTracker = new TurnTracker(toCopy.turnTracker);
 
         betController = new BetController(toCopy.betController);
+
+        numPhase = toCopy.numPhase;
+    }
+
+    public void nextPhase() {
+        if (numPhase == PHASE_PRE_FLOP) {
+            phasePreFlop();
+        }
+        else if (numPhase == PHASE_FLOP) {
+            phaseFlop();
+        }
+        else if (numPhase == PHASE_TURN) {
+            phaseTurn();
+        }
+        else if (numPhase == PHASE_RIVER) {
+            phaseRiver();
+        }
+        else {
+            // should never occur
+        }
+    }
+
+    private void phasePreFlop() {
+        for (int i = 0; i < CARDS_FLOP; i++) {
+            communityCards.add(playingDeck.getACard());
+        }
+
+        // if there are no players left to prompt, go to the text phase until
+        // we end the round
+        boolean startPhase = turnTracker.promptPlayers();
+        if (!startPhase) {
+            phaseFlop();
+            return;
+        }
+
+        betController.startPhase();
+
+        numPhase = PHASE_FLOP;
+
+    }
+
+    private void phaseFlop() {
+        communityCards.add(playingDeck.getACard());
+
+        // if there are no players left to prompt, go to the text phase until
+        // we end the round
+        boolean startPhase = turnTracker.promptPlayers();
+        if (!startPhase) {
+            phaseTurn();
+            return;
+        }
+
+        betController.startPhase();
+
+        numPhase = PHASE_TURN;
+    }
+
+    private void phaseTurn() {
+        communityCards.add(playingDeck.getACard());
+
+        // if there are no players left to prompt, go to the text phase until
+        // we end the round
+        boolean startPhase = turnTracker.promptPlayers();
+        if (!startPhase) {
+            phaseRiver();
+            return;
+        }
+
+        betController.startPhase();
+
+        numPhase = PHASE_RIVER;
+    }
+
+    private void phaseRiver() {
+        endOfRound(rankCardCollections());
+    }
+
+    public void endOfRound(int rankings[]) {
+        betController.distributePots(rankings);
+        betController.asynchronousReset();
+        betController.startPhase();
+
+        //remove players who are out of funds
+        for (int i = 0; i < numPlayers; i++) {
+            if (betController.getPlayerChips(i) == 0) {
+                turnTracker.remove(i);
+            }
+        }
+
+        turnTracker.nextRound();
+
+        playingDeck = new Deck();
+        deal();
+
+        //if no one left, do nothing. the game framework should notice
+        if (turnTracker.checkIfGameOver() == -1) {
+            return;
+        }
+
+        if (roundNumber % (ROUNDS_PER_BLIND_INCREMENT + 1) == 0) {
+            betController.incrementBlinds();
+        }
+
+        int[] blinds = turnTracker.determineBlinds();
+        betController.forceSmallBlinds(blinds[0]);
+        betController.forceBigBlinds(blinds[1]);
+
+        numPhase = PHASE_PRE_FLOP;
+    }
+
+    /**
+     * Give players their cards.
+     */
+    public void deal() {
+        playingDeck.dealPlayers(hands);
+    }
+
+    /**
+     * Determines the rankings of the players from a HankRanker
+     *
+     * @return an int array who's indexes match the same player indexes as hands. The int represents
+     * the players ranking, where 0 is the best rank, a higher int is a lower rank, and the max
+     * integer means the player has folded.
+     */
+    private int[] rankCardCollections() {
+        ArrayList<CardCollection> finalHands = new ArrayList<>();
+
+        // find the best hand for every player still in the game
+        // everyone who is not in the game is given a null hand
+        for (int i = 0; i < numPlayers; i++) {
+            if (turnTracker.isPlayerInRound(i)) {
+                HandRanker ranker = new HandRanker(hands.get(i),
+                        communityCards);
+                finalHands.add(i, ranker.computeHandRank());
+            }
+            else {
+                finalHands.add(i, null);
+            }
+        }
+
+        // create a new array that's a sorted copy of the previous one
+        ArrayList<CardCollection> sortedFinalHands = new ArrayList<>();
+        sortedFinalHands.addAll(finalHands);
+        Collections.sort(sortedFinalHands, new SortByCardCollection());
+
+        int[] finalRanks = new int[numPlayers]; // stores the ranks to be
+                                                // returned
+
+        // rank each player according to this sorted array
+        // if multiple people match a sorted hand, they have the same
+        // rank
+        for (int i = 0; i < sortedFinalHands.size(); i++) {
+            CardCollection bestHandForRank = sortedFinalHands.get(i);
+
+            for (int playerID = 0; playerID < finalHands.size(); playerID++) {
+                CardCollection finalHandPlayer = finalHands.get(playerID);
+
+                // assigned players who folded the max int
+                if (finalHandPlayer == null) {
+                    finalRanks[playerID] = Integer.MAX_VALUE;
+                }
+                else {
+                    int compare = finalHandPlayer.compareTo(bestHandForRank);
+                    if (compare == 0) {
+                        finalRanks[playerID] = i;
+                    }
+                }
+
+            } //player loop
+
+        } // sorted CardCollections looop
+
+        return finalRanks;
+    }
+
+    public ArrayList<Hand> getHands() {
+        return hands;
+    }
+
+    public BetController getBetController() {
+        return betController;
+    }
+
+    public TurnTracker getTurnTracker() {
+        return turnTracker;
     }
 
     /**
@@ -154,32 +354,5 @@ public class PokerGameState extends GameState {
         };
 
         return toReturn;
-    }
-
-    /**
-     * Give players their cards.
-     */
-    public void deal() {
-        playingDeck.dealPlayers(hands);
-    }
-
-    /**
-     * Determines the rankings of the players from a HankRanker
-     *
-     * @return an int array who's indexes match the same player indexes as hands. The int represents
-     * the players ranking, where 0 is the best rank, a higher int is a lower rank, and the max
-     * integer means the player has folded.
-     */
-    public int[] rankCardCollections() {
-        //TODO
-        return null;
-    }
-
-    public BetController getBetController() {
-        return betController;
-    }
-
-    public TurnTracker getTurnTracker() {
-        return turnTracker;
     }
 }

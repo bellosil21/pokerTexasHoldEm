@@ -545,7 +545,8 @@ public class HandRanker {
      * @param b the second CardCollection to compare
      * @return the higher ranking CardCollection
      */
-    private CardCollection getHigherCardCollection(CardCollection a, CardCollection b) {
+    public static CardCollection getHigherCardCollection(CardCollection a,
+                                             CardCollection b) {
         //handing null cases
         if (a == null && b == null) {
             return null;

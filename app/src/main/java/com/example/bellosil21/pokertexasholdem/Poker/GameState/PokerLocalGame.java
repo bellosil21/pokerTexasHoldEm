@@ -2,7 +2,6 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import android.util.Log;
 
-import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.LocalGame;
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
@@ -12,10 +11,12 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
 public class PokerLocalGame extends LocalGame {
 
-    PokerGameState state;
+    private PokerGameState state;
 
     private static final int startingChips = 1000;
     private static final int startingSmallBlind = 50;
@@ -58,17 +59,12 @@ public class PokerLocalGame extends LocalGame {
     @Override
     protected boolean canMove(int playerIdx) {
         int activePlayer = state.getTurnTracker().getActivePlayerID();
-        if (activePlayer == playerIdx) {
-            return true;
-        }
-        return false;
+        return (activePlayer == playerIdx);
     }
 
     /**
      * checks whether the game is over; if so, returns a string giving the result
-     *
-     * @result
-     * 		the end-of-game message, or null if the game is not over
+     * otherwise, return null
      */
     @Override
     protected String checkIfGameOver() {
@@ -91,69 +87,62 @@ public class PokerLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
-        boolean isValid = false;
+        boolean isValid = false; // by default, we return false
+        boolean nextTurn = false; // by default, we return false
 
         // ALL IN
         if (action instanceof PokerAllIn) {
             int playerID = getPlayerIdx(action.getPlayer());
-            state.getBetController().allIn(playerID);
-            isValid = true;
+            allIn(playerID);
+            nextTurn = true;
         }
 
         // CALL
         else if (action instanceof PokerCall) {
             int playerID = getPlayerIdx(action.getPlayer());
-            boolean usedAllFunds = state.getBetController().call(playerID);
-
-            // we need to keep track if the player used all their funds
-            if (usedAllFunds) {
-                state.getTurnTracker().allIn();
-            }
-
-            isValid = true;
+            call(playerID);
+            nextTurn = true;
         }
 
         // CHECK
         else if (action instanceof PokerCheck) {
-            isValid = state.getBetController().check();
+            int playerID = getPlayerIdx(action.getPlayer());
+            nextTurn = check(playerID);
         }
 
         // FOLD
         else if (action instanceof PokerFold) {
             state.getTurnTracker().fold();
-
-            isValid = true;
+            nextTurn = true;
         }
 
         // RAISE BET
         else if (action instanceof PokerRaiseBet) {
             int playerID = getPlayerIdx(action.getPlayer());
             int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
-
-            int raiseReturn = state.getBetController().raiseBet(playerID,
-                    raiseAmount);
-
-            if (raiseReturn == BetController.RAISE_INVALID) {
-                isValid = false;
-            }
-            else if (raiseReturn == BetController.RAISE_NO_FUNDS_LEFT) {
-                state.getTurnTracker().allIn();
-                isValid = true;
-            }
-            else if (raiseReturn == BetController.RAISE_FUNDS_LEFT) {
-                isValid = true;
-            }
-            else {
-                // this should never happen
-                isValid = false;
-            }
+            nextTurn = raiseBet(playerID, raiseAmount);
         }
 
         // SHOW HIDE CARDS
         else if (action instanceof PokerShowHideCards) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            toggleShowHideCards(playerID);
 
+            isValid = true;
         }
 
+        // SIT OUT/IN
+        else if (action instanceof PokerSitOut) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            state.getTurnTracker().toggleSitting(playerID);
+
+            isValid = true;
+        }
+
+        if (nextTurn) {
+            endTurnCleanUp();
+            return true;
+        }
 
         return isValid;
     }
@@ -161,79 +150,139 @@ public class PokerLocalGame extends LocalGame {
     /* Game Actions */
 
     /**
-     * Submits a bet if it's the player's turn and goes to the next turn.
-     * this is equivalent to Raise action which is why
-     * we call the raise method from the PotTracker class.
-     *
-     * @param playerID the ID of the player giving the action
-     * @param amount   the amount that the player is submitting
-     * @return true if the bet is valid and it is the player's turn
-     */
-    public boolean raiseBet(int playerID, int amount) {
-
-    }
-
-    /**
-     * Folds the player's hand if it's their turn and goes to the next turn.
-     *
-     * @param playerID the ID of the player giving the action
-     * @return true if the action was valid and it is the player's turn
-     */
-    public boolean fold(int playerID) {
-
-    }
-
-    /**
-     * Shows or hides a player's cards.
-     *
-     * @param playerID the ID of the player showing a card
-     * @param isShown  true if the player wants to show their cards
-     * @return true; this action is always valid
-     */
-    public boolean showHideCards(int playerID, boolean isShown) {
-
-    }
-
-    /**
-     * Checks to see if it is the current player's turn and if there any
-     * current bets. If not
-     * return true and go to next turn.
-     *
-     * @param playerID ID of the player
-     * @return true if the maxBet == 0 and it is the player's turn
-     */
-    public boolean check(int playerID) {
-
-    }
-
-    /**
-     * Calls the current pot and goes to the next turn.
-     *
-     * @param playerID ID of the player
-     * @return true if is the player's turn
-     */
-    public boolean call(int playerID) {
-
-    }
-
-    /**
-     * Checks to see if it is the current player's turn. If it is an instance
-     * of the player's
-     * chip amount is set to the integer bets. Then the player's chip amount
-     * is removed from
-     * their personal pot and is placed as a bet.
+     * Tells BetController and TurnTracker that this player went all in.
+     * Because all in uses up all the player's funds, the TurnTracker knows
+     * to go to the next turn.
      *
      * @param playerID the ID of the player
-     * @return true if the bet was valid and it is the player's turn.
      */
-    public boolean allIn(int playerID) {
+    private void allIn(int playerID) {
+        boolean maxBetChanged = state.getBetController().allIn(playerID);
 
+        // if the max bet changed, prompt the players
+        if (maxBetChanged) {
+            state.getTurnTracker().promptPlayers();
+        }
+
+        state.getTurnTracker().allIn();
     }
 
-    public boolean toggleSitOut(int playerID)
+    /**
+     * Tells the BetController that we called. If we used up all our funds,
+     * tell the turn tracker; otherwise, manually go to next turn.
+     *
+     * @param playerID ID of the player
+     */
+    private void call(int playerID) {
+        boolean usedAllFunds = state.getBetController().call(playerID);
+
+        // we need to keep track if the player used all their funds
+        if (usedAllFunds) {
+            state.getTurnTracker().allIn();
+            return;
+        }
+
+        state.getTurnTracker().nextTurn();
+    }
+
+    /**
+     * Determine if the check is valid. If so, manually go to the next turn.
+     *
+     * @return true if the action is valid
+     */
+    private boolean check(int playerID) {
+        boolean isValid = state.getBetController().check(playerID);
+        if (!isValid) {
+            return false;
+        }
+
+        state.getTurnTracker().nextTurn();
+        return true;
+    }
 
 
-    public boolean exit(int playerID) {
+    /**
+     * Passes the raiseBet action to the BetController.
+     * If the bet is illegal, return false.
+     * If the bet is valid and the player has no funds, tell the turn tracker
+     * and return true.
+     * If the bet is valid and the player still has funds, manually go to the
+     * next turn and return true
+     *
+     * Players need to be prompted if the maxBet is raised before we tell
+     * move to the next turn.
+     *
+     * @param playerID the ID of the player giving the action
+     * @param raiseAmount   the amount that the player is submitting
+     * @return true if the action is valid
+     */
+    private boolean raiseBet(int playerID, int raiseAmount) {
+        int raiseReturn = state.getBetController().raiseBet(playerID,
+                raiseAmount);
 
+        if (raiseReturn == BetController.RAISE_INVALID) {
+            return false;
+        }
+        else if (raiseReturn == BetController.RAISE_NO_FUNDS_LEFT) {
+            state.getTurnTracker().promptPlayers();
+            state.getTurnTracker().allIn();
+            return true;
+        }
+        else if (raiseReturn == BetController.RAISE_FUNDS_LEFT) {
+            state.getTurnTracker().promptPlayers();
+            state.getTurnTracker().nextTurn();
+            return true;
+        }
+
+        //this should never run since we taken care of all possibilities
+        return false;
+    }
+
+    /**
+     * If a player is showing their cards, hide them.
+     * If a player is hiding their cards, show them.
+     *
+     * @param playerID the ID of the player showing a card
+     */
+    private void toggleShowHideCards(int playerID) {
+        Hand playerHand  = state.getHands().get(playerID);
+
+        boolean isShown = playerHand.isShowCards();
+        playerHand.setShowCards(!isShown);
+    }
+
+    /**
+     * After every valid turn, we determine if the betting phase is over.
+     * We start by folding the next player if they are sitting out.
+     *
+     * Then, we see if everyone has folded. If so, we giving them the highest
+     * rank and end the round.
+     *
+     * Otherwise, we check to see if we need to go to the next phase.
+     */
+    private void endTurnCleanUp() {
+        // if next player is sitting out, fold them
+        if (state.getTurnTracker().isActivePlayerSittingOut()) {
+            state.getTurnTracker().fold();
+        }
+
+        // check if one player is left
+        int onlyPlayerLeft = state.getTurnTracker().isRoundOver();
+        if (onlyPlayerLeft != -1) {
+
+            //go to the end of the round, passing this playerID as the best rank
+            int[] rankings = new int[numPlayers];
+            for (int i = 0; i < numPlayers; i++) {
+                if (onlyPlayerLeft != i) {
+                    rankings[i] = Integer.MAX_VALUE;
+                }
+            }
+            state.endOfRound(rankings);
+        }
+
+        // check if everyone has been prompted
+        else if (state.getTurnTracker().isPhaseOver()) {
+            state.nextPhase();
+        }
     }
 }
