@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Turn: Player 4"
-            android:textColor="@android:color/holo_orange_dark"
+            android:textColor="@color/black"
             android:textSize="30dp" />
 
         <ImageView
@@ -268,18 +268,18 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/showButton"
+                    android:id="@+id/showHideCardsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Show Cards" />
+                    android:text="SHOW/HIDE CARDS" />
 
                 <Button
-                    android:id="@+id/hideButton"
+                    android:id="@+id/fold_sitoutButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Hide Cards" />
+                    android:text="FOLD/SIT OUT" />
 
             </LinearLayout>
 
@@ -360,18 +360,18 @@
                     android:text="Raise / Bet" />
 
                 <Button
-                    android:id="@+id/foldButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Fold / Sit out" />
-
-                <Button
                     android:id="@+id/callButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Call / Check" />
+                    android:text="CALL" />
+
+                <Button
+                    android:id="@+id/checkButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CHECK" />
             </LinearLayout>
 
         </LinearLayout>

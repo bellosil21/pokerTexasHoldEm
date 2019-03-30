@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class BetController {
 
-    /** instance vars **/
+    /** instance vars **/ //dont use 'vars' kevin using variables
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.
     /* A pot at a lower index includes all players, while pots at high
      * indexes include less players. Assume we only have one pot to begin
