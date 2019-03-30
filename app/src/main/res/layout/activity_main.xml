@@ -135,7 +135,8 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/player4"
-            app:srcCompat="@drawable/dealer" />
+            app:srcCompat="@drawable/dealer"
+            android:layout_toRightOf="@+id/player4" />
 
         <ImageView
             android:id="@+id/logo"
@@ -152,7 +153,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_jc" />
 
         <ImageView
             android:id="@+id/flop2"
@@ -161,7 +162,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/flop1"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_2c" />
 
         <ImageView
             android:id="@+id/flop3"
@@ -170,7 +171,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/flop2"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_3s" />
 
         <ImageView
             android:id="@+id/turn"
@@ -179,7 +180,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/flop1"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_qd" />
 
         <ImageView
             android:id="@+id/river"
@@ -188,7 +189,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/turn"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_7c" />
 
         <ImageView
             android:id="@+id/chipStack"
@@ -297,7 +298,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@android:color/darker_gray"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_3h" />
 
         <ImageView
             android:id="@+id/userSecCard"
@@ -306,7 +307,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@android:color/darker_gray"
-            app:srcCompat="@drawable/sample_card" />
+            app:srcCompat="@drawable/card_jc" />
 
         <Space
             android:layout_width="wrap_content"

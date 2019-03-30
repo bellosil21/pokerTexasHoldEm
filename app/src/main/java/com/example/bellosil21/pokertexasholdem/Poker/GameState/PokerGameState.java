@@ -182,4 +182,23 @@ public class PokerGameState extends GameState {
     public TurnTracker getTurnTracker() {
         return turnTracker;
     }
+
+    /**
+     * Gets a player's current chip amount
+     *
+     * @param playerNum - Index of player to return
+     * @return amount of chips the player has
+     */
+    public int getChips(int playerNum){
+        return betController.getPlayerChips(playerNum);
+    }
+
+    /**
+     * Gets and returns all Cards so far laid out in the table
+     *
+     * @return ArrayList containing all the community Cards
+     */
+    public ArrayList<Card> getCommunityCards(){ return communityCards; }
+
+    public ArrayList<Hand> getHands(){ return hands; }
 }
