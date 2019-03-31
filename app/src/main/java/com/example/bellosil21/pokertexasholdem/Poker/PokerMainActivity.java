@@ -29,7 +29,7 @@ public class PokerMainActivity extends GameMainActivity {
             }
         });
 
-        playerTypes.add(new GamePlayerType("Computer player (dumb like you)") {
+        playerTypes.add(new GamePlayerType("Computer player (dumb)") {
             @Override
             public GamePlayer createPlayer(String name) {
                 return new PokerDumbComputerPlayer(name);
@@ -43,12 +43,12 @@ public class PokerMainActivity extends GameMainActivity {
         //Add the default players
         defaultConfig.addPlayer("Human", 0); // this index represents the index in
         //the playerTypes array list.
-        defaultConfig.addPlayer("Dumb Computer", 1);
-        defaultConfig.addPlayer("Dumb Computer2", 1);
-        defaultConfig.addPlayer("Dumb Computer3", 1);
+        defaultConfig.addPlayer("Computer 1", 1);
+        defaultConfig.addPlayer("Computer 2", 1);
+        defaultConfig.addPlayer("Computer 3", 1);
 
         //set the initial information for the remote player?
-        defaultConfig.setRemoteData("Poker Guest", "Some IP code",
+        defaultConfig.setRemoteData("Poker Guest", "",
                 0); //not really sure what this does.
         return defaultConfig;
     }
