@@ -262,9 +262,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
             // Changes all the chip count to how much each player has
             playerCount = this.playerNum;
             player1TV.setText(""+state.getChips((playerCount)%4));
-            player2TV.setText(""+state.getChips((playerCount++)%4));
-            player3TV.setText(""+state.getChips((playerCount++)%4));
-            player4TV.setText(""+state.getChips((playerCount++)%4));
+            player2TV.setText(""+state.getChips((++playerCount)%4));
+            player3TV.setText(""+state.getChips((++playerCount)%4));
+            player4TV.setText(""+state.getChips((++playerCount)%4));
 
             // Sets the current total pot amount
             jackpot.setText(""+ state.getBetController().getTotalAmount());
@@ -275,18 +275,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
             // Updates the player's hole cards
             playerCount = playerNum;
             ArrayList<Hand> hands = state.getHands();
-            setCard(hands.get(this.playerNum).getHole1(), playerHole1);
-            setCard(hands.get(this.playerNum).getHole2(), playerHole2);
-            setCard(hands.get(this.playerNum).getHole1(),player2Card1);
-            setCard(hands.get(this.playerNum).getHole2(),player2Card2);
-            setCard(hands.get(this.playerNum).getHole1(),player3Card1);
-            setCard(hands.get(this.playerNum).getHole2(),player3Card2);
-            setCard(hands.get(this.playerNum).getHole1(),player4Card1);
-            setCard(hands.get(this.playerNum).getHole2(),player4Card2);
+            setCard(hands.get(playerCount).getHole1(), playerHole1);
+            setCard(hands.get(playerCount).getHole2(), playerHole2);
+            playerCount = (playerCount + 1) % 4;
+            setCard(hands.get(playerCount).getHole1(),player2Card1);
+            setCard(hands.get(playerCount).getHole2(),player2Card2);
+            playerCount = (playerCount + 1) % 4;
+            setCard(hands.get(playerCount).getHole1(),player3Card1);
+            setCard(hands.get(playerCount).getHole2(),player3Card2);
+            playerCount = (playerCount + 1) % 4;
+            setCard(hands.get(playerCount).getHole1(),player4Card1);
+            setCard(hands.get(playerCount).getHole2(),player4Card2);
 
 
             turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID()) + 1);
-            callButton.setText("Call(" + state.getBetController().getMaxBet()+")");
+            callButton.setText("Call(" + state.getBetController().getCallAmount(playerNum)+")");
 
             chipBetSeekbar.setMax(state.getChips(playerNum) - state.getBetController().getCallAmount(playerNum));
 

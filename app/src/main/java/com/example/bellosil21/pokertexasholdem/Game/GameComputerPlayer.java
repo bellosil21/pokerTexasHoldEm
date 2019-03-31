@@ -294,6 +294,4 @@ public abstract class GameComputerPlayer implements GamePlayer, Tickable {
 	protected void timerTicked() {
 		// by default, do nothing
 	}
-
-	protected String getName(){return name;}
 }// class GameComputerPlayer

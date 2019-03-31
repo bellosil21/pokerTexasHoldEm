@@ -342,7 +342,5 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 		// by default, do nothing
 	}
 
-	protected String getName(){return name;}
-
 }// class GameHumanPlayer
 
