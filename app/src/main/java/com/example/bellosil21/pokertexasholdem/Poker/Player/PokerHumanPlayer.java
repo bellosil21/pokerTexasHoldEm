@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,11 +14,16 @@ import android.widget.TextView;
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
+import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
@@ -27,8 +33,9 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class PokerHumanPlayer extends GameHumanPlayer
-        implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
+public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
 
 
@@ -58,6 +65,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
     // Player action buttons
     private Button foldButton;
+    private Button sitOutButton;
     private Button betButton;
     private Button callButton;
     private Button checkButton;
@@ -71,9 +79,17 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private ImageView thirdFlop;
     private ImageView turnCard;
     private ImageView riverCard;
+    private ImageView player2Card1;
+    private ImageView player2Card2;
+    private ImageView player3Card1;
+    private ImageView player3Card2;
+    private ImageView player4Card1;
+    private ImageView player4Card2;
 
     private GameMainActivity myActivity;
     private PokerGameState state;
+
+    private static final int MAX_INTEGER = 2147483647;
 
 
     /**
@@ -125,7 +141,9 @@ public class PokerHumanPlayer extends GameHumanPlayer
         // Setting references to the variables needed for the buttons in the
         // GUI
         this.foldButton =
-                (Button) activity.findViewById(R.id.fold_sitoutButton);
+                (Button) activity.findViewById(R.id.foldButton);
+        this.sitOutButton =
+                (Button) activity.findViewById(R.id.sitoutButton);
         this.betButton = (Button) activity.findViewById(R.id.betButton);
         this.checkButton = (Button) activity.findViewById(R.id.checkButton);
         this.showHideCardsButton =
@@ -136,6 +154,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
         // Setting listeners to all the buttons
         this.showHideCardsButton.setOnClickListener(this);
         this.foldButton.setOnClickListener(this);
+        this.sitOutButton.setOnClickListener(this);
         this.betButton.setOnClickListener(this);
         this.checkButton.setOnClickListener(this);
         this.callButton.setOnClickListener(this);
@@ -146,16 +165,27 @@ public class PokerHumanPlayer extends GameHumanPlayer
         this.thirdFlop = activity.findViewById(R.id.flop1);
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
+        this.player2Card1 = activity.findViewById(R.id.player2Card1);
+        this.player2Card2 = activity.findViewById(R.id.player2Card2);
+        this.player3Card1 = activity.findViewById(R.id.player3Card1);
+        this.player3Card2 = activity.findViewById(R.id.player3Card2);
+        this.player4Card1 = activity.findViewById(R.id.player4Card1);
+        this.player4Card2 = activity.findViewById(R.id.player4Card2);
 
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void receiveInfo(GameInfo info) {
         if (info instanceof PokerGameState){
             state = (PokerGameState) info;
+            PokerGameState state = (PokerGameState) info;
+
+            if (info == null) {
+                return;
+            }
+
             TextView player1TV = null;
             TextView player2TV = null;
             TextView player3TV = null;
@@ -233,6 +263,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
             ArrayList<Hand> hands = state.getHands();
             setCard(hands.get(this.playerNum).getHole1(), playerHole1);
             setCard(hands.get(this.playerNum).getHole2(), playerHole2);
+            setCard(hands.get(this.playerNum).getHole1(),player2Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player2Card2);
+            setCard(hands.get(this.playerNum).getHole1(),player3Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player3Card2);
+            setCard(hands.get(this.playerNum).getHole1(),player4Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player4Card2);
 
 
             turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID()) + 1);
@@ -240,6 +276,9 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
             chipBetSeekbar.setMax(state.getChips(playerNum) - state.getBetController().getCallAmount(playerNum));
 
+        }
+        else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+            flash(0xFFFF0000, 50);
         }
     }
 
@@ -305,186 +344,191 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
         if (card1 instanceof Card){
             card = (Card) card1;
+            // Checks which suit the card has
+            if (card.getSuit() == Card.Suit.DIAMONDS){
+                switch (card.getRank()){
+                    // Sets the corresponding card once the rank is found
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ad);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2d);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3d);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4d);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5d);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6d);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7d);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8d);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9d);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_td);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jd);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qd);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kd);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.SPADES){
+                switch (card.getRank()){
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_as);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2s);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3s);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4s);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5s);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6s);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7s);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8s);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9s);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_ts);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_js);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qs);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_ks);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.HEART){
+                switch (card.getRank()){
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ah);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2h);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3h);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4h);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5h);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6h);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7h);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8h);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9h);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_th);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jh);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qh);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kh);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.CLUBS) {
+                switch (card.getRank()) {
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ac);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2c);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3c);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4c);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5c);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6c);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7c);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8c);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9c);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_tc);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jc);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qc);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kc);
+                        break;
+                }
+            }
+        }
+        else if(card1 instanceof BlankCard){
+            BlankCard card2 = (BlankCard)card1;
+            cardImage.setImageResource(R.drawable.card_b);
         }
         else{
             return;
         }
 
 
-        // Checks which suit the card has
-        if (card.getSuit() == Card.Suit.DIAMONDS){
-            switch (card.getRank()){
-                // Sets the corresponding card once the rank is found
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ad);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2d);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3d);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4d);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5d);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6d);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7d);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8d);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9d);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_td);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jd);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qd);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kd);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.SPADES){
-            switch (card.getRank()){
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_as);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2s);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3s);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4s);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5s);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6s);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7s);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8s);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9s);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_ts);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_js);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qs);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_ks);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.HEART){
-            switch (card.getRank()){
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ah);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2h);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3h);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4h);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5h);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6h);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7h);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8h);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9h);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_th);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jh);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qh);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kh);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.CLUBS) {
-            switch (card.getRank()) {
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ac);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2c);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3c);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4c);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5c);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6c);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7c);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8c);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9c);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_tc);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jc);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qc);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kc);
-                    break;
-            }
-        }
+
     }
 
     /**
@@ -502,23 +546,36 @@ public class PokerHumanPlayer extends GameHumanPlayer
      */
     @Override
     public void onClick(View v) {
-        if (v == foldButton){
-            game.sendAction(new PokerFold(this));
+        if (v == null) {
+            return; //this should never happen lol
         }
-        else if (v == callButton){
-            game.sendAction(new PokerCall(this));
-        }
-        else if (v == checkButton){
-            game.sendAction(new PokerCheck(this));
-        }
-        else if (v == betButton){
-            int bet = Integer.parseInt(chipBetText.getText().toString());
-            game.sendAction(new PokerRaiseBet(this, bet));
-        }
-        else if (v == showHideCardsButton){
-            game.sendAction(new PokerFold(this));
-        }
+        if (v.equals(foldButton)) {
 
+
+            if (v == foldButton) {
+                game.sendAction(new PokerFold(this));
+            } else if (v.equals(callButton)) {
+                game.sendAction(new PokerCall(this));
+            } else if (v.equals(checkButton)) {
+                game.sendAction(new PokerCheck(this));
+            } else if (v.equals(betButton)) {
+                //this is where we need to put restriction!!!
+                /*So basically we need to prevent users/players from inputing anynumber they want
+                 * we do this by checking to see if there bet exceeds the biggest possible integer.
+                 * */
+                int bet = Integer.parseInt(chipBetText.getText().toString());
+                if (bet > MAX_INTEGER) {
+                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
+                    Log.i("PlaceBets error", "User has attempted to place a bet too big");
+                }
+                game.sendAction(new PokerRaiseBet(this, bet));
+            } else if (v.equals(showHideCardsButton)) {
+                game.sendAction(new PokerFold(this));
+            } else if (v.equals(sitOutButton)) {
+                game.sendAction(new PokerSitOut(this));
+            }
+
+        }
     }
 
     @Override

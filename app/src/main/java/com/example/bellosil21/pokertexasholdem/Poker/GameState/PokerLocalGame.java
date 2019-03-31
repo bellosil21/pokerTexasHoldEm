@@ -32,8 +32,12 @@ public class PokerLocalGame extends LocalGame {
 
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
+        if(p == null){
+            Log.i("PokerLocalGame.java", "GamePlayer object is null");
+            return;
+        }
         // if there is no state to send, ignore
-        if (state == null) {
+        if (state == null) { //addd a log.i call here
             return;
         }
 
@@ -87,6 +91,12 @@ public class PokerLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
+        /*check if GameAction object is null*/
+        if(action == null){
+            Log.i("PokerLocalGame.java", "GameAction object is nulll come fix it.");
+            return false;
+        }
+
         boolean isValid = false; // by default, we return false
         boolean nextTurn = false; // by default, we return false
 

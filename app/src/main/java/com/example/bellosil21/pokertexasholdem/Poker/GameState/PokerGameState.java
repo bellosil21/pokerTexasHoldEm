@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import android.util.Log;
+
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
@@ -116,8 +118,8 @@ public class PokerGameState extends GameState {
         }
 
         communityCards = new ArrayList<>();
-        for (Card c : toCopy.communityCards) {
-            communityCards.add(new Card(c));
+        for (int i = 0; i < toCopy.communityCards.size(); i++) {
+            communityCards.add(new Card(toCopy.communityCards.get(i)));
         }
 
         roundNumber = toCopy.roundNumber;
@@ -142,6 +144,8 @@ public class PokerGameState extends GameState {
             phaseRiver();
         } else {
             // should never occur
+            Log.i("PokeGameState.java","The numPhase variable in PokerGameState.java is " +
+                    "probably null");
         }
     }
 
@@ -194,6 +198,7 @@ public class PokerGameState extends GameState {
         betController.startPhase();
 
         numPhase = PHASE_RIVER;
+        /** can something null happen here*/
     }
 
     private void phaseRiver() {
@@ -301,6 +306,10 @@ public class PokerGameState extends GameState {
                     int compare = finalHandPlayer.compareTo(bestHandForRank);
                     if (compare == 0) {
                         finalRanks[playerID] = i;
+                    }
+                    else if(compare == -9999){
+                        Log.i("PokerGameState.java", "'compare' int is prolly null");
+                        return null; //means compareTo method returned -9999;
                     }
                 }
 

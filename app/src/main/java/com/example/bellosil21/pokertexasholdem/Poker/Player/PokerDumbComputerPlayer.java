@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.util.Log;
+
 import com.example.bellosil21.pokertexasholdem.Game.Game;
 import com.example.bellosil21.pokertexasholdem.Game.GameComputerPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
@@ -30,6 +32,11 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
+        /*checking for null object */
+        if(info == null){
+            //this should never happen right? does it make sense?
+            Log.i("dumbComputerPlayer", "GameInfo object is null.");
+        }
         if(info instanceof NotYourTurnInfo){
             return;
         }
