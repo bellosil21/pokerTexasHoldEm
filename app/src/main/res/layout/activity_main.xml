@@ -153,7 +153,7 @@
             android:layout_height="40dp"
             android:layout_above="@id/flop1"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="160dp"
+            android:layout_marginBottom="70dp"
             android:background="#00ffb7"
             app:srcCompat="@drawable/player" />
 
@@ -174,8 +174,9 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_above="@id/flop1"
-            android:layout_alignLeft="@id/player3"
-            android:layout_marginBottom="55dp"
+            android:layout_toLeftOf="@id/player3Card2"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="40dp"
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/card_2c" />
 
@@ -184,9 +185,9 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_above="@id/flop1"
-            android:layout_toRightOf="@id/player3Card1"
+            android:layout_toLeftOf="@id/player3"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginBottom="55dp"
+            android:layout_marginBottom="40dp"
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/card_jh" />
 

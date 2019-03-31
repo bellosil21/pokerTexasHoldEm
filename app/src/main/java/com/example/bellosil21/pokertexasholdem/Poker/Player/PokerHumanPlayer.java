@@ -75,6 +75,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
     private ImageView player3Card2;
     private ImageView player4Card1;
     private ImageView player4Card2;
+    private ImageView blankCard;
+    private ImageView player1;
+    private ImageView player2;
+    private ImageView player3;
+    private ImageView player4;
+    private ImageView chipStack;
 
     private GameMainActivity myActivity;
 
@@ -157,6 +163,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
+
+        // TODO: 3/31/2019 if statement to see if round is over, if true show all cards 
+        this.player1 = activity.findViewById(R.id.player1);
+        this.player2 = activity.findViewById(R.id.player2);
+        this.player3 = activity.findViewById(R.id.player3);
+        this.player4 = activity.findViewById(R.id.player4);
+        this.chipStack = activity.findViewById(R.id.chipStack);
     }
 
     @Override
