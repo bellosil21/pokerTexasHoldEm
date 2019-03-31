@@ -439,15 +439,16 @@ public class BetController {
         */
         ArrayList<Integer> highestRanks = new ArrayList<>();
         int highestRank = rankings[contributors.get(0)];
-        for(int i = 0; i< contributors.size(); i++){
-            if(highestRank < rankings[contributors.get(i)]){
+
+        for(int i = 0; i < contributors.size(); i++){
+            if(highestRank > rankings[contributors.get(i)]){
                 highestRanks.clear();
                 int newRank = rankings[contributors.get(i)];
                 highestRank = newRank;
-                highestRanks.add(newRank);
+                highestRanks.add(contributors.get(i));
             }
             else if(highestRank == rankings[contributors.get(i)]){
-                highestRanks.add(rankings[contributors.get(i)]);
+                highestRanks.add(contributors.get(i));
             }
         }
         return highestRanks; //returns an array list of the winner{s) that 'the pot' needs to
