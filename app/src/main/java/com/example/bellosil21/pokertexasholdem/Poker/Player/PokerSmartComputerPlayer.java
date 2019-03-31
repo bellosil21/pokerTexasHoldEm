@@ -63,6 +63,15 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                 }
             }
         }
+        /**
+         External Citation
+            Date:      27 March 2019
+            Problem:   Needed an reference to start with this method.
+            Resource:
+                https://github.com/srvegdahl
+            Solution:   I used the examples in these repositories as a reference to how to start
+                        this functionality.
+         */
     }
 
 }
