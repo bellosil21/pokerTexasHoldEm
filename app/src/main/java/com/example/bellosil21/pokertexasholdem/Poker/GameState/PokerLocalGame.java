@@ -69,7 +69,7 @@ public class PokerLocalGame extends LocalGame {
     @Override
     protected String checkIfGameOver() {
         int check = state.getTurnTracker().checkIfGameOver();
-        if (check > 0) {
+        if (check < 0) {
             return null;
         }
 
