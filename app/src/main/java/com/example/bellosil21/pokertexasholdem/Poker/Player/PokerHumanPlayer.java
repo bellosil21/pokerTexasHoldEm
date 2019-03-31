@@ -260,6 +260,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
             setCommCards(state.getCommunityCards());
 
             // Updates the player's hole cards
+            playerCount = playerNum;
             ArrayList<Hand> hands = state.getHands();
             setCard(hands.get(this.playerNum).getHole1(), playerHole1);
             setCard(hands.get(this.playerNum).getHole2(), playerHole2);
@@ -549,9 +550,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         if (v == null) {
             return; //this should never happen lol
         }
-        if (v.equals(foldButton)) {
-
-
             if (v == foldButton) {
                 game.sendAction(new PokerFold(this));
             } else if (v.equals(callButton)) {
@@ -574,8 +572,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
             } else if (v.equals(sitOutButton)) {
                 game.sendAction(new PokerSitOut(this));
             }
-
-        }
     }
 
     @Override
