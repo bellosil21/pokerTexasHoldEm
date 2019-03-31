@@ -211,9 +211,6 @@ public class PokerGameState extends GameState {
 
         turnTracker.nextRound();
 
-        playingDeck = new Deck();
-        deal();
-
         //if no one left, do nothing. the game framework should notice
         if (turnTracker.checkIfGameOver() == -1) {
             return;
@@ -222,6 +219,13 @@ public class PokerGameState extends GameState {
         if (roundNumber % (ROUNDS_PER_BLIND_INCREMENT + 1) == 0) {
             betController.incrementBlinds();
         }
+
+        startRound();
+    }
+
+    private void startRound() {
+        playingDeck = new Deck();
+        deal();
 
         int[] blinds = turnTracker.determineBlinds();
         betController.forceSmallBlinds(blinds[0]);
