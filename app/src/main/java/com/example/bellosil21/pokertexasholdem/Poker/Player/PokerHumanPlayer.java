@@ -16,6 +16,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
@@ -234,186 +235,191 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
         if (card1 instanceof Card){
             card = (Card) card1;
+            // Checks which suit the card has
+            if (card.getSuit() == Card.Suit.DIAMONDS){
+                switch (card.getRank()){
+                    // Sets the corresponding card once the rank is found
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ad);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2d);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3d);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4d);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5d);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6d);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7d);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8d);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9d);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_td);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jd);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qd);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kd);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.SPADES){
+                switch (card.getRank()){
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_as);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2s);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3s);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4s);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5s);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6s);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7s);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8s);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9s);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_ts);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_js);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qs);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_ks);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.HEART){
+                switch (card.getRank()){
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ah);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2h);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3h);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4h);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5h);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6h);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7h);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8h);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9h);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_th);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jh);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qh);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kh);
+                        break;
+                }
+            }
+            else if (card.getSuit() == Card.Suit.CLUBS) {
+                switch (card.getRank()) {
+                    case ACE:
+                        cardImage.setImageResource(R.drawable.card_ac);
+                        break;
+                    case TWO:
+                        cardImage.setImageResource(R.drawable.card_2c);
+                        break;
+                    case THREE:
+                        cardImage.setImageResource(R.drawable.card_3c);
+                        break;
+                    case FOUR:
+                        cardImage.setImageResource(R.drawable.card_4c);
+                        break;
+                    case FIVE:
+                        cardImage.setImageResource(R.drawable.card_5c);
+                        break;
+                    case SIX:
+                        cardImage.setImageResource(R.drawable.card_6c);
+                        break;
+                    case SEVEN:
+                        cardImage.setImageResource(R.drawable.card_7c);
+                        break;
+                    case EIGHT:
+                        cardImage.setImageResource(R.drawable.card_8c);
+                        break;
+                    case NINE:
+                        cardImage.setImageResource(R.drawable.card_9c);
+                        break;
+                    case TEN:
+                        cardImage.setImageResource(R.drawable.card_tc);
+                        break;
+                    case JACK:
+                        cardImage.setImageResource(R.drawable.card_jc);
+                        break;
+                    case QUEEN:
+                        cardImage.setImageResource(R.drawable.card_qc);
+                        break;
+                    case KING:
+                        cardImage.setImageResource(R.drawable.card_kc);
+                        break;
+                }
+            }
+        }
+        else if(card1 instanceof BlankCard){
+            BlankCard card2 = (BlankCard)card1;
+            cardImage.setImageResource(R.drawable.card_b);
         }
         else{
             return;
         }
 
 
-        // Checks which suit the card has
-        if (card.getSuit() == Card.Suit.DIAMONDS){
-            switch (card.getRank()){
-                // Sets the corresponding card once the rank is found
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ad);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2d);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3d);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4d);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5d);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6d);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7d);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8d);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9d);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_td);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jd);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qd);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kd);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.SPADES){
-            switch (card.getRank()){
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_as);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2s);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3s);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4s);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5s);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6s);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7s);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8s);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9s);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_ts);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_js);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qs);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_ks);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.HEART){
-            switch (card.getRank()){
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ah);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2h);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3h);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4h);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5h);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6h);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7h);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8h);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9h);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_th);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jh);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qh);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kh);
-                    break;
-            }
-        }
-        else if (card.getSuit() == Card.Suit.CLUBS) {
-            switch (card.getRank()) {
-                case ACE:
-                    cardImage.setImageResource(R.drawable.card_ac);
-                    break;
-                case TWO:
-                    cardImage.setImageResource(R.drawable.card_2c);
-                    break;
-                case THREE:
-                    cardImage.setImageResource(R.drawable.card_3c);
-                    break;
-                case FOUR:
-                    cardImage.setImageResource(R.drawable.card_4c);
-                    break;
-                case FIVE:
-                    cardImage.setImageResource(R.drawable.card_5c);
-                    break;
-                case SIX:
-                    cardImage.setImageResource(R.drawable.card_6c);
-                    break;
-                case SEVEN:
-                    cardImage.setImageResource(R.drawable.card_7c);
-                    break;
-                case EIGHT:
-                    cardImage.setImageResource(R.drawable.card_8c);
-                    break;
-                case NINE:
-                    cardImage.setImageResource(R.drawable.card_9c);
-                    break;
-                case TEN:
-                    cardImage.setImageResource(R.drawable.card_tc);
-                    break;
-                case JACK:
-                    cardImage.setImageResource(R.drawable.card_jc);
-                    break;
-                case QUEEN:
-                    cardImage.setImageResource(R.drawable.card_qc);
-                    break;
-                case KING:
-                    cardImage.setImageResource(R.drawable.card_kc);
-                    break;
-            }
-        }
+
     }
 
     /**
