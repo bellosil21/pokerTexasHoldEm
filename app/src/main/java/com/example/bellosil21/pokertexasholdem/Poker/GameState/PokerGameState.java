@@ -215,7 +215,7 @@ public class PokerGameState extends GameState {
         turnTracker.nextRound();
 
         //if no one left, do nothing. the game framework should notice
-        if (turnTracker.checkIfGameOver() == -1) {
+        if (turnTracker.checkIfGameOver() != -1) {
             return;
         }
 
@@ -230,9 +230,19 @@ public class PokerGameState extends GameState {
         playingDeck = new Deck();
         deal();
 
-        int[] blinds = turnTracker.determineBlinds();
-        betController.forceSmallBlinds(blinds[0]);
-        betController.forceBigBlinds(blinds[1]);
+        turnTracker.determineBlinds();
+
+        // get the small blind player, make them bet, and tell the turn
+        // tracker the result
+        int activePlayerID = turnTracker.getActivePlayerID();
+        boolean forcedAllInSB = betController.forceSmallBlinds(activePlayerID);
+        turnTracker.queueBlind(forcedAllInSB);
+
+        // get the big blind player, make them bet, and tell the turn
+        // tracker the result
+        activePlayerID = turnTracker.getActivePlayerID();
+        boolean forcedAllInBB = betController.forceBigBlinds(activePlayerID);
+        turnTracker.queueBlind(forcedAllInBB);
 
         numPhase = PHASE_PRE_FLOP;
     }

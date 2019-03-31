@@ -82,4 +82,9 @@ public class CardCollection {
         }
         return -1;
     }
+
+    @Override
+    public String toString() {
+        return "HandRank: " + this.handRank.toString();
+    }
 }

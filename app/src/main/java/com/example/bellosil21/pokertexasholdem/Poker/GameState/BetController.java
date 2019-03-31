@@ -124,7 +124,7 @@ public class BetController {
     public boolean forceBigBlinds(int bigBlindID){
         int bigPlayerChips = players.get(bigBlindID).getChips();
 
-        if (bigPlayerChips <= smallBlind) {
+        if (bigPlayerChips <= bigBlind) {
             allIn(bigBlindID);
             return true;
         }
@@ -254,7 +254,6 @@ public class BetController {
         /*check to see if all in is the largest bet*/
         int accumulativeBet = player.getLastBet() + allChips;
         if(accumulativeBet > maxBet){
-            maxBet = accumulativeBet;
             maxBetChanged = true;
         }
 
@@ -290,7 +289,7 @@ public class BetController {
         // determine if this is the highest bet
         // if so, make a new pot
         if (accumulativeBet > maxBet) {
-            int newPotContribution = amount - maxBet;
+            int newPotContribution = accumulativeBet - maxBet;
             PotTracker newPot = new PotTracker(newPotContribution);
             pots.add(newPot);
             maxBet = accumulativeBet;
@@ -346,7 +345,7 @@ public class BetController {
         PotTracker nextPot = pots.get(nextPotIndex);
         int potContribution = nextPot.getContribution();
 
-        totalAmount =+ potContribution;
+        totalAmount += potContribution;
         player.removeChips(potContribution);
         nextPot.addContributor(playerID);
 
@@ -440,8 +439,9 @@ public class BetController {
         */
         ArrayList<Integer> highestRanks = new ArrayList<>();
         int highestRank = rankings[contributors.get(0)];
+        highestRanks.add(contributors.get(0));
 
-        for(int i = 0; i < contributors.size(); i++){
+        for(int i = 1; i < contributors.size(); i++){
             if(highestRank > rankings[contributors.get(i)]){
                 highestRanks.clear();
                 int newRank = rankings[contributors.get(i)];
@@ -484,5 +484,10 @@ public class BetController {
         for (PlayerChipCollection p : players) {
             p.resetLastContributedPot();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TotalPot: " + totalAmount + " MaxBet: " + maxBet;
     }
 }
