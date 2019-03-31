@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
+import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
@@ -28,8 +29,9 @@ import com.example.bellosil21.pokertexasholdem.R;
 
 import java.util.ArrayList;
 
-public class PokerHumanPlayer extends GameHumanPlayer
-        implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
+public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
 
 
@@ -69,6 +71,8 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private ImageView riverCard;
 
     private GameMainActivity myActivity;
+
+    private static final int MAX_INTEGER = 2147483647;
 
 
     /**
@@ -453,32 +457,41 @@ public class PokerHumanPlayer extends GameHumanPlayer
      */
     @Override
     public void onClick(View v) {
-        if (v.equals(foldButton)){
-            game.sendAction(new PokerFold(this));
+        if (v == null) {
+            return; //this should never happen lol
         }
-        else if (v.equals(callButton)){
-            game.sendAction(new PokerCall(this));
-        }
-        else if (v.equals(checkButton)){
-            game.sendAction(new PokerCheck(this));
-        }
-        else if (v.equals(betButton)){
-            int bet = Integer.parseInt(chipBetText.getText().toString());
-            game.sendAction(new PokerRaiseBet(this, bet));
-        }
-        else if (v.equals(showHideCardsButton)){
-            game.sendAction(new PokerFold(this));
-        }
-        else if (v.equals(sitOutButton)) {
-            game.sendAction(new PokerSitOut(this));
-        }
+        if (v.equals(foldButton)) {
 
+
+            if (v == foldButton) {
+                game.sendAction(new PokerFold(this));
+            } else if (v.equals(callButton)) {
+                game.sendAction(new PokerCall(this));
+            } else if (v.equals(checkButton)) {
+                game.sendAction(new PokerCheck(this));
+            } else if (v.equals(betButton)) {
+                //this is where we need to put restriction!!!
+                /*So basically we need to prevent users/players from inputing anynumber they want
+                 * we do this by checking to see if there bet exceeds the biggest possible integer.
+                 * */
+                int bet = Integer.parseInt(chipBetText.getText().toString());
+                if (bet > MAX_INTEGER) {
+                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
+                    Log.i("PlaceBets error", "User has attempted to place a bet too big");
+                }
+                game.sendAction(new PokerRaiseBet(this, bet));
+            } else if (v.equals(showHideCardsButton)) {
+                game.sendAction(new PokerFold(this));
+            } else if (v.equals(sitOutButton)) {
+                game.sendAction(new PokerSitOut(this));
+            }
+
+        }
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress,
-                                  boolean fromUser) {
-        chipBetText.setText(""+progress);
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        
     }
 
     @Override

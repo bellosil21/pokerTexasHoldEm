@@ -53,6 +53,15 @@ public class PokerMainActivity extends GameMainActivity {
         return defaultConfig;
     }
 
+    /**
+     External Citation
+        Date:       29 March 2019
+        Problem:    Needed to setup the configuration for our game.
+        Resource:
+            https://github.com/srvegdahl
+        Solution:   Used the configuration examples from these repositories.
+     */
+
     @Override
     public LocalGame createLocalGame() {
         return new PokerLocalGame();

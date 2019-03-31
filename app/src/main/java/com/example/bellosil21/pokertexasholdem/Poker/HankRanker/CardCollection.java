@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.HankRanker;
 
+import android.util.Log;
+
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 
 /**
@@ -14,6 +16,7 @@ public class CardCollection {
 
     private Card[] cards;
     private HandRank handRank;
+    private static final int NULL_INTEGER = -9999;
 
     public CardCollection(Card[] cards, HandRank handRank) {
         this.cards = new Card[cards.length];
@@ -53,8 +56,9 @@ public class CardCollection {
      *         0 if this CardCollection ties with the other
      */
     public int compareTo(CardCollection other) {
-        if (other == null) {
-            return 1;
+        if(other == null){
+            Log.i("CardCollection.java", "CompareTo method takes in a null parameter");
+            return NULL_INTEGER;
         }
         if (this.handRank.getValue() > other.handRank.getValue()) {
             return 1;
