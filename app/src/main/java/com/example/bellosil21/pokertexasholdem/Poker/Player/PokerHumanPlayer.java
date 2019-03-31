@@ -67,6 +67,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private ImageView thirdFlop;
     private ImageView turnCard;
     private ImageView riverCard;
+    private ImageView player2Card1;
+    private ImageView player2Card2;
+    private ImageView player3Card1;
+    private ImageView player3Card2;
+    private ImageView player4Card1;
+    private ImageView player4Card2;
 
     private GameMainActivity myActivity;
 
@@ -138,6 +144,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
         this.thirdFlop = activity.findViewById(R.id.flop1);
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
+        this.player2Card1 = activity.findViewById(R.id.player2Card1);
+        this.player2Card2 = activity.findViewById(R.id.player2Card2);
+        this.player3Card1 = activity.findViewById(R.id.player3Card1);
+        this.player3Card2 = activity.findViewById(R.id.player3Card2);
+        this.player4Card1 = activity.findViewById(R.id.player4Card1);
+        this.player4Card2 = activity.findViewById(R.id.player4Card2);
 
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
@@ -202,6 +214,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
             ArrayList<Hand> hands = state.getHands();
             setCard(hands.get(this.playerNum).getHole1(), playerHole1);
             setCard(hands.get(this.playerNum).getHole2(), playerHole2);
+            setCard(hands.get(this.playerNum).getHole1(),player2Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player2Card2);
+            setCard(hands.get(this.playerNum).getHole1(),player3Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player3Card2);
+            setCard(hands.get(this.playerNum).getHole1(),player4Card1);
+            setCard(hands.get(this.playerNum).getHole2(),player4Card2);
 
             turnTracker.setText("Turn " + state.getTurnTracker().getActivePlayerID());
 
