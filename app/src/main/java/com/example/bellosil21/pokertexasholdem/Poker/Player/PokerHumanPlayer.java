@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
@@ -16,6 +17,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
@@ -360,8 +362,8 @@ public class PokerHumanPlayer extends GameHumanPlayer
                     break;
             }
         }
-        else if (card.getSuit() == Card.Suit.CLUBS){
-            switch (card.getRank()){
+        else if (card.getSuit() == Card.Suit.CLUBS) {
+            switch (card.getRank()) {
                 case ACE:
                     cardImage.setImageResource(R.drawable.card_ac);
                     break;
@@ -403,8 +405,6 @@ public class PokerHumanPlayer extends GameHumanPlayer
                     break;
             }
         }
-
-
     }
 
     /**

@@ -15,7 +15,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
  */
 public class PokerDumbComputerPlayer extends GameComputerPlayer {
 
-    protected Game game;
     protected GamePlayer player;
     protected String name;
 
