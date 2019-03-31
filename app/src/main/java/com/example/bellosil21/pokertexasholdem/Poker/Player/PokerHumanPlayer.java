@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
@@ -48,6 +50,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
     // Player action buttons
     private Button foldButton;
+    private Button sitOutButton;
     private Button betButton;
     private Button callButton;
     private Button checkButton;
@@ -108,7 +111,9 @@ public class PokerHumanPlayer extends GameHumanPlayer
         // Setting references to the variables needed for the buttons in the
         // GUI
         this.foldButton =
-                (Button) activity.findViewById(R.id.fold_sitoutButton);
+                (Button) activity.findViewById(R.id.foldButton);
+        this.sitOutButton =
+                (Button) activity.findViewById(R.id.sitoutButton);
         this.betButton = (Button) activity.findViewById(R.id.betButton);
         this.checkButton = (Button) activity.findViewById(R.id.checkButton);
         this.showHideCardsButton =
@@ -119,6 +124,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
         // Setting listeners to all the buttons
         this.showHideCardsButton.setOnClickListener(this);
         this.foldButton.setOnClickListener(this);
+        this.sitOutButton.setOnClickListener(this);
         this.betButton.setOnClickListener(this);
         this.checkButton.setOnClickListener(this);
         this.callButton.setOnClickListener(this);
@@ -431,21 +437,24 @@ public class PokerHumanPlayer extends GameHumanPlayer
      */
     @Override
     public void onClick(View v) {
-        if (v == foldButton){
+        if (v.equals(foldButton)){
             game.sendAction(new PokerFold(this));
         }
-        else if (v == callButton){
+        else if (v.equals(callButton)){
             game.sendAction(new PokerCall(this));
         }
-        else if (v == checkButton){
+        else if (v.equals(checkButton)){
             game.sendAction(new PokerCheck(this));
         }
-        else if (v == betButton){
+        else if (v.equals(betButton)){
             int bet = Integer.parseInt(chipBetText.getText().toString());
             game.sendAction(new PokerRaiseBet(this, bet));
         }
-        else if (v == showHideCardsButton){
+        else if (v.equals(showHideCardsButton)){
             game.sendAction(new PokerFold(this));
+        }
+        else if (v.equals(sitOutButton)) {
+            game.sendAction(new PokerSitOut(this));
         }
 
     }
