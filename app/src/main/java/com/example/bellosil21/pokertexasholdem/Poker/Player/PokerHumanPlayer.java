@@ -87,6 +87,8 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
         myActivity = activity;
 
+        activity.setContentView(R.layout.activity_main);
+
         // Setting all TextViews to local variables
         this.player1Chips = (TextView) activity.findViewById(R.id.currChips);
         this.player2Chips = (TextView) activity.findViewById(R.id.player2Chips);

@@ -57,7 +57,6 @@ public class PokerGameStateTest {
         int playerID = myGameState.getTurnTracker().getActivePlayerID();
         boolean ans = true;
         boolean val;
-        val = myGameState.
 
 
     }

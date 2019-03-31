@@ -13,7 +13,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
-import com.example.bellosil21.pokertexasholdem.Poker.GameState.PotTracker;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.TurnTracker;
 
 import java.util.Random;
