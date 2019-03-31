@@ -464,14 +464,14 @@
                     android:text="SHOW CARDS" />
 
                 <Button
-                    android:id="@+id/fold_foldButton"
+                    android:id="@+id/foldButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="FOLD" />
 
                 <Button
-                    android:id="@+id/fold_sitoutButton"
+                    android:id="@+id/sitoutButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
