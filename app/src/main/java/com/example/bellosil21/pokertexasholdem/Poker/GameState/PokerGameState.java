@@ -116,8 +116,8 @@ public class PokerGameState extends GameState {
         }
 
         communityCards = new ArrayList<>();
-        for (Card c : toCopy.communityCards) {
-            communityCards.add(new Card(c));
+        for (int i = 0; i < toCopy.communityCards.size(); i++) {
+            communityCards.add(new Card(toCopy.communityCards.get(i)));
         }
 
         roundNumber = toCopy.roundNumber;

@@ -58,7 +58,7 @@ public class PotTracker {
     }
 
     public void subtractContribution(int amount) {
-        contribution =- amount;
+        contribution -= amount;
     }
 
 

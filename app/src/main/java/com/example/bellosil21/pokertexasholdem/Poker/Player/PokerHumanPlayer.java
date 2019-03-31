@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
@@ -145,6 +147,11 @@ public class PokerHumanPlayer extends GameHumanPlayer
     public void receiveInfo(GameInfo info) {
         if (info instanceof PokerGameState){
             PokerGameState state = (PokerGameState) info;
+
+            if (info == null) {
+                return;
+            }
+
             TextView player1TV = null;
             TextView player2TV = null;
             TextView player3TV = null;
@@ -198,6 +205,9 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
             turnTracker.setText("Turn " + state.getTurnTracker().getActivePlayerID());
 
+        }
+        else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+            flash(0xFFFF0000, 50);
         }
     }
 

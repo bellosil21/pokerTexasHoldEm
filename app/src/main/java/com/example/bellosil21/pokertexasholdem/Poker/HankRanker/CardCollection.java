@@ -53,6 +53,9 @@ public class CardCollection {
      *         0 if this CardCollection ties with the other
      */
     public int compareTo(CardCollection other) {
+        if (other == null) {
+            return 1;
+        }
         if (this.handRank.getValue() > other.handRank.getValue()) {
             return 1;
         }

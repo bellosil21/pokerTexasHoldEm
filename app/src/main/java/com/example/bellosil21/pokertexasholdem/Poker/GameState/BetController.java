@@ -298,26 +298,9 @@ public class BetController {
         int nextPotIndex = player.getLastContributedPot() + 1;
         PotTracker nextPot = pots.get(nextPotIndex);
 
-        int nextPotContribution = nextPot.getContribution();
-
-
         // determine if we are trying to add an amount less than the next pot
         // to contribute
-        if (amount < nextPotContribution) {
-            // this is a case A instance of making a new pot
-
-            ArrayList<Integer> newPotContributors =
-                    nextPot.getContributors();
-
-            for (int p : newPotContributors) {
-                players.get(p).incrementLastContributedPot();
-            }
-
-            PotTracker newPot = new PotTracker(amount, newPotContributors);
-            pots.add(nextPotIndex, newPot);
-
-            nextPot.subtractContribution(amount);
-        }
+        checkIfAddSmallerPot(amount, nextPotIndex);
 
         // the pot array is now ready to accept any new contributions
         addToPotHelper(playerID, amount);
@@ -345,6 +328,8 @@ public class BetController {
         PotTracker nextPot = pots.get(nextPotIndex);
         int potContribution = nextPot.getContribution();
 
+        checkIfAddSmallerPot(amount, nextPotIndex);
+
         totalAmount += potContribution;
         player.removeChips(potContribution);
         nextPot.addContributor(playerID);
@@ -352,6 +337,30 @@ public class BetController {
         int remaining = amount - potContribution;
 
         addToPotHelper(playerID, remaining);
+    }
+
+    private void checkIfAddSmallerPot(int amount, int nextPotIndex) {
+        // determine if we are trying to add an amount less than the next pot
+        // to contribute
+        PotTracker nextPot = pots.get(nextPotIndex);
+        int nextPotContribution = nextPot.getContribution();
+
+        if (amount < nextPotContribution) {
+            // this is a case A instance of making a new pot
+
+            ArrayList<Integer> newPotContributors =
+                    nextPot.getContributors();
+
+            for (int p : newPotContributors) {
+                players.get(p).incrementLastContributedPot();
+            }
+
+            PotTracker newPot = new PotTracker(amount, newPotContributors);
+            pots.add(nextPotIndex, newPot);
+
+            nextPot.subtractContribution(amount);
+        }
+
     }
 
     /**

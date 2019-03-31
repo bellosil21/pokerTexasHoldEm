@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import android.util.Log;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -113,7 +115,12 @@ public class TurnTracker {
         if(activePlayers.isEmpty()){
             return -1;
         }
-        return activePlayers.peek();
+        if (activePlayers.peek() == null) {
+            Log.i("wat", "wat");
+        }
+        Integer toReturn = activePlayers.peek();
+        assert toReturn != null;
+        return toReturn;
     }
 
     /**
