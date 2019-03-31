@@ -220,10 +220,8 @@ public class PokerHumanPlayer extends GameHumanPlayer
                     cardImage = riverCard;
                     break;
             }
-
             setCard(card, cardImage);
             cardCount++;
-
         }
 
     }
