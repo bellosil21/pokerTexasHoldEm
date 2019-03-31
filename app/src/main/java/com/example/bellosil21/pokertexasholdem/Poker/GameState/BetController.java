@@ -325,10 +325,11 @@ public class BetController {
         PlayerChipCollection player = players.get(playerID);
 
         int nextPotIndex = player.incrementLastContributedPot();
-        PotTracker nextPot = pots.get(nextPotIndex);
-        int potContribution = nextPot.getContribution();
 
         checkIfAddSmallerPot(amount, nextPotIndex);
+
+        PotTracker nextPot = pots.get(nextPotIndex);
+        int potContribution = nextPot.getContribution();
 
         totalAmount += potContribution;
         player.removeChips(potContribution);
