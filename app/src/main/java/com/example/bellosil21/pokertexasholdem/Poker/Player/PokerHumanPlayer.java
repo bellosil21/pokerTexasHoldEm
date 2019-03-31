@@ -202,6 +202,10 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private void setCommCards(ArrayList<Card> commCards) {
         int cardCount = 0;
         ImageView cardImage = null;
+        if (commCards.size() == 0){
+          resetCommCards();
+        }
+
         for (Card card: commCards) {
             switch (cardCount){
                 case 0:
@@ -224,6 +228,24 @@ public class PokerHumanPlayer extends GameHumanPlayer
             cardCount++;
         }
 
+    }
+
+    /**
+     * External Citation
+     * Date: March 31, 2019
+     *
+     * Problem: Unable to reset cards to nothing for community cards
+     * Resource: https://inducesmile.com/android-programming/how-to-remove-
+     *           image-or-bitmap-from-imageview-in-android/
+     * Solution: Used the idea to put 0 as a the parameter for setImageResource
+     *            method
+     */
+    private void resetCommCards() {
+        firstFlop.setImageResource(0);
+        secondFlop.setImageResource(0);
+        thirdFlop.setImageResource(0);
+        turnCard.setImageResource(0);
+        riverCard.setImageResource(0);
     }
 
     //
