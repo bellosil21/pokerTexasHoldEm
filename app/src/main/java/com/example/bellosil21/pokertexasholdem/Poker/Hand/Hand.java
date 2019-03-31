@@ -34,8 +34,13 @@ public class Hand implements Serializable {
      * @param toCopy the Hand to copy
      */
     public Hand(Hand toCopy) {
-        hole1 = new Card((Card) toCopy.hole1);
-        hole2 = new Card((Card) toCopy.hole2);
+        if (toCopy.hole1 instanceof BlankCard) {
+            hole1 = new BlankCard();
+            hole2 = new BlankCard();
+        } else {
+            hole1 = new Card((Card)toCopy.hole1);
+            hole2 = new Card((Card)toCopy.hole2);
+        }
         showCards = toCopy.showCards;
     }
 

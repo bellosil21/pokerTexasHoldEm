@@ -411,7 +411,7 @@ public class HandRanker {
         // Checks each rank and finds two highest ranks that has at least two
         // cards in the hand
         Card[] toReturn = new Card[FOUR_CARD_HAND];
-        for (int index = rankOccurrences.length; index >= 0; index--){
+        for (int index = rankOccurrences.length - 1; index >= 0; index--){
             if (rankOccurrences[index] >= TWO_CARD_HAND){
                 if (toCheck1 < 0) {
                     toCheck1 = index;
