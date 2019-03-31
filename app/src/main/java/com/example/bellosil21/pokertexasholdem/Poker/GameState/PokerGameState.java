@@ -87,6 +87,9 @@ public class PokerGameState extends GameState {
         turnTracker = new TurnTracker(numPlayers, INIT_DEALER_ID);
 
         numPhase = INIT_PHASE_NUM;
+
+        turnTracker.nextRound();
+        startRound();
     }
 
     /**
