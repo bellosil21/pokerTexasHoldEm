@@ -155,9 +155,10 @@ public class TurnTracker {
 
             activePlayers.remove(playerID);
             promptedPlayers.remove(playerID);
-            allInPlayers.remove(playerID);
-            foldedPlayers.remove(playerID);
-            sittingOutPlayers.remove(playerID);
+            allInPlayers.remove((Integer)playerID); // cast integer to remove
+            // the object and not reference the index
+            foldedPlayers.remove((Integer)playerID);
+            sittingOutPlayers.remove((Integer)playerID);
 
         }
     }

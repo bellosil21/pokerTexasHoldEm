@@ -124,7 +124,7 @@ public class BetController {
     public boolean forceBigBlinds(int bigBlindID){
         int bigPlayerChips = players.get(bigBlindID).getChips();
 
-        if (bigPlayerChips <= smallBlind) {
+        if (bigPlayerChips <= bigBlind) {
             allIn(bigBlindID);
             return true;
         }
@@ -254,7 +254,6 @@ public class BetController {
         /*check to see if all in is the largest bet*/
         int accumulativeBet = player.getLastBet() + allChips;
         if(accumulativeBet > maxBet){
-            maxBet = accumulativeBet;
             maxBetChanged = true;
         }
 
