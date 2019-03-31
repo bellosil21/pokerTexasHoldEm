@@ -21,6 +21,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
@@ -584,7 +585,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                 }
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {
-                game.sendAction(new PokerFold(this));
+                game.sendAction(new PokerShowHideCards(this));
             } else if (v.equals(sitOutButton)) {
                 game.sendAction(new PokerSitOut(this));
             }
