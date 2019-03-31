@@ -15,9 +15,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
  */
 public class PokerDumbComputerPlayer extends GameComputerPlayer {
 
-    protected GamePlayer player;
-    protected String name;
-
     /**
      * constructor
      *
@@ -38,7 +35,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
         }
         if(info instanceof PokerGameState){
             if(Math.random() > 0.5){
-                game.sendAction(new PokerShowHideCards(this));
+                game.sendAction(new PokerCall(this));
             }
             else{
                 game.sendAction(new PokerCall(this));

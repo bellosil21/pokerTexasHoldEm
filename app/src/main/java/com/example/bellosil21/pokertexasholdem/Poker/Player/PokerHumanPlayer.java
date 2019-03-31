@@ -76,7 +76,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
     @Override
     public View getTopView() {
-        return null;
+        return myActivity.findViewById(R.id.top_gui_layout);
     }
 
     /**
@@ -129,6 +129,9 @@ public class PokerHumanPlayer extends GameHumanPlayer
         this.thirdFlop = activity.findViewById(R.id.flop1);
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
+
+        this.playerHole1 = activity.findViewById(R.id.userFirstCard);
+        this.playerHole2 = activity.findViewById(R.id.userSecCard);
     }
 
     @Override
@@ -183,11 +186,10 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
             // Updates the player's hole cards
             ArrayList<Hand> hands = state.getHands();
-            setCard((Card)hands.get(this.playerNum).getHole1(), playerHole1);
-            setCard((Card)hands.get(this.playerNum).getHole2(), playerHole2);
+            setCard(hands.get(this.playerNum).getHole1(), playerHole1);
+            setCard(hands.get(this.playerNum).getHole2(), playerHole2);
 
-            // Updates the Player's Turn announcer
-            turnTracker.setText("Turn" + state.getTurnTracker());
+            turnTracker.setText("Turn" + state.getTurnTracker().getActivePlayerID());
 
         }
     }
@@ -226,10 +228,18 @@ public class PokerHumanPlayer extends GameHumanPlayer
     }
 
     //
-    private void setCard(Card card, ImageView cardImage) {
+    private void setCard(CardSlot card1, ImageView cardImage) {
         // Checks if the card or Image view is set
-        assert (card != null);
         assert (cardImage != null);
+        Card card;
+
+        if (card1 instanceof Card){
+            card = (Card) card1;
+        }
+        else{
+            return;
+        }
+
 
         // Checks which suit the card has
         if (card.getSuit() == Card.Suit.DIAMONDS){
