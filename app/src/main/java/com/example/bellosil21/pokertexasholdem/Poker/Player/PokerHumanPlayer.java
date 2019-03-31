@@ -189,7 +189,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
             setCard(hands.get(this.playerNum).getHole1(), playerHole1);
             setCard(hands.get(this.playerNum).getHole2(), playerHole2);
 
-            turnTracker.setText("Turn" + state.getTurnTracker().getActivePlayerID());
+            turnTracker.setText("Turn " + state.getTurnTracker().getActivePlayerID());
 
         }
     }

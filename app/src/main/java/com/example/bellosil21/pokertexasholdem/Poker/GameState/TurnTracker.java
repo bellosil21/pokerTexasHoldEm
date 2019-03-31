@@ -203,13 +203,14 @@ public class TurnTracker {
      * If everyone but one player has folded, return the playerID that is still
      * left in the game.
      *
-     * This player is either a prompted player, or is an allIn player
+     * This player is either a active player, prompted player, or is an allIn
+     * player
      *
      * @return -1 if more than one player remain; otherwise, return
      *          the playerID of the last player remaining
      */
     public int isRoundOver() {
-        if (promptedPlayers.size() + allInPlayers.size() > 1) {
+        if (activePlayers.size() + promptedPlayers.size() + allInPlayers.size() > 1) {
             return -1;
         }
         if (!promptedPlayers.isEmpty()) {
@@ -279,36 +280,37 @@ public class TurnTracker {
     }
 
     /**
-     * Requirement: nextRound() has been called prior to this function and
-     * nextRound() returns -1, meaning that there is more than one player
-     * left in the game.
-     *
-     * Returns the playerID of the smallBlind and bigBlind from the dealerID
      *
      * Increment the dealer ID (being within mod numPlayers to stay within index
      * bounds) until it matches to an active player.
      *
-     * We return two integers in an array. The first being the playerID of
-     * the small blind, and the second being the playerID of the big blind.
-     * We poll these players from the front of the active queue and then
-     * place them at the end of the active queue.
-     *
-     * @return an int array with two element; the first being the playerID of
-     * the small blind and the second being the playerID of the big blind.
+     * Finally, make the dealerID match the first player in the active queue
      */
-    public int[] determineBlinds() {
+    public void determineBlinds() {
         dealerID = (dealerID+1)%numPlayers;
         while(!activePlayers.contains(dealerID)){
             dealerID = (dealerID+1)%numPlayers;
         }
 
-        int[] blinds = new int[2];
-        blinds[0] = activePlayers.poll();
-        blinds[1] = activePlayers.poll();
-        activePlayers.offer(blinds[0]);
-        activePlayers.offer(blinds[1]);
+        while(activePlayers.peek() != dealerID) {
+            activePlayers.offer(activePlayers.poll());
+        }
+    }
 
-        return blinds;
+    /**
+     * Queues a person being forced to give a blind. If the player has no
+     * more funds, call allIn(); otherwise, add them to the end of the active
+     * player queue.
+     *
+     * @param isOutOfFunds true if the active player (being forced to bet a
+     *                     blind) is out funds
+     */
+    public void queueBlind(boolean isOutOfFunds) {
+        if (isOutOfFunds) {
+            allIn();
+        } else {
+            activePlayers.offer(activePlayers.poll());
+        }
     }
 
     public int getDealerID() {
