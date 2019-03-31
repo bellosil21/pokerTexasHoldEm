@@ -283,11 +283,6 @@ public class BetController {
     private void addToPot(int playerID, int amount) {
         PlayerChipCollection player = players.get(playerID);
 
-        int nextPotIndex = player.getLastContributedPot() + 1;
-        PotTracker nextPot = pots.get(nextPotIndex);
-
-        int nextPotContribution = nextPot.getContribution();
-
         //adjust the player's last bet
         int accumulativeBet = player.getLastBet() + amount;
         player.setLastBet(accumulativeBet);
@@ -301,9 +296,15 @@ public class BetController {
             maxBet = accumulativeBet;
         }
 
+        int nextPotIndex = player.getLastContributedPot() + 1;
+        PotTracker nextPot = pots.get(nextPotIndex);
+
+        int nextPotContribution = nextPot.getContribution();
+
+
         // determine if we are trying to add an amount less than the next pot
         // to contribute
-        else if (amount < nextPotContribution) {
+        if (amount < nextPotContribution) {
             // this is a case A instance of making a new pot
 
             ArrayList<Integer> newPotContributors =
