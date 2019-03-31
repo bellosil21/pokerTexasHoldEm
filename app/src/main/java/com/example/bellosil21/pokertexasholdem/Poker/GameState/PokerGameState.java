@@ -227,6 +227,7 @@ public class PokerGameState extends GameState {
     }
 
     private void startRound() {
+        communityCards.clear();
         playingDeck = new Deck();
         deal();
 
