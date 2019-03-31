@@ -222,6 +222,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
             }
 
             setCard(card, cardImage);
+            cardCount++;
 
         }
 
