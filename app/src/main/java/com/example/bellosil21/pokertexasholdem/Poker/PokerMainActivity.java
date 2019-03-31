@@ -43,9 +43,9 @@ public class PokerMainActivity extends GameMainActivity {
         //Add the default players
         defaultConfig.addPlayer("Human", 0); // this index represents the index in
         //the playerTypes array list.
-        defaultConfig.addPlayer("Dumb Computer 1", 1);
-        defaultConfig.addPlayer("Dumb Computer 2", 1);
-        defaultConfig.addPlayer("Dumb Computer 3", 1);
+        defaultConfig.addPlayer("Computer 1", 1);
+        defaultConfig.addPlayer("Computer 2", 1);
+        defaultConfig.addPlayer("Computer 3", 1);
 
         //set the initial information for the remote player?
         defaultConfig.setRemoteData("Poker Guest", "",
