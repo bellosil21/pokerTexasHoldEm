@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,8 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class PokerHumanPlayer extends GameHumanPlayer
@@ -33,6 +37,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private TextView player2Chips;
     private TextView player3Chips;
     private TextView player4Chips;
+
+    // Instance references to each player's name
+    private TextView player1Name;
+    private TextView player2Name;
+    private TextView player3Name;
+    private TextView player4Name;
 
     // pot TextView
     private TextView jackpot;
@@ -63,6 +73,7 @@ public class PokerHumanPlayer extends GameHumanPlayer
     private ImageView riverCard;
 
     private GameMainActivity myActivity;
+    private PokerGameState state;
 
 
     /**
@@ -99,6 +110,12 @@ public class PokerHumanPlayer extends GameHumanPlayer
         this.turnTracker = (TextView) activity.findViewById(R.id.turnText);
         this.jackpot = (TextView) activity.findViewById(R.id.totalPot);
 
+        // Setting all players' names TextViews to local variables
+        this.player1Name = (TextView) activity.findViewById(R.id.player1Name);
+        this.player2Name = (TextView) activity.findViewById(R.id.player2Name);
+        this.player3Name = (TextView) activity.findViewById(R.id.player3Name);
+        this.player4Name = (TextView) activity.findViewById(R.id.player4Name);
+
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
         this.chipBetSeekbar = (SeekBar) activity.findViewById(R.id.bettingSearch);
@@ -134,45 +151,73 @@ public class PokerHumanPlayer extends GameHumanPlayer
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void receiveInfo(GameInfo info) {
         if (info instanceof PokerGameState){
-            PokerGameState state = (PokerGameState) info;
+            state = (PokerGameState) info;
             TextView player1TV = null;
             TextView player2TV = null;
             TextView player3TV = null;
             TextView player4TV = null;
+            TextView player1Nm = null;
+            TextView player2Nm = null;
+            TextView player3Nm = null;
+            TextView player4Nm = null;
 
             // Sets the TextViews to change as their are the player
             switch (this.playerNum){
                 case 0:
                     player1TV = player1Chips;
+                    player1Nm = player1Name;
                     player2TV = player2Chips;
+                    player2Nm = player2Name;
                     player3TV = player3Chips;
+                    player3Nm = player3Name;
                     player4TV = player4Chips;
+                    player4Nm = player4Name;
                     break;
                 case 1:
                     player1TV = player2Chips;
+                    player1Nm = player2Name;
                     player2TV = player3Chips;
+                    player2Nm = player3Name;
                     player3TV = player4Chips;
+                    player3Nm = player4Name;
                     player4TV = player1Chips;
+                    player4Nm = player1Name;
                     break;
                 case 2:
                     player1TV = player3Chips;
+                    player1Nm = player3Name;
                     player2TV = player4Chips;
+                    player2Nm = player4Name;
                     player3TV = player1Chips;
+                    player3Nm = player1Name;
                     player4TV = player2Chips;
+                    player4Nm = player2Name;
                     break;
                 case 3:
                     player1TV = player4Chips;
+                    player1Nm = player4Name;
                     player2TV = player1Chips;
+                    player2Nm = player1Name;
                     player3TV = player2Chips;
+                    player3Nm = player2Name;
                     player4TV = player3Chips;
+                    player4Nm = player3Name;
                     break;
             }
 
-            // Changes all the chip count to how much each player has
+            // Changing all the player's names
             int playerCount = this.playerNum;
+            player1Nm.setText(this.allPlayerNames[playerCount%4]);
+            player2Nm.setText(this.allPlayerNames[(playerCount++)%4]);
+            player3Nm.setText(this.allPlayerNames[(playerCount++)%4]);
+            player4Nm.setText(this.allPlayerNames[(playerCount++)%4]);
+
+            // Changes all the chip count to how much each player has
+            playerCount = this.playerNum;
             player1TV.setText(""+state.getChips((playerCount)%4));
             player2TV.setText(""+state.getChips((playerCount++)%4));
             player3TV.setText(""+state.getChips((playerCount++)%4));
@@ -189,7 +234,11 @@ public class PokerHumanPlayer extends GameHumanPlayer
             setCard(hands.get(this.playerNum).getHole1(), playerHole1);
             setCard(hands.get(this.playerNum).getHole2(), playerHole2);
 
-            turnTracker.setText("Turn " + state.getTurnTracker().getActivePlayerID());
+
+            turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID()) + 1);
+            callButton.setText("Call(" + state.getBetController().getMaxBet()+")");
+
+            chipBetSeekbar.setMax(state.getChips(playerNum) - state.getBetController().getCallAmount(playerNum));
 
         }
     }
@@ -474,8 +523,10 @@ public class PokerHumanPlayer extends GameHumanPlayer
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
-                                  boolean fromUser) {
-        chipBetText.setText(""+progress);
+                                  boolean fromUser){
+        int betting =
+                progress + (state.getBetController().getCallAmount(playerNum));
+        chipBetText.setText(""+ betting);
     }
 
     @Override
