@@ -176,7 +176,7 @@
             android:layout_above="@id/flop1"
             android:layout_toLeftOf="@id/player3Card2"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="35dp"
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/card_2c" />
 
@@ -187,7 +187,7 @@
             android:layout_above="@id/flop1"
             android:layout_toLeftOf="@id/player3"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="35dp"
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/card_jh" />
 
