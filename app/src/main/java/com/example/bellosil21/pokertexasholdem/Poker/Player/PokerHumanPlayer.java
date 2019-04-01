@@ -183,7 +183,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
-        
+
         this.player1 = activity.findViewById(R.id.player1);
         this.player2 = activity.findViewById(R.id.player2);
         this.player3 = activity.findViewById(R.id.player3);

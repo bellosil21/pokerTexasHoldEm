@@ -371,7 +371,6 @@
             android:layout_below="@id/flop1"
             android:layout_centerInParent="true"
             android:adjustViewBounds="false"
-            android:background="@android:drawable/screen_background_light_transparent"
             android:visibility="visible"
             app:srcCompat="@drawable/chip_stack" />
 
