@@ -262,14 +262,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         // Changing all the player's names
         int playerCount = this.playerNum;
-        player1Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
-        player2Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
-        player3Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
-        player4Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
+        player1Nm.setText(this.allPlayerNames[(playerCount) % 4]);
+        player2Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        player3Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        player4Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("" + state.getChips((++playerCount) % 4));
+        player1TV.setText("" + state.getChips((playerCount) % 4));
         player2TV.setText("" + state.getChips((++playerCount) % 4));
         player3TV.setText("" + state.getChips((++playerCount) % 4));
         player4TV.setText("" + state.getChips((++playerCount) % 4));
