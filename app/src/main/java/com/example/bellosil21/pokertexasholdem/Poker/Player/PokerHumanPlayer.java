@@ -92,6 +92,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
     private ImageView player3;
     private ImageView player4;
     private ImageView chipStack;
+    private ImageView bettingStack;
 
     private GameMainActivity myActivity;
     private PokerGameState state;
@@ -172,6 +173,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         this.thirdFlop = activity.findViewById(R.id.flop1);
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
+        // TODO: 3/31/2019 if statement to see if round is over, if true show all cards
         this.player2Card1 = activity.findViewById(R.id.player2Card1);
         this.player2Card2 = activity.findViewById(R.id.player2Card2);
         this.player3Card1 = activity.findViewById(R.id.player3Card1);
@@ -181,13 +183,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
-
-        // TODO: 3/31/2019 if statement to see if round is over, if true show all cards 
+        
         this.player1 = activity.findViewById(R.id.player1);
         this.player2 = activity.findViewById(R.id.player2);
         this.player3 = activity.findViewById(R.id.player3);
         this.player4 = activity.findViewById(R.id.player4);
         this.chipStack = activity.findViewById(R.id.chipStack);
+        this.bettingStack = activity.findViewById(R.id.bettingStack);
     }
 
     @Override
@@ -272,6 +274,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
             // Updates the Community Card fields to all existing community cards
             setCommCards(state.getCommunityCards());
+
+            player1.setImageResource(R.drawable.player);
+            player2.setImageResource(R.drawable.player);
+            player3.setImageResource(R.drawable.player);
+            player4.setImageResource(R.drawable.player);
+            chipStack.setImageResource(R.drawable.chip_stack);
+            bettingStack.setImageResource(R.drawable.chip_stack);
 
             // Updates the player's hole cards
             playerCount = playerNum;
@@ -585,6 +594,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                 }
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {
+
+                if(showHideCardsButton.getText().equals("SHOW CARDS")){
+                    showHideCardsButton.setText("HIDE CARDS");
+                }
+                else {
+                    showHideCardsButton.setText("SHOW CARDS");
+                }
                 game.sendAction(new PokerShowHideCards(this));
             } else if (v.equals(sitOutButton)) {
                 game.sendAction(new PokerSitOut(this));

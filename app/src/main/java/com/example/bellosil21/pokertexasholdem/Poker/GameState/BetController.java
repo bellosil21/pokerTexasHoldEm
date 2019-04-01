@@ -70,11 +70,9 @@ public class BetController {
      * Copy constructor
      */
     public BetController(BetController toCopy) {
-        pots = new ArrayList<>();
-        pots.addAll(toCopy.pots);
+        pots = new ArrayList<>(toCopy.pots);
 
-        players = new ArrayList<>();
-        players.addAll(toCopy.players);
+        players = new ArrayList<>(toCopy.players);
 
         maxBet = toCopy.maxBet;
         totalAmount = toCopy.totalAmount;

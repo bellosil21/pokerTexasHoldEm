@@ -61,26 +61,27 @@ public class TurnTracker {
         this.removedPlayers = new ArrayList<>();
         this.numPlayers = numPlayers;
         this.dealerID = dealerID % numPlayers;
+
+        for(int i=0; i<numPlayers; i++){
+            activePlayers.add(i);
+        }
     }
 
     /**
      * Copy constructor
      */
     public TurnTracker(TurnTracker toCopy) {
-        this.activePlayers = toCopy.activePlayers.clone();
-        this.promptedPlayers = toCopy.promptedPlayers.clone();
+        this.activePlayers = new ArrayDeque<>(toCopy.activePlayers);
 
-        this.allInPlayers = new ArrayList<>();
-        allInPlayers.addAll(toCopy.allInPlayers);
+        this.promptedPlayers = new ArrayDeque<>(toCopy.promptedPlayers);
 
-        this.foldedPlayers = new ArrayList<>();
-        foldedPlayers.addAll(toCopy.foldedPlayers);
+        this.allInPlayers = new ArrayList<>(toCopy.allInPlayers);
 
-        this.sittingOutPlayers = new ArrayList<>();
-        sittingOutPlayers.addAll(toCopy.sittingOutPlayers);
+        this.foldedPlayers = new ArrayList<>(toCopy.foldedPlayers);
 
-        this.removedPlayers = new ArrayList<>();
-        removedPlayers.addAll(toCopy.removedPlayers);
+        this.sittingOutPlayers = new ArrayList<>(toCopy.sittingOutPlayers);
+
+        this.removedPlayers = new ArrayList<>(toCopy.removedPlayers);
 
         this.numPlayers = toCopy.numPlayers;
         this.dealerID = toCopy.dealerID;
@@ -115,12 +116,7 @@ public class TurnTracker {
         if(activePlayers.isEmpty()){
             return -1;
         }
-        if (activePlayers.peek() == null) {
-            Log.i("wat", "wat");
-        }
-        Integer toReturn = activePlayers.peek();
-        assert toReturn != null;
-        return toReturn;
+        return activePlayers.peek();
     }
 
     /**
@@ -162,6 +158,7 @@ public class TurnTracker {
 
             activePlayers.remove(playerID);
             promptedPlayers.remove(playerID);
+
             allInPlayers.remove((Integer)playerID); // cast integer to remove
             // the object and not reference the index
             foldedPlayers.remove((Integer)playerID);
@@ -177,7 +174,7 @@ public class TurnTracker {
      *
      * @param playerID the ID of the player who is sitting in/out
      */
-    public void toggleSitting(int playerID){
+    public void toggleSitting(Integer playerID){
         if(sittingOutPlayers.contains(playerID)){
             sittingOutPlayers.remove(playerID);
         }
@@ -234,7 +231,7 @@ public class TurnTracker {
      * @param playerID the ID of the player
      * @return true if the player is in prompted players or all in players
      */
-    public boolean isPlayerInRound(int playerID) {
+    public boolean isPlayerInRound(Integer playerID) {
         return (promptedPlayers.contains(playerID) || allInPlayers.contains(playerID));
     }
 
