@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import android.util.Log;
+
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
@@ -446,6 +448,12 @@ public class BetController {
         return highestRank;
         */
         ArrayList<Integer> highestRanks = new ArrayList<>();
+        if(rankings == null){
+            Log.i("BetController.java", "rankings array is null");
+        }
+        if(contributors == null){
+            Log.i("BetController.java", "contriutors array is null");
+        }
         int highestRank = rankings[contributors.get(0)];
         highestRanks.add(contributors.get(0));
 
