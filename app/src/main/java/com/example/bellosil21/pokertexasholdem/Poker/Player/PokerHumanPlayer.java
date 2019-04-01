@@ -262,14 +262,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         // Changing all the player's names
         int playerCount = this.playerNum;
-        player1Nm.setText(this.allPlayerNames[playerCount % 4]);
+        player1Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
         player2Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
         player3Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
         player4Nm.setText(this.allPlayerNames[(playerCount++) % 4]);
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("" + state.getChips((playerCount) % 4));
+        player1TV.setText("" + state.getChips((++playerCount) % 4));
         player2TV.setText("" + state.getChips((++playerCount) % 4));
         player3TV.setText("" + state.getChips((++playerCount) % 4));
         player4TV.setText("" + state.getChips((++playerCount) % 4));
@@ -571,8 +571,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         if (v == null) {
             return; //this should never happen lol
         }
-        if (v.equals(foldButton)) {
-
 
             if (v == foldButton) {
                 game.sendAction(new PokerFold(this));
@@ -602,13 +600,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
             } else if (v.equals(sitOutButton)) {
                 game.sendAction(new PokerSitOut(this));
             }
-        }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         //this.state.getBetController().raiseBet(playerNum, progress);
-        chipBetText.setText(""+ progress);
+        int betting =
+                progress + state.getBetController().getCallAmount(playerNum);
+        chipBetText.setText(""+ betting);
     }
 
     @Override
