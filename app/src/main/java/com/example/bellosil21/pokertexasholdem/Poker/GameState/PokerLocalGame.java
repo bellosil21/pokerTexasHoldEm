@@ -292,6 +292,8 @@ public class PokerLocalGame extends LocalGame {
 
         // check if everyone has been prompted
         else if (state.getTurnTracker().isPhaseOver()) {
+            //TODO: if last round, show all cards and sleep thread
+
             state.nextPhase();
         }
     }

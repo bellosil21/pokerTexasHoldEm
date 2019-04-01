@@ -117,10 +117,7 @@ public class PokerGameState extends GameState {
             }
         }
 
-        communityCards = new ArrayList<>();
-        for (int i = 0; i < toCopy.communityCards.size(); i++) {
-            communityCards.add(new Card(toCopy.communityCards.get(i)));
-        }
+        communityCards = new ArrayList<>(toCopy.communityCards);
 
         roundNumber = toCopy.roundNumber;
 
@@ -224,7 +221,7 @@ public class PokerGameState extends GameState {
             return;
         }
 
-        if (roundNumber % (ROUNDS_PER_BLIND_INCREMENT + 1) == 0) {
+        if ((roundNumber + 1) % ROUNDS_PER_BLIND_INCREMENT == 0) {
             betController.incrementBlinds();
         }
 
@@ -306,10 +303,6 @@ public class PokerGameState extends GameState {
                     int compare = finalHandPlayer.compareTo(bestHandForRank);
                     if (compare == 0) {
                         finalRanks[playerID] = i;
-                    }
-                    else if(compare == -9999){
-                        Log.i("PokerGameState.java", "'compare' int is prolly null");
-                        return null; //means compareTo method returned -9999;
                     }
                 }
 
