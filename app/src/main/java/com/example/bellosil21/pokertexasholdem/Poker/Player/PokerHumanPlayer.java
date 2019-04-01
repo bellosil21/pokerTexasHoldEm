@@ -302,9 +302,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         setCard(hands.get(playerCount).getHole1(), player4Card1);
         setCard(hands.get(playerCount).getHole2(), player4Card2);
 
-
-        turnTracker.setText("Turn " + state.getTurnTracker().getActivePlayerID());
-        turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID()) + 1);
+        turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID() + 1));
         callButton.setText("Call(" + state.getBetController().getCallAmount(playerNum) + ")");
 
         chipBetSeekbar.setMax(state.getChips(playerNum) - state.getBetController().getCallAmount(playerNum));
@@ -604,6 +602,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (state == null) {
+            return;
+        }
         //this.state.getBetController().raiseBet(playerNum, progress);
         int betting =
                 progress + state.getBetController().getCallAmount(playerNum);

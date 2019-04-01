@@ -72,9 +72,9 @@ public class TurnTracker {
      * Copy constructor
      */
     public TurnTracker(TurnTracker toCopy) {
-        this.activePlayers = new LinkedList<>(toCopy.activePlayers);
+        this.activePlayers = (LinkedList) toCopy.activePlayers.clone();
 
-        this.promptedPlayers = new LinkedList<>(toCopy.promptedPlayers);
+        this.promptedPlayers = (LinkedList) toCopy.promptedPlayers.clone();
 
         this.allInPlayers = new ArrayList<>(toCopy.allInPlayers);
 
@@ -114,10 +114,15 @@ public class TurnTracker {
      * @return The current player's turn.
      */
     public int getActivePlayerID() {
-        if(activePlayers.isEmpty()){
+        if(activePlayers.size() < 1){
             return -1;
         }
-        return activePlayers.peek();
+        Integer toReturn = activePlayers.peek(); // TODO: FIND WHERE WE ARE
+        // INJECTING A NULL
+        if (toReturn == null) {
+            return Integer.MIN_VALUE;
+        }
+        return toReturn;
     }
 
     /**
@@ -222,7 +227,10 @@ public class TurnTracker {
         if (!promptedPlayers.isEmpty()) {
             return promptedPlayers.peek();
         }
-        return allInPlayers.get(0);
+        if (!allInPlayers.isEmpty()) {
+            return allInPlayers.get(0);
+        }
+        return activePlayers.peek();
     }
 
     /**
@@ -282,7 +290,13 @@ public class TurnTracker {
         if (numPlayers - removedPlayers.size() > PLAYERS_FOR_GAME_OVER) {
             return -1;
         }
-        return activePlayers.peek();
+        if (!allInPlayers.isEmpty()) {
+            return allInPlayers.get(allInPlayers.size() - 1);
+        }
+        if (!promptedPlayers.isEmpty()) {
+            return promptedPlayers.get(0);
+        }
+        return activePlayers.get(0);
     }
 
     /**
