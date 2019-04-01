@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Keeps track of whose turn it is.
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 public class TurnTracker {
 
     /** instance vars **/
-    private ArrayDeque<Integer> activePlayers; // players who haven't taken a
+    private LinkedList<Integer> activePlayers; // players who haven't taken a
     // turn in this phase
-    private ArrayDeque<Integer> promptedPlayers; // players who taken a turn in
+    private LinkedList<Integer> promptedPlayers; // players who taken a turn in
     // this phase
     private ArrayList<Integer> allInPlayers; // players who have committed
     // their whole chip collection to the pot
@@ -53,8 +54,8 @@ public class TurnTracker {
      * @param numPlayers the numbers of players
      */
     public TurnTracker(int numPlayers, int dealerID) {
-        this.activePlayers = new ArrayDeque<>();
-        this.promptedPlayers = new ArrayDeque<>();
+        this.activePlayers = new LinkedList<>();
+        this.promptedPlayers = new LinkedList<>();
         this.allInPlayers = new ArrayList<>();
         this.foldedPlayers = new ArrayList<>();
         this.sittingOutPlayers = new ArrayList<>();
@@ -71,9 +72,9 @@ public class TurnTracker {
      * Copy constructor
      */
     public TurnTracker(TurnTracker toCopy) {
-        this.activePlayers = new ArrayDeque<>(toCopy.activePlayers);
+        this.activePlayers = new LinkedList<>(toCopy.activePlayers);
 
-        this.promptedPlayers = new ArrayDeque<>(toCopy.promptedPlayers);
+        this.promptedPlayers = new LinkedList<>(toCopy.promptedPlayers);
 
         this.allInPlayers = new ArrayList<>(toCopy.allInPlayers);
 
@@ -156,8 +157,8 @@ public class TurnTracker {
 
             removedPlayers.add(playerID);
 
-            activePlayers.remove(playerID);
-            promptedPlayers.remove(playerID);
+            activePlayers.remove((Integer)playerID);
+            promptedPlayers.remove((Integer)playerID);
 
             allInPlayers.remove((Integer)playerID); // cast integer to remove
             // the object and not reference the index
@@ -266,7 +267,7 @@ public class TurnTracker {
         }
 
         for (int i: removedPlayers){
-            activePlayers.remove(i);
+            activePlayers.remove((Integer)i);
         }
     }
 
