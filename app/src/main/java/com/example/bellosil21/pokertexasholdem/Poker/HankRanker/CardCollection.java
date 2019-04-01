@@ -57,8 +57,7 @@ public class CardCollection {
      */
     public int compareTo(CardCollection other) {
         if(other == null){
-            Log.i("CardCollection.java", "CompareTo method takes in a null parameter");
-            return NULL_INTEGER;
+            return 1;
         }
         if (this.handRank.getValue() > other.handRank.getValue()) {
             return 1;
