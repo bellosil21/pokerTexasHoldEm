@@ -608,7 +608,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         //this.state.getBetController().raiseBet(playerNum, progress);
         int betting =
                 progress + state.getBetController().getCallAmount(playerNum);
-        chipBetText.setText("Bet Amount: "+ betting);
+        chipBetText.setText(""+ betting);
     }
 
     @Override
