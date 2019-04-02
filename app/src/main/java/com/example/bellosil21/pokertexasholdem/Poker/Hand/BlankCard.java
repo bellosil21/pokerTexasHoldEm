@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Hand;
 
+import java.io.Serializable;
+
 /**
  * To represent a blank or hidden card.
  *
@@ -8,7 +10,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.Hand;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class BlankCard implements CardSlot {
+public class BlankCard implements CardSlot, Serializable {
 
     /**
      * BlankCard constructor

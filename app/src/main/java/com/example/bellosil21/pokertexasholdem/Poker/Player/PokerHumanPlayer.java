@@ -1,5 +1,8 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.os.Build;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +14,12 @@ import android.widget.TextView;
 
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
+import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
@@ -28,6 +33,9 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PokerHumanPlayer extends GameHumanPlayer implements
@@ -45,6 +53,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private TextView player2Name;
     private TextView player3Name;
     private TextView player4Name;
+
+    // last actions for players
+    private TextView player1Action;
+    private TextView player2Action;
+    private TextView player3Action;
+    private TextView player4Action;
+    private int lastMaxBet = 0;
 
     // pot TextView
     private TextView jackpot;
@@ -108,6 +123,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      */
     public PokerHumanPlayer(String name) {
         super(name);
+        lastMaxBet = 0;
     }
 
     @Override
@@ -140,6 +156,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.player2Name = (TextView) activity.findViewById(R.id.player2Name);
         this.player3Name = (TextView) activity.findViewById(R.id.player3Name);
         this.player4Name = (TextView) activity.findViewById(R.id.player4Name);
+
+        this.player1Action = (TextView) activity.findViewById(R.id.player1Move);
+        this.player2Action = (TextView) activity.findViewById(R.id.player2Move);
+        this.player3Action = (TextView) activity.findViewById(R.id.player3Move);
+        this.player4Action = (TextView) activity.findViewById(R.id.player4Move);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
@@ -286,6 +307,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         player2TV.setText("$ " + state.getChips((++playerCount) % 4));
         player3TV.setText("$ " + state.getChips((++playerCount) % 4));
         player4TV.setText("$ " + state.getChips((++playerCount) % 4));
+
+        playerCount = this.playerNum;
+        ArrayList<GameAction> lastActions = state.getLastActions();
+        updateAction(player1Action, lastActions.get(playerCount));
+        updateAction(player2Action, lastActions.get((++playerCount) % 4));
+        updateAction(player3Action, lastActions.get((++playerCount) % 4));
+        updateAction(player4Action, lastActions.get((++playerCount) % 4));
+
 
         // Sets the current total pot amount
         jackpot.setText("" + state.getBetController().getTotalAmount());
@@ -598,6 +627,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     }
 
+    private void updateAction(TextView tv, GameAction action) {
+        if (action == null) {
+            tv.setText("");
+        }
+        int nextMaxBet = state.getBetController().getMaxBet();
+        if (action instanceof PokerAllIn) {
+            tv.setText("All In");
+        }
+        else if (action instanceof PokerCall) {
+            if (nextMaxBet == 0) {
+                tv.setText("Check");
+            } else {
+                tv.setText("Call");
+            }
+        }
+        else if (action instanceof PokerCheck) {
+            tv.setText("Check");
+        }
+        else if (action instanceof PokerFold) {
+            tv.setText("Fold");
+        }
+        else if (action instanceof PokerRaiseBet) {
+            int amount = ((PokerRaiseBet) action).getRaiseAmount();
+            tv.setText("Raised by " + amount);
+        }
+        lastMaxBet = nextMaxBet;
+    }
+
     /**
      * External Citation
      * March 30, 2019
@@ -629,12 +686,35 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                  * we do this by checking to see if there bet exceeds the
                  * biggest  possible integer.
                  * */
-                int bet = Integer.parseInt(chipBetText.getText().toString());
-                if (bet > MAX_INTEGER) {
+                int playerID = state.getTurnTracker().getActivePlayerID();
+                int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+
+                int bet;
+                try{
+                    bet = Integer.parseInt(chipBetText.getText().toString());
+                }
+                catch(NumberFormatException i){
+
+                    Log.i("bet variable", "Bet variable was not in proper format.");
+                    return;
+                }
+
+                /**
+                 External Citation
+
+                 */
+
+                if (bet > allPlayerMoney) {
                     MessageBox.popUpMessage("Entry to big!", this.myActivity);
                     Log.i("PlaceBets error", "User has attempted to " +
                             "place a " + "bet too big");
                 }
+                else if(bet < 0){
+                    MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
+                }
+
+
+
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {
 

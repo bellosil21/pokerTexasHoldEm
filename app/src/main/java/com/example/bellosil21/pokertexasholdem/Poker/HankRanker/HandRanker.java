@@ -4,6 +4,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.SortCardByRank;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import java.util.Collections;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class HandRanker {
+public class HandRanker implements Serializable {
 
     /** instance vars **/
     private ArrayList<Card> cardSet;

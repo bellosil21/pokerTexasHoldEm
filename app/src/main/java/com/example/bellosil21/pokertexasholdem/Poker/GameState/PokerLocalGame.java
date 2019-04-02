@@ -18,7 +18,7 @@ public class PokerLocalGame extends LocalGame {
 
     private PokerGameState state;
 
-    private static final int startingChips = 400;
+    private static final int startingChips = 1000;
     private static final int startingSmallBlind = 50;
     private static final int startingBigBling = 100;
     private static final int numPlayers = 4;
@@ -150,6 +150,8 @@ public class PokerLocalGame extends LocalGame {
         }
 
         if (nextTurn) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            state.updatelastAction(playerID, action);
             endTurnCleanUp();
             return true;
         }

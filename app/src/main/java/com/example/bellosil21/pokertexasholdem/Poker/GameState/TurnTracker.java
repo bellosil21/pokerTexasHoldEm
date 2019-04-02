@@ -1,8 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import android.util.Log;
-
-import java.util.ArrayDeque;
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -14,7 +13,7 @@ import java.util.LinkedList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class TurnTracker {
+public class TurnTracker implements Serializable {
 
     /** instance vars **/
     private LinkedList<Integer> activePlayers; // players who haven't taken a
@@ -204,8 +203,11 @@ public class TurnTracker {
         if (promptedPlayers.isEmpty()) {
             return false;
         }
-        while(!promptedPlayers.isEmpty()){
-            activePlayers.offer(promptedPlayers.poll());
+
+        int size = promptedPlayers.size();
+        for (int i = 0; i < size; i++) {
+            int toAdd = promptedPlayers.poll();
+            activePlayers.offer(toAdd);
         }
         return true;
     }
@@ -335,6 +337,14 @@ public class TurnTracker {
 
     public int getDealerID() {
         return dealerID;
+    }
+
+    public int[] getActivePlayers() {
+        int[] toReturn = new int[activePlayers.size()];
+        for (int i = 0; i < toReturn.length; i++) {
+            toReturn[i] = activePlayers.get(i);
+        }
+        return toReturn;
     }
 
     @Override

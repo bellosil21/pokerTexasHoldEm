@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 
+import java.io.Serializable;
+
 /**
  * Stores the a poker hand that is associated with a hank ranking
  *
@@ -12,7 +14,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class CardCollection {
+public class CardCollection implements Serializable {
 
     private Card[] cards;
     private HandRank handRank;
