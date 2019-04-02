@@ -642,7 +642,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                     bet = Integer.parseInt(chipBetText.getText().toString());
                 }
                 catch(NumberFormatException i){
-
+                    MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
                     Log.i("bet variable", "Bet variable was not in proper format.");
                     return;
                 }
@@ -653,13 +653,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                  */
 
                 if (bet > allPlayerMoney) {
-                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
+                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
                     Log.i("PlaceBets error", "User has attempted to place a bet too big");
                 }
                 else if(bet < 0){
                     MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
                 }
-
+                else if(bet == 420){
+                    MessageBox.popUpMessage("Pass the booof", this.myActivity);
+                }
+                else if(bet == 69){
+                    MessageBox.popUpMessage("Nice.", this.myActivity);
+                }
 
 
                 game.sendAction(new PokerRaiseBet(this, bet));
