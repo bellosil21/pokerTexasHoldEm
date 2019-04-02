@@ -8,6 +8,7 @@ import com.example.bellosil21.pokertexasholdem.Game.config.GamePlayerType;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerLocalGame;
 import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerDumbComputerPlayer;
 import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerHumanPlayer;
+import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerSmartComputerPlayer;
 
 import java.util.ArrayList;
 
@@ -29,10 +30,17 @@ public class PokerMainActivity extends GameMainActivity {
             }
         });
 
-        playerTypes.add(new GamePlayerType("Computer player (dumb)") {
+        playerTypes.add(new GamePlayerType("Computer Player (Dumb)") {
             @Override
             public GamePlayer createPlayer(String name) {
                 return new PokerDumbComputerPlayer(name);
+            }
+        });
+
+        playerTypes.add(new GamePlayerType("Computer Player (Smart)") {
+            @Override
+            public GamePlayer createPlayer(String name) {
+                return new PokerSmartComputerPlayer(name);
             }
         });
 
