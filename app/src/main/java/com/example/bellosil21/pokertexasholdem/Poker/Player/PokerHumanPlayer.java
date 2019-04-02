@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.os.Build;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
@@ -581,11 +582,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                 /*So basically we need to prevent users/players from inputing anynumber they want
                  * we do this by checking to see if there bet exceeds the biggest possible integer.
                  * */
-                int bet = Integer.parseInt(chipBetText.getText().toString());
-                if (bet > MAX_INTEGER) {
-                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
+                int playerID = state.getTurnTracker().getActivePlayerID();
+                int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+
+                int bet;
+                try{
+                    bet = Integer.parseInt(chipBetText.getText().toString());
+                }
+                catch(NumberFormatException i){
+
+                    Log.i("bet variable", "Bet variable was not in proper format.");
+                    return;
+                }
+
+                /**
+                 External Citation
+
+                 */
+
+                if (bet > allPlayerMoney) {
+                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
                     Log.i("PlaceBets error", "User has attempted to place a bet too big");
                 }
+                else if(bet < 0){
+                    MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
+                }
+
+
+
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {
 
