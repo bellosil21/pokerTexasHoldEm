@@ -34,6 +34,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info) {
+        sleep(100); //slow down
         //Random n = new Random();
         //int randomInt = n.nextInt(2)+1;
         if(info instanceof NotYourTurnInfo || game == null){

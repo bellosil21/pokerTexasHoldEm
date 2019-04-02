@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -11,7 +12,7 @@ import java.util.LinkedList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class TurnTracker {
+public class TurnTracker implements Serializable {
 
     /** instance vars **/
     private LinkedList<Integer> activePlayers; // players who haven't taken a

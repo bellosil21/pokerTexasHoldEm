@@ -5,9 +5,10 @@ import android.util.Log;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BetController {
+public class BetController implements Serializable {
 
     /** instance vars **/ //dont use 'vars' kevin using variables
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.

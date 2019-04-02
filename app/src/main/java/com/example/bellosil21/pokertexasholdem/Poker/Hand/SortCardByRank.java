@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Hand;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Comparator;
  * @author Gabe Marcial
  */
 
-public class SortCardByRank implements Comparator<Card> {
+public class SortCardByRank implements Comparator<Card>, Serializable {
 
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.bellosil21.pokertexasholdem.Poker.HankRanker;
 
-public enum HandRank{
+import java.io.Serializable;
+
+public enum HandRank implements Serializable {
     STRAIGHT_FLUSH(8),
     FOUR_OF_A_KIND(7),
     FULL_HOUSE(6),
