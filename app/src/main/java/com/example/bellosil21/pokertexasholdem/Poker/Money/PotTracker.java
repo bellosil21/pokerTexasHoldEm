@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Money;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PotTracker {
+public class PotTracker implements Serializable {
     private ArrayList<Integer> contributors;
     /*
      * External Citation

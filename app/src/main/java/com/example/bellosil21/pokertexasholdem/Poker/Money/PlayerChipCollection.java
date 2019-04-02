@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Money;
 
+import java.io.Serializable;
+
 /**
  * Stores an amount of chips with player data.
  *
@@ -8,7 +10,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.Money;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PlayerChipCollection extends ChipCollection {
+public class PlayerChipCollection extends ChipCollection implements Serializable {
 
     private int lastBet; // keep track of most recent bet in case of a raise
     private int lastContributedPot; // index of the last pot this player

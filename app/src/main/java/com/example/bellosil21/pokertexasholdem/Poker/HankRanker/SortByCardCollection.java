@@ -2,9 +2,10 @@ package com.example.bellosil21.pokertexasholdem.Poker.HankRanker;
 
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class SortByCardCollection implements Comparator<CardCollection> {
+public class SortByCardCollection implements Comparator<CardCollection>, Serializable {
 
     @Override
     public int compare(CardCollection cc1, CardCollection cc2) {

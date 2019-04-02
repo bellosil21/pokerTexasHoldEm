@@ -7,10 +7,11 @@ import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class BetController {
+public class BetController implements Serializable {
 
     /** instance vars **/ //dont use 'vars' kevin using variables
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.
