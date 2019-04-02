@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import android.util.Log;
 
+import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
@@ -42,6 +43,8 @@ public class PokerGameState extends GameState {
     private TurnTracker turnTracker;
     // controls and tracks the bets and pots
     private BetController betController;
+
+    private ArrayList<GameAction> lastActions;
 
     /**
      * constant
@@ -90,6 +93,11 @@ public class PokerGameState extends GameState {
 
         numPhase = INIT_PHASE_NUM;
 
+        lastActions = new ArrayList<>();
+        for (int i = 0; i < numPlayers; i++)  {
+            lastActions.add(null);
+        }
+
         turnTracker.nextRound();
         startRound();
     }
@@ -128,6 +136,8 @@ public class PokerGameState extends GameState {
         betController = new BetController(toCopy.betController);
 
         numPhase = toCopy.numPhase;
+
+        lastActions = new ArrayList<>(toCopy.lastActions);
     }
 
     public void nextPhase() {
@@ -223,6 +233,11 @@ public class PokerGameState extends GameState {
 
         if ((roundNumber + 1) % ROUNDS_PER_BLIND_INCREMENT == 0) {
             betController.incrementBlinds();
+        }
+
+        //reset the game actions for the new round
+        for (int i = 0; i < lastActions.size(); i++) {
+            lastActions.set(i, null);
         }
 
         startRound();
@@ -390,4 +405,12 @@ public class PokerGameState extends GameState {
 
     public ArrayList<Hand> getHands(){ return hands; }
     public Deck getDeck(){ return this.playingDeck; }
+
+    public void updatelastAction(int playerID, GameAction action) {
+        lastActions.set(playerID, action);
+    }
+
+    public ArrayList<GameAction> getLastActions() {
+        return lastActions;
+    }
 }
