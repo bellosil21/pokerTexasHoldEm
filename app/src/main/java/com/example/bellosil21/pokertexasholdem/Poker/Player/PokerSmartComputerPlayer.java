@@ -1,10 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
-import android.os.Build;
-
-import com.example.bellosil21.pokertexasholdem.Game.Game;
 import com.example.bellosil21.pokertexasholdem.Game.GameComputerPlayer;
-import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
@@ -15,13 +11,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.TurnTracker;
 
-import java.util.Random;
-
 public class PokerSmartComputerPlayer extends GameComputerPlayer {
-
-    protected Game game;
-    protected GamePlayer player;
-    protected String name;
 
     /**
      * constructor
@@ -35,9 +25,8 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
     @Override
     protected void receiveInfo(GameInfo info) {
         sleep(100); //slow down
-        //Random n = new Random();
-        //int randomInt = n.nextInt(2)+1;
-        if(info instanceof NotYourTurnInfo || game == null){
+        double random = Math.random();
+        if(info instanceof NotYourTurnInfo || info == null){
             return;
         }
         else if(info instanceof PokerGameState){
@@ -53,13 +42,14 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                 game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.
             }
             else{
-                if(myChips > maxBet){
-                    game.sendAction(new PokerRaiseBet(this, 50));
+                int difference = myChips - maxBet;
+                if(difference > 100){
+                    game.sendAction(new PokerRaiseBet(this, maxBet + 50));
                 }
-                else if(myChips == maxBet){
+                if (random > 0.25) {
                     game.sendAction(new PokerCall(this));
                 }
-                else if(myChips < maxBet){
+                else {
                     game.sendAction(new PokerFold(this)); //because i will loose.
                 }
             }
