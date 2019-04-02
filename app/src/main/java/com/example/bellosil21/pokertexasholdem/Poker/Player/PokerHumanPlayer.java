@@ -583,7 +583,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                  * */
                 int bet = Integer.parseInt(chipBetText.getText().toString());
                 if (bet > MAX_INTEGER) {
-                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
+                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
                     Log.i("PlaceBets error", "User has attempted to place a bet too big");
                 }
                 game.sendAction(new PokerRaiseBet(this, bet));
@@ -608,7 +608,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         //this.state.getBetController().raiseBet(playerNum, progress);
         int betting =
                 progress + state.getBetController().getCallAmount(playerNum);
-        chipBetText.setText(""+ betting);
+        chipBetText.setText("Bet Amount: "+ betting);
     }
 
     @Override
