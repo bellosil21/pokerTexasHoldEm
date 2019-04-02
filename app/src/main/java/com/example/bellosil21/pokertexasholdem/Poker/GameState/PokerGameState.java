@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
@@ -12,6 +13,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.SortByCardCollection;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -61,7 +63,7 @@ public class PokerGameState extends GameState implements Serializable {
     private static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
-    private static final int ROUNDS_PER_BLIND_INCREMENT = 5;
+    private static final int ROUNDS_PER_BLIND_INCREMENT = 10;
     private static final long serialVersionUID = -8269749892027578792L;
 
     /**
@@ -218,10 +220,13 @@ public class PokerGameState extends GameState implements Serializable {
         betController.asynchronousReset();
         betController.startPhase();
 
-        //remove players who are out of funds
+        //remove players who are out of funds and set their cards to blank cards
         for (int i = 0; i < numPlayers; i++) {
             if (betController.getPlayerChips(i) == 0) {
                 turnTracker.remove(i);
+                hands.get(i).setHole1(new BlankCard());
+                hands.get(i).setHole2(new BlankCard());
+
             }
         }
 
@@ -232,7 +237,8 @@ public class PokerGameState extends GameState implements Serializable {
             return;
         }
 
-        if ((roundNumber + 1) % ROUNDS_PER_BLIND_INCREMENT == 0) {
+        roundNumber++; // increment the round;
+        if (roundNumber % ROUNDS_PER_BLIND_INCREMENT == 0) {
             betController.incrementBlinds();
         }
 
@@ -267,11 +273,15 @@ public class PokerGameState extends GameState implements Serializable {
     }
 
     /**
-     * Give players their cards.
+     * Give players their cards. (Only if they are an active player)
      */
     public void deal() {
-
-        playingDeck.dealPlayers(hands);
+        int[] players = turnTracker.getActivePlayers();
+        ArrayList<Hand> toDeal = new ArrayList<>();
+        for (int i : players) {
+            toDeal.add(hands.get(i));
+        }
+        playingDeck.dealPlayers(toDeal);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -336,6 +337,14 @@ public class TurnTracker implements Serializable {
 
     public int getDealerID() {
         return dealerID;
+    }
+
+    public int[] getActivePlayers() {
+        int[] toReturn = new int[activePlayers.size()];
+        for (int i = 0; i < toReturn.length; i++) {
+            toReturn[i] = activePlayers.get(i);
+        }
+        return toReturn;
     }
 
     @Override
