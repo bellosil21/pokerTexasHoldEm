@@ -150,6 +150,8 @@ public class PokerLocalGame extends LocalGame {
         }
 
         if (nextTurn) {
+            int playerID = getPlayerIdx(action.getPlayer());
+            state.updatelastAction(playerID, action);
             endTurnCleanUp();
             return true;
         }

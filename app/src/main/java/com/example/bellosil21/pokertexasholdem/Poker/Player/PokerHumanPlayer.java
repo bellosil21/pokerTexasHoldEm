@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
+import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
@@ -33,6 +35,7 @@ import com.example.bellosil21.pokertexasholdem.R;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
@@ -51,6 +54,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
     private TextView player2Name;
     private TextView player3Name;
     private TextView player4Name;
+
+    // last actions for players
+    private TextView player1Action;
+    private TextView player2Action;
+    private TextView player3Action;
+    private TextView player4Action;
+    private int lastMaxBet = 0;
 
     // pot TextView
     private TextView jackpot;
@@ -106,6 +116,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
      */
     public PokerHumanPlayer(String name) {
         super(name);
+        lastMaxBet = 0;
     }
 
     @Override
@@ -138,6 +149,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         this.player2Name = (TextView) activity.findViewById(R.id.player2Name);
         this.player3Name = (TextView) activity.findViewById(R.id.player3Name);
         this.player4Name = (TextView) activity.findViewById(R.id.player4Name);
+
+        this.player1Action = (TextView) activity.findViewById(R.id.player1Move);
+        this.player2Action = (TextView) activity.findViewById(R.id.player2Move);
+        this.player3Action = (TextView) activity.findViewById(R.id.player3Move);
+        this.player4Action = (TextView) activity.findViewById(R.id.player4Move);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
@@ -274,6 +290,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         player2TV.setText("" + state.getChips((++playerCount) % 4));
         player3TV.setText("" + state.getChips((++playerCount) % 4));
         player4TV.setText("" + state.getChips((++playerCount) % 4));
+
+        playerCount = this.playerNum;
+        ArrayList<GameAction> lastActions = state.getLastActions();
+        updateAction(player1Action, lastActions.get(playerCount));
+        updateAction(player2Action, lastActions.get((++playerCount) % 4));
+        updateAction(player3Action, lastActions.get((++playerCount) % 4));
+        updateAction(player4Action, lastActions.get((++playerCount) % 4));
+
 
         // Sets the current total pot amount
         jackpot.setText("" + state.getBetController().getTotalAmount());
@@ -551,6 +575,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         }
 
 
+    }
+
+    private void updateAction(TextView tv, GameAction action) {
+        if (action == null) {
+            tv.setText("");
+        }
+        int nextMaxBet = state.getBetController().getMaxBet();
+        if (action instanceof PokerAllIn) {
+            tv.setText("All In");
+        }
+        else if (action instanceof PokerCall) {
+            if (nextMaxBet == 0) {
+                tv.setText("Check");
+            } else {
+                tv.setText("Call");
+            }
+        }
+        else if (action instanceof PokerCheck) {
+            tv.setText("Check");
+        }
+        else if (action instanceof PokerFold) {
+            tv.setText("Fold");
+        }
+        else if (action instanceof PokerRaiseBet) {
+            int amount = ((PokerRaiseBet) action).getRaiseAmount();
+            tv.setText("Raised by " + amount);
+        }
+        lastMaxBet = nextMaxBet;
     }
 
     /**
