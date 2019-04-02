@@ -42,6 +42,8 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
         }
         if(info instanceof PokerGameState){
 
+            sleep(4000);
+
             if(Math.random() > 0.5){
                 game.sendAction(new PokerCall(this));
             }

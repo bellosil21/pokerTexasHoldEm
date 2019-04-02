@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,13 +28,10 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-
-public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class PokerHumanPlayer extends GameHumanPlayer implements
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
 
     // Instance variables for player's chips TextViews
@@ -85,13 +80,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
     private ImageView player3Card2;
     private ImageView player4Card1;
     private ImageView player4Card2;
-    private ImageView blankCard;
     private ImageView player1;
     private ImageView player2;
     private ImageView player3;
     private ImageView player4;
     private ImageView chipStack;
     private ImageView bettingStack;
+
+    // ImageViews for the blind positions for each player
+    private ImageView player1Status;
+    private ImageView player2Status;
+    private ImageView player3Status;
+    private ImageView player4Status;
+
+    // TextView for Round Number
+    private TextView roundNum;
 
     private GameMainActivity myActivity;
     protected PokerGameState state;
@@ -109,7 +112,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
     @Override
     public View getTopView() {
-        return myActivity.findViewById(R.id.top_gui_layout);
+        return null;//myActivity.findViewById(R.id.top_gui_layout);
     }
 
     /**
@@ -188,6 +191,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         this.player4 = activity.findViewById(R.id.player4);
         this.chipStack = activity.findViewById(R.id.chipStack);
         this.bettingStack = activity.findViewById(R.id.bettingStack);
+
+        this.player1Status = activity.findViewById(R.id.player1Status);
+        this.player2Status = activity.findViewById(R.id.player2Status);
+        this.player3Status = activity.findViewById(R.id.player3Status);
+        this.player4Status = activity.findViewById(R.id.player4Status);
+
+        this.roundNum = activity.findViewById(R.id.roundNum);
     }
 
     @Override
@@ -206,6 +216,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
     }
 
+    /**
+     * Method updates the player's view on the game
+     */
     public void updateGui() {
         TextView player1TV = null;
         TextView player2TV = null;
@@ -269,10 +282,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("" + state.getChips((playerCount) % 4));
-        player2TV.setText("" + state.getChips((++playerCount) % 4));
-        player3TV.setText("" + state.getChips((++playerCount) % 4));
-        player4TV.setText("" + state.getChips((++playerCount) % 4));
+        player1TV.setText("$ " + state.getChips((playerCount) % 4));
+        player2TV.setText("$ " + state.getChips((++playerCount) % 4));
+        player3TV.setText("$ " + state.getChips((++playerCount) % 4));
+        player4TV.setText("$ " + state.getChips((++playerCount) % 4));
 
         // Sets the current total pot amount
         jackpot.setText("" + state.getBetController().getTotalAmount());
@@ -302,11 +315,44 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         setCard(hands.get(playerCount).getHole1(), player4Card1);
         setCard(hands.get(playerCount).getHole2(), player4Card2);
 
-        turnTracker.setText("Turn " + (state.getTurnTracker().getActivePlayerID() + 1));
-        callButton.setText("Call(" + state.getBetController().getCallAmount(playerNum) + ")");
+        turnTracker.setText(allPlayerNames[state.getTurnTracker().
+                getActivePlayerID()] + "'s Turn");
+        callButton.setText("Call(" + state.getBetController().
+                getCallAmount(playerNum) + ")");
 
-        chipBetSeekbar.setMax(state.getChips(playerNum) - state.getBetController().getCallAmount(playerNum));
+        chipBetSeekbar.setMax(
+                state.getChips(playerNum) - state.getBetController()
+                        .getCallAmount(playerNum));
 
+        setBlinds();
+
+        roundNum.setText("Round: " + state.getRoundNumber());
+
+    }
+
+    private void setBlinds() {
+
+        player1Status.setImageResource(0);
+        player2Status.setImageResource(0);
+        player3Status.setImageResource(0);
+        player4Status.setImageResource(0);
+
+        if (state.getTurnTracker().getDealerID() == playerNum){
+            player1Status.setImageResource(R.drawable.small_blind);
+            player2Status.setImageResource(R.drawable.big_blind);
+        }
+        else if (state.getTurnTracker().getDealerID() == (playerNum + 1) % 4){
+            player2Status.setImageResource(R.drawable.small_blind);
+            player3Status.setImageResource(R.drawable.big_blind);
+        }
+        else if (state.getTurnTracker().getDealerID() == (playerNum + 2) % 4){
+            player3Status.setImageResource(R.drawable.small_blind);
+            player4Status.setImageResource(R.drawable.big_blind);
+        }
+        else if (state.getTurnTracker().getDealerID() == (playerNum + 3) % 4){
+            player4Status.setImageResource(R.drawable.small_blind);
+            player1Status.setImageResource(R.drawable.big_blind);
+        }
     }
 
     /**
@@ -578,13 +624,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
                 game.sendAction(new PokerCheck(this));
             } else if (v.equals(betButton)) {
                 //this is where we need to put restriction!!!
-                /*So basically we need to prevent users/players from inputing anynumber they want
-                 * we do this by checking to see if there bet exceeds the biggest possible integer.
+                /*So basically we need to prevent users/players from inputing
+                 any number they want
+                 * we do this by checking to see if there bet exceeds the
+                 * biggest  possible integer.
                  * */
                 int bet = Integer.parseInt(chipBetText.getText().toString());
                 if (bet > MAX_INTEGER) {
                     MessageBox.popUpMessage("Entry to big!", this.myActivity);
-                    Log.i("PlaceBets error", "User has attempted to place a bet too big");
+                    Log.i("PlaceBets error", "User has attempted to " +
+                            "place a " + "bet too big");
                 }
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {
@@ -605,7 +654,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements View.OnClickLis
         if (state == null) {
             return;
         }
-        //this.state.getBetController().raiseBet(playerNum, progress);
         int betting =
                 progress + state.getBetController().getCallAmount(playerNum);
         chipBetText.setText(""+ betting);

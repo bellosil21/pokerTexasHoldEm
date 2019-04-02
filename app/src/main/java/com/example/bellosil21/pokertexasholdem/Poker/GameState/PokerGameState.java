@@ -390,4 +390,6 @@ public class PokerGameState extends GameState {
 
     public ArrayList<Hand> getHands(){ return hands; }
     public Deck getDeck(){ return this.playingDeck; }
+
+    public int getRoundNumber(){return this.roundNumber;}
 }
