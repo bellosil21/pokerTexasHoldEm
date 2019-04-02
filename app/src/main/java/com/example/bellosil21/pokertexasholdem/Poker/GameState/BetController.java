@@ -2,10 +2,13 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import android.util.Log;
 
+import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
+import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class BetController {
 
@@ -41,6 +44,7 @@ public class BetController {
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
+    private GameMainActivity myActivity;
 
     /** constants **/
     public static final int RAISE_INVALID = -1;
@@ -380,18 +384,32 @@ public class BetController {
      */
     public void distributePots(int[] rankings){
 
+        //String winnerList = new String();
+        //String potList = new String();
         for(PotTracker p: pots){
             ArrayList<Integer> winners = getHighestRankingPlayers(p.getContributors(), rankings);
             int amountInPot = p.getContribution();
             int contributorsPerPot = p.getContributors().size();
             int potTotal = amountInPot * contributorsPerPot;
             int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get.
-
             for(int i: winners){
                 players.get(i).addChips(chipsWon);
+                //winnerList = players.get(i+1) + " ";
+                //potList = chipsWon + " ";
+
             }
         }
         /*reset maxBet and totalAmount */
+
+        /**
+         * attempt to make a popup box to display winners
+        MessageBox.popUpMessage("Winning Player(s): \n"+winnerList+"Pot(s):"+potList
+                ,this.myActivity);
+        try{
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            asynchronousReset();
+        }**/
         asynchronousReset();
         /*
         int n;
