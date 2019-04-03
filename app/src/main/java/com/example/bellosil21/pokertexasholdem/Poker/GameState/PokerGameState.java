@@ -336,7 +336,7 @@ public class PokerGameState extends GameState implements Serializable {
 
             } //player loop
 
-        } // sorted CardCollections looop
+        } // sorted CardCollections loop
 
         return finalRanks;
     }
@@ -421,7 +421,7 @@ public class PokerGameState extends GameState implements Serializable {
 
     public int getRoundNumber(){return this.roundNumber;}
 
-    public void updatelastAction(int playerID, GameAction action) {
+    public void updateLastAction(int playerID, GameAction action) {
         lastActions.set(playerID, action);
     }
 
