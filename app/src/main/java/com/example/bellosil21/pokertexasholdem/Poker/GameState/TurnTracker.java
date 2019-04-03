@@ -52,8 +52,8 @@ public class TurnTracker implements Serializable {
      * The tracker requires the total amount of players and the player to
      * take the first smallBlind.
      *
-     * @param dealerID the marker for person who starts the small blind
-     * @param numPlayers the numbers of players
+     * @param dealerID The marker for person who starts the small blind.
+     * @param numPlayers The numbers of players.
      */
     public TurnTracker(int numPlayers, int dealerID) {
         this.activePlayers = new LinkedList<>();
@@ -133,7 +133,7 @@ public class TurnTracker implements Serializable {
 
     /**
      * To be used in the PokerGameState to fold players who are sitting out
-     * if true
+     * if true.
      */
     public boolean isActivePlayerSittingOut() {
         int activePlayer = getActivePlayerID();
@@ -159,9 +159,9 @@ public class TurnTracker implements Serializable {
     /**
      * Removes a player from the game. This player will no longer be involved
      * in the game. Add them to the removed array list, and remove them from
-     * any other list
+     * any other list.
      *
-     * @param playerID the ID of the player who lost or left
+     * @param playerID The ID of the player who lost or left.
      */
     public void remove(int playerID){
         if (!removedPlayers.contains(playerID)) {
@@ -185,7 +185,7 @@ public class TurnTracker implements Serializable {
      * sitting out, they will regain control of their actions.
      *
      * @param playerID the ID of the player who is sitting in/out
-     * @return false if the player has been removed
+     * @return False if the player has been removed.
      */
     public boolean toggleSitting(Integer playerID){
         if (removedPlayers.contains(playerID)) {
@@ -204,12 +204,12 @@ public class TurnTracker implements Serializable {
      * Moves all players from the prompted queue back in the active queue to
      * get their action. This method is called when there is a new bet or
      * when there is a new betting phase (after new community cards have been
-     * place or have been dealt)
+     * place or have been dealt).
      *
      * We maintain the order of the queue by taking the first player in the
      * prompted queue and adding them into the back of the active queue.
      *
-     * @return true if there is still players to prompt
+     * @return True if there is still players to prompt.
      */
     public boolean promptPlayers() {
         if (promptedPlayers.isEmpty()) {
@@ -229,10 +229,10 @@ public class TurnTracker implements Serializable {
      * left in the game.
      *
      * This player is either a active player, prompted player, or is an allIn
-     * player
+     * player.
      *
      * @return -1 if more than one player remain; otherwise, return
-     *          the playerID of the last player remaining
+     *          the playerID of the last player remaining.
      */
     public int isRoundOver() {
         if (activePlayers.size() + promptedPlayers.size() + allInPlayers.size() > 1) {
@@ -268,7 +268,7 @@ public class TurnTracker implements Serializable {
 
     /**
      * Requirement: This function must be called after the removed players
-     * array has been updated
+     * array has been updated.
      *
      * Resets the turn order for the next round with players still in the game.
      * First, the prompted, active, allIn, and folded player arrays are
@@ -298,7 +298,7 @@ public class TurnTracker implements Serializable {
      *
      * @return -1 if the difference between the number of player and the size
      * of removedPlayers is greater than 1; otherwise, return the playerID of
-     * the only player remaining
+     * the only player remaining.
      */
     public int checkIfGameOver() {
         if (numPlayers - removedPlayers.size() > PLAYERS_FOR_GAME_OVER) {
@@ -314,7 +314,6 @@ public class TurnTracker implements Serializable {
     }
 
     /**
-     *
      * Increment the dealer ID (being within mod numPlayers to stay within index
      * bounds) until it matches to an active player.
      *
@@ -336,8 +335,8 @@ public class TurnTracker implements Serializable {
      * more funds, call allIn(); otherwise, add them to the end of the active
      * player queue.
      *
-     * @param isOutOfFunds true if the active player (being forced to bet a
-     *                     blind) is out funds
+     * @param isOutOfFunds True if the active player (being forced to bet a
+     *                     blind) is out funds.
      */
     public void queueBlind(boolean isOutOfFunds) {
         if (isOutOfFunds) {
