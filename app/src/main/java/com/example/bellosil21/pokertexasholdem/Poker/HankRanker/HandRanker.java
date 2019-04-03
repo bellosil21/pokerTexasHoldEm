@@ -21,7 +21,7 @@ import java.util.Collections;
  */
 public class HandRanker implements Serializable {
 
-    /** instance vars **/
+    /** instance variables **/
     private ArrayList<Card> cardSet;
     private ArrayList<Card> clubs;
     private ArrayList<Card> spades;
