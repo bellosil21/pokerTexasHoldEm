@@ -462,7 +462,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         riverCard.setImageResource(0);
     }
 
-    //
+
     private void setCard(CardSlot card1, ImageView cardImage) {
         // Checks if the card or Image view is set
         assert (cardImage != null);
