@@ -108,9 +108,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     protected PokerGameState state;
 
     /**
-     * constructor
+     * Constructor
      *
-     * @param name the name of the player
+     * @param name The name of the player.
      */
     public PokerHumanPlayer(String name) {
         super(name);
