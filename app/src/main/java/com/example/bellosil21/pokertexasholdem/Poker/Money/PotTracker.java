@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class PotTracker implements Serializable {
     private ArrayList<Integer> contributors;
-    /*
+    /**
      * External Citation
      *  Date:     27 March 2019
      *  Problem:  Did not know how to make an array list of ints.

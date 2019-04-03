@@ -49,7 +49,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                     game.sendAction(new PokerCall(this));
                 }
                 else {
-                    game.sendAction(new PokerFold(this)); //because i will loose.
+                    game.sendAction(new PokerFold(this));
                 }
             }
         }
@@ -63,5 +63,4 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                         this functionality.
          */
     }
-
 }

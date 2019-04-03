@@ -52,9 +52,8 @@ public class BetController implements Serializable {
     public static final int RAISE_FUNDS_LEFT = 0;
     public static final int RAISE_NO_FUNDS_LEFT = 1;
 
-    private static final int MULTIPLIER = 2; // the factor at which the
-                                             // small/big blinds will be
-                                             // incremented.
+    /* The factor at which the small/big blinds will be incremented */
+    private static final int MULTIPLIER = 2;
     private static final int DEFAULT_POT_AMOUNT = 0;
 
 
@@ -89,7 +88,7 @@ public class BetController implements Serializable {
 
     /**
      * This method sets up the betting phase by resetting the player's last
-     * bets to 0, and setting the maxBet to 0
+     * bets to 0, and setting the maxBet to 0.
      */
     public void startPhase() {
         for (PlayerChipCollection p : players) {
@@ -139,6 +138,10 @@ public class BetController implements Serializable {
         return false;
     }
 
+    /**
+     * Each time the rotation of which players are the big/small blinds, we multiply they amount
+     * of the blinds by a factor of two.
+     */
     public void incrementBlinds(){
         this.smallBlind = this.smallBlind * MULTIPLIER;
         this.bigBlind = this.bigBlind * MULTIPLIER;
@@ -410,10 +413,10 @@ public class BetController implements Serializable {
                                                     int[] rankings){
         ArrayList<Integer> highestRanks = new ArrayList<>();
         if(rankings == null){
-            Log.i("BetController.java", "rankings array is null");
+            Log.i("BetController.java", "Rankings array is null.");
         }
         if(contributors == null){
-            Log.i("BetController.java", "contriutors array is null");
+            Log.i("BetController.java", "Contributors array is null.");
         }
         int highestRank = rankings[contributors.get(0)];
         highestRanks.add(contributors.get(0));

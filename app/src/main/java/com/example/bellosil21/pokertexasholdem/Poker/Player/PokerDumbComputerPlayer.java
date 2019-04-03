@@ -32,10 +32,11 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        sleep(100); //slow down
-        //checking for null object
+        sleep(100); //slow dow
+        /*checking for null object */
         if(info == null){
-            Log.i("dumbComputerPlayer", "GameInfo object is null.");
+            //this should never happen right? does it make sense?
+            Log.i("DumbComputerPlayer", "GameInfo object is null.");
         }
         if(info instanceof NotYourTurnInfo){
             return;

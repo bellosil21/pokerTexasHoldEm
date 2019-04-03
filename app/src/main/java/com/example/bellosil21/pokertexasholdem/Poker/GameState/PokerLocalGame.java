@@ -51,14 +51,12 @@ public class PokerLocalGame extends LocalGame {
                 break;
             }
         }
-
     }
 
     /**
-     * whether a player is allowed to move
+     * Determine whether a player is allowed to move.
      *
-     * @param playerIdx
-     * 		the player-number of the player in question
+     * @param playerIdx The player-number of the player in question.
      */
     @Override
     protected boolean canMove(int playerIdx) {
@@ -67,8 +65,8 @@ public class PokerLocalGame extends LocalGame {
     }
 
     /**
-     * checks whether the game is over; if so, returns a string giving the result
-     * otherwise, return null
+     * Checks whether the game is over; if so, returns a string giving the result
+     * otherwise, return null.
      */
     @Override
     protected String checkIfGameOver() {
@@ -76,30 +74,27 @@ public class PokerLocalGame extends LocalGame {
         if (check < 0) {
             return null;
         }
-
         return this.playerNames[check] + " is the winner!";
-
     }
 
     /**
-     * makes a move on behalf of a player
+     * Makes a move on behalf of a player.
      *
-     * @param action
-     * 		the action denoting the move to be made
-     * @return
-     * 		true if the move was legal; false otherwise
+     * @param action The action denoting the move to be made.
+     * @return True if the move was legal; false otherwise.
      */
     @Override
     protected boolean makeMove(GameAction action) {
         /*check if GameAction object is null*/
         if(action == null){
-            Log.i("PokerLocalGame.java", "GameAction object is nulll come fix it.");
+            Log.i("PokerLocalGame.java", "GameAction object is null.");
             return false;
         }
 
         boolean isValid = false; // by default, we return false
         boolean nextTurn = false; // by default, we return false
 
+        /*Game Actions*/
         // ALL IN
         if (action instanceof PokerAllIn) {
             int playerID = getPlayerIdx(action.getPlayer());
@@ -157,14 +152,13 @@ public class PokerLocalGame extends LocalGame {
         return isValid;
     }
 
-    /* Game Actions */
 
     /**
      * Tells BetController and TurnTracker that this player went all in.
      * Because all in uses up all the player's funds, the TurnTracker knows
      * to go to the next turn.
      *
-     * @param playerID the ID of the player
+     * @param playerID The ID of the player.
      */
     private void allIn(int playerID) {
         boolean maxBetChanged = state.getBetController().allIn(playerID);
@@ -173,7 +167,6 @@ public class PokerLocalGame extends LocalGame {
         if (maxBetChanged) {
             state.getTurnTracker().promptPlayers();
         }
-
         state.getTurnTracker().allIn();
     }
 
@@ -181,7 +174,7 @@ public class PokerLocalGame extends LocalGame {
      * Tells the BetController that we called. If we used up all our funds,
      * tell the turn tracker; otherwise, manually go to next turn.
      *
-     * @param playerID ID of the player
+     * @param playerID ID of the player.
      */
     private void call(int playerID) {
         boolean usedAllFunds = state.getBetController().call(playerID);
@@ -198,7 +191,7 @@ public class PokerLocalGame extends LocalGame {
     /**
      * Determine if the check is valid. If so, manually go to the next turn.
      *
-     * @return true if the action is valid
+     * @return True if the action is valid.
      */
     private boolean check(int playerID) {
         boolean isValid = state.getBetController().check(playerID);
@@ -224,7 +217,7 @@ public class PokerLocalGame extends LocalGame {
      *
      * @param playerID the ID of the player giving the action
      * @param raiseAmount   the amount that the player is submitting
-     * @return true if the action is valid
+     * @return True if the action is valid.
      */
     private boolean raiseBet(int playerID, int raiseAmount) {
         int raiseReturn = state.getBetController().raiseBet(playerID,
@@ -252,7 +245,7 @@ public class PokerLocalGame extends LocalGame {
      * If a player is showing their cards, hide them.
      * If a player is hiding their cards, show them.
      *
-     * @param playerID the ID of the player showing a card
+     * @param playerID The ID of the player showing a card.
      */
     private void toggleShowHideCards(int playerID) {
         Hand playerHand  = state.getHands().get(playerID);
