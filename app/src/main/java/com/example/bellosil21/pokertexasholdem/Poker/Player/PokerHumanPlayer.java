@@ -676,20 +676,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     /**
      * External Citation
-     * March 30, 2019
+     *  March 30, 2019
      * Problem: Unable to convert a type Editable to a type int
      * Resource: https://www.quora.com/How-would-I-get-an-int-value-from-an-
      *           edit-text-view-in-Android-studio
      * Solution: Used the method to convert to a String first then to a int
      *           suggested from this forum post
      */
+
     /**
      * @param v
      */
     @Override
     public void onClick(View v) {
         if (v == null) {
-            return; //this should never happen lol
+            return;
         }
 
             if (v == foldButton) {
@@ -699,12 +700,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             } else if (v.equals(checkButton)) {
                 game.sendAction(new PokerCheck(this));
             } else if (v.equals(betButton)) {
-                //this is where we need to put restriction!!!
-                /*So basically we need to prevent users/players from inputing
-                 any number they want
-                 * we do this by checking to see if there bet exceeds the
-                 * biggest  possible integer.
-                 * */
+
                 int playerID = state.getTurnTracker().getActivePlayerID();
                 int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
 
@@ -720,29 +716,28 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
                 /**
                  External Citation
-                 Date:   31 March 2019
-                 Problem: Users were able to place bets that were larger than the amount of
-                 money they had in their personal pot
-
-                 Resource:
-                 /
-                 Solution: We
+                    Date: 1 April 2019
+                    Problem:    Needed to find a way to check if a bet integer was declared.
+                                because in the GUI, when they choose to type in the amount they
+                                want to raise, it defaults to "place bets" when nothing is typed,
+                                and the game will crash if this method tries to access an integer
+                                that does not exist.
+                    Resource:
+                        https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#parseInt-
+                            java.lang.String-
+                    Solution:   After inspecting the parseInt() method, we realised that it throws
+                                a NumberFormatException. With this information, we used a try/catch
+                                that would prevent the program from crashing.
                  */
 
                 if (bet > allPlayerMoney) {
                     MessageBox.popUpMessage("Entry too big!", this.myActivity);
-                    Log.i("PlaceBets error", "User has attempted to place a bet too big");
+                    Log.i("PlaceBets error", "User has attempted to raise more money than they " +
+                            "have");
                 }
                 else if(bet < 0){
                     MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
                 }
-                else if(bet == 420){
-                    MessageBox.popUpMessage("Pass the booof", this.myActivity);
-                }
-                else if(bet == 69){
-                    MessageBox.popUpMessage("Nice.", this.myActivity);
-                }
-
 
                 game.sendAction(new PokerRaiseBet(this, bet));
             } else if (v.equals(showHideCardsButton)) {

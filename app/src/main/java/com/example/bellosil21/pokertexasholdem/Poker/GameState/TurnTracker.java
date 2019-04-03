@@ -15,7 +15,7 @@ import java.util.LinkedList;
  */
 public class TurnTracker implements Serializable {
 
-    /** instance vars **/
+    /** instance variables **/
     private LinkedList<Integer> activePlayers; // players who haven't taken a
     // turn in this phase
     private LinkedList<Integer> promptedPlayers; // players who taken a turn in
@@ -36,12 +36,13 @@ public class TurnTracker implements Serializable {
     // turn when dealerID == playerID, the player is smallBlind
     // (dealerID + 1) % numPlayers == playerID, the player is bigBlind
     // (dealerID + 2) % numPlayers == playerID, the player takes the first turn
-    /*
-     * External Citation
-     *  Date:     26 March 2019
-     *  Problem:  Did not know java's LinkedList implementation.
-     *  Resource: https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html
-     *  Solution: We used an ArrayDeque found in java's javadoc.
+
+    /**
+     External Citation
+        Date:     26 March 2019
+        Problem:  Did not know java's LinkedList implementation.
+        Resource: https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html
+        Solution: We used an ArrayDeque found in java's javadoc.
      */
 
     /** constants **/
