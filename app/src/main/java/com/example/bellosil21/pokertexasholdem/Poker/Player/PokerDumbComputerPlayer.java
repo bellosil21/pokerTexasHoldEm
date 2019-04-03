@@ -32,7 +32,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        sleep(100); //slow dow
+        sleep(200); //slow dow
         /*checking for null object */
         if(info == null){
             //this should never happen right? does it make sense?
@@ -47,6 +47,8 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
             if (!showCards) {
                 game.sendAction(new PokerShowHideCards(this));
             }
+
+            sleep(4000);
 
             if(Math.random() > 0.5){
                 game.sendAction(new PokerCall(this));
