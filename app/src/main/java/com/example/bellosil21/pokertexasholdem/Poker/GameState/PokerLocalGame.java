@@ -37,7 +37,7 @@ public class PokerLocalGame extends LocalGame {
             return;
         }
         // if there is no state to send, ignore
-        if (state == null) { //addd a log.i call here
+        if (state == null) {
             return;
         }
 
@@ -144,9 +144,7 @@ public class PokerLocalGame extends LocalGame {
         // SIT OUT/IN
         else if (action instanceof PokerSitOut) {
             int playerID = getPlayerIdx(action.getPlayer());
-            state.getTurnTracker().toggleSitting(playerID);
-
-            isValid = true;
+            isValid = state.getTurnTracker().toggleSitting(playerID);
         }
 
         if (nextTurn) {

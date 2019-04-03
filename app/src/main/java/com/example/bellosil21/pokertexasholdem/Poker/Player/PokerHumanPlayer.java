@@ -128,7 +128,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     @Override
     public View getTopView() {
-        return null;//myActivity.findViewById(R.id.top_gui_layout);
+        return myActivity.findViewById(R.id.top_gui_layout);
     }
 
     /**
@@ -229,6 +229,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         if (info instanceof PokerGameState) {
+            if (state != null){
+                if (state.equals(info)) {
+                    return; // we do not want to update if it is the same state
+                }
+            }
             state = (PokerGameState) info;
             updateGui();
         } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
@@ -359,28 +364,42 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     }
 
+    /**
+     * Sets the small blind and big blind image next to the player icon
+     */
     private void setBlinds() {
-
         player1Status.setImageResource(0);
         player2Status.setImageResource(0);
         player3Status.setImageResource(0);
         player4Status.setImageResource(0);
 
-        if (state.getTurnTracker().getDealerID() == playerNum){
+        int playerSB = state.getTurnTracker().getSmallBlindID();
+        int playerBB = state.getTurnTracker().getBigBlindID();
+
+        if (playerSB == playerNum) {
             player1Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 1) % 4) {
+            player2Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 2) % 4) {
+            player3Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 3) % 4) {
+            player4Status.setImageResource(R.drawable.small_blind);
+        }
+
+        if (playerBB == playerNum) {
+            player1Status.setImageResource(R.drawable.big_blind);
+        }
+        else if (playerBB == (playerNum + 1) % 4) {
             player2Status.setImageResource(R.drawable.big_blind);
         }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 1) % 4){
-            player2Status.setImageResource(R.drawable.small_blind);
+        else if (playerBB == (playerNum + 2) % 4) {
             player3Status.setImageResource(R.drawable.big_blind);
         }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 2) % 4){
-            player3Status.setImageResource(R.drawable.small_blind);
+        else if (playerBB == (playerNum + 3) % 4) {
             player4Status.setImageResource(R.drawable.big_blind);
-        }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 3) % 4){
-            player4Status.setImageResource(R.drawable.small_blind);
-            player1Status.setImageResource(R.drawable.big_blind);
         }
     }
 
@@ -694,7 +713,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                     bet = Integer.parseInt(chipBetText.getText().toString());
                 }
                 catch(NumberFormatException i){
-
+                    MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
                     Log.i("bet variable", "Bet variable was not in proper format.");
                     return;
                 }
@@ -705,14 +724,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                  */
 
                 if (bet > allPlayerMoney) {
-                    MessageBox.popUpMessage("Entry to big!", this.myActivity);
-                    Log.i("PlaceBets error", "User has attempted to " +
-                            "place a " + "bet too big");
+                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
+                    Log.i("PlaceBets error", "User has attempted to place a bet too big");
                 }
                 else if(bet < 0){
                     MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
                 }
-
+                else if(bet == 420){
+                    MessageBox.popUpMessage("Pass the booof", this.myActivity);
+                }
+                else if(bet == 69){
+                    MessageBox.popUpMessage("Nice.", this.myActivity);
+                }
 
 
                 game.sendAction(new PokerRaiseBet(this, bet));

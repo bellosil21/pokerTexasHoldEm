@@ -13,7 +13,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.SortByCardCollection;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -63,7 +62,7 @@ public class PokerGameState extends GameState implements Serializable {
     private static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
-    private static final int ROUNDS_PER_BLIND_INCREMENT = 10;
+    private static final int ROUNDS_PER_BLIND_INCREMENT = 5;
     private static final long serialVersionUID = -8269749892027578792L;
 
     /**
@@ -260,12 +259,14 @@ public class PokerGameState extends GameState implements Serializable {
         // get the small blind player, make them bet, and tell the turn
         // tracker the result
         int activePlayerID = turnTracker.getActivePlayerID();
+        turnTracker.setSmallBlindID(activePlayerID);
         boolean forcedAllInSB = betController.forceSmallBlinds(activePlayerID);
         turnTracker.queueBlind(forcedAllInSB);
 
         // get the big blind player, make them bet, and tell the turn
         // tracker the result
         activePlayerID = turnTracker.getActivePlayerID();
+        turnTracker.setBigBlindID(activePlayerID);
         boolean forcedAllInBB = betController.forceBigBlinds(activePlayerID);
         turnTracker.queueBlind(forcedAllInBB);
 
