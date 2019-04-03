@@ -21,7 +21,6 @@ public enum HandRank implements Serializable {
     PAIR(1),
     HIGH_CARD(0);
 
-    public static final int numOfHandRanks = 10;
     private int numVal;
 
     HandRank(int rank){this.numVal = rank;}

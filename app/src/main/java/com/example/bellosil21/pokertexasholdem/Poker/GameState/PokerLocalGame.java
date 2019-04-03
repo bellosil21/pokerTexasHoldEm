@@ -14,22 +14,37 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCa
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
+/**
+ * The local game to control the master PokerGameState
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class PokerLocalGame extends LocalGame {
 
     private PokerGameState state;
 
-    private static final int startingChips = 1000;
-    private static final int startingSmallBlind = 50;
-    private static final int startingBigBling = 100;
-    private static final int numPlayers = 4;
+    private static final int STARTING_CHIPS = 200;
+    private static final int STARTING_SMALL_BLIND = 50;
+    private static final int STARTING_BIG_BLIND = 100;
+    private static final int NUM_PLAYERS = 4;
 
     public PokerLocalGame() {
         Log.i("SJLocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new PokerGameState(startingChips, startingSmallBlind,
-                startingBigBling, numPlayers);
+        state = new PokerGameState(STARTING_CHIPS, STARTING_SMALL_BLIND,
+                STARTING_BIG_BLIND, NUM_PLAYERS);
     }
 
+    /**
+     * Sends an updated game state to the players.
+     *
+     * Confidential information is hidden (player cards)
+     *
+     * @param p the player to send info to
+     */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
@@ -274,8 +289,8 @@ public class PokerLocalGame extends LocalGame {
         if (onlyPlayerLeft != -1) {
 
             //go to the end of the round, passing this playerID as the best rank
-            int[] rankings = new int[numPlayers];
-            for (int i = 0; i < numPlayers; i++) {
+            int[] rankings = new int[NUM_PLAYERS];
+            for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (onlyPlayerLeft != i) {
                     rankings[i] = Integer.MAX_VALUE;
                 }

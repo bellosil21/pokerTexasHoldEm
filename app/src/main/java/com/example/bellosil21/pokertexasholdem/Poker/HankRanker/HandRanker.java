@@ -5,7 +5,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.SortCardByRank;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -30,8 +29,6 @@ public class HandRanker implements Serializable {
     private int[] rankOccurrences;
 
     /** constants **/
-    //public static final int FLUSH_REQ = 5;
-    //private static final int START = 0;
     private static final int FIVE_CARD_HAND = 5;
     private static final int FOUR_CARD_HAND = 4;
     private static final int THREE_CARD_HAND = 3;

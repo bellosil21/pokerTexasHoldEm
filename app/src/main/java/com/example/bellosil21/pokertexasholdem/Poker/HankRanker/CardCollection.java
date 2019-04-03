@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.HankRanker;
 
-import android.util.Log;
-
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 
 import java.io.Serializable;
@@ -19,7 +17,6 @@ public class CardCollection implements Serializable {
     // Instance variables for a card collection
     private Card[] cards;
     private HandRank handRank;
-    private static final int NULL_INTEGER = -9999;
 
     /**
      * Constructor for a CardCollection object

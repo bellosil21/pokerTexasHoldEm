@@ -2,9 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.util.Log;
 
-import com.example.bellosil21.pokertexasholdem.Game.Game;
 import com.example.bellosil21.pokertexasholdem.Game.GameComputerPlayer;
-import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
@@ -14,6 +12,11 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 
 /**
  * The "dumb" AI for Poker
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
  */
 public class PokerDumbComputerPlayer extends GameComputerPlayer {
 
@@ -28,11 +31,16 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
 
     /**
      * Updates the state of the other players and the game
-     * @param info
+     *
+     * This dumb AI shows their cards and always sends a call action.
+     *
+     * @param info about the game
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        sleep(100); //slow dow
+        //slow the computer down so the human player can see what is going on
+        sleep(100);
+
         /*checking for null object */
         if(info == null){
             //this should never happen right? does it make sense?

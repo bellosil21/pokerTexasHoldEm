@@ -9,8 +9,15 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
-import com.example.bellosil21.pokertexasholdem.Poker.GameState.TurnTracker;
 
+/**
+ * The "smart" AI for Poker
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
     /**
@@ -22,6 +29,15 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
         super(name);
     }
 
+    /**
+     * Updates the state of the other players and the game
+     *
+     * This smart AI checks for maxBets == 0, makes a bet when they have an
+     * excess amount of funds, otherwise they will call 75% of the time and
+     * fold 25% of the time.
+     *
+     * @param info about the game
+     */
     @Override
     protected void receiveInfo(GameInfo info) {
         double random = Math.random();
@@ -35,7 +51,8 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
             int myChips = betController.getPlayerChips(this.playerNum);
             int maxBet = betController.getMaxBet();
 
-            sleep(500); //slow down
+            // slow down so the human player can see what is going
+            sleep(500);
 
             if(betController.getMaxBet() == 0){
                 game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.

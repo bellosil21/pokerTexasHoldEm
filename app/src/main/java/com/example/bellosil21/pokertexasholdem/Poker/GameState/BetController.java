@@ -2,18 +2,24 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import android.util.Log;
 
-import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
-import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * Controls and distributes the pots
+ * Manages all bets
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class BetController implements Serializable {
 
-    /** instance vars **/ //dont use 'vars' kevin using variables
+    /** instance vars **/
     private ArrayList<PotTracker> pots; // Keeps track of all the pots.
     /* A pot at a lower index includes all players, while pots at high
      * indexes include less players. Assume we only have one pot to begin
@@ -45,7 +51,6 @@ public class BetController implements Serializable {
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
-    private GameMainActivity myActivity;
 
     /** constants **/
     public static final int RAISE_INVALID = -1;
@@ -295,7 +300,6 @@ public class BetController implements Serializable {
         }
 
         int nextPotIndex = player.getLastContributedPot() + 1;
-        PotTracker nextPot = pots.get(nextPotIndex);
 
         // determine if we are trying to add an amount less than the next pot
         // to contribute

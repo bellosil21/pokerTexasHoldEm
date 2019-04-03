@@ -142,6 +142,9 @@ public class PokerGameState extends GameState implements Serializable {
         lastActions = new ArrayList<>(toCopy.lastActions);
     }
 
+    /**
+     * Sets up the game for the next phase
+     */
     public void nextPhase() {
         if (numPhase == PHASE_PRE_FLOP) {
             phasePreFlop();
@@ -158,6 +161,9 @@ public class PokerGameState extends GameState implements Serializable {
         }
     }
 
+    /**
+     * It is the end of the pre-fop, so set up the game for the flop
+     */
     private void phasePreFlop() {
         for (int i = 0; i < CARDS_FLOP; i++) {
             communityCards.add(playingDeck.getACard());
@@ -177,6 +183,9 @@ public class PokerGameState extends GameState implements Serializable {
 
     }
 
+    /**
+     * It is the end of the flop, so set up the game for the turn
+     */
     private void phaseFlop() {
         communityCards.add(playingDeck.getACard());
 
@@ -193,6 +202,9 @@ public class PokerGameState extends GameState implements Serializable {
         numPhase = PHASE_TURN;
     }
 
+    /**
+     * It is the end of the turn, so set up the game for the river
+     */
     private void phaseTurn() {
         communityCards.add(playingDeck.getACard());
 
@@ -210,10 +222,20 @@ public class PokerGameState extends GameState implements Serializable {
         /** can something null happen here*/
     }
 
+    /**
+     * It is the end of the river, so distribute the pots to the winners
+     */
     private void phaseRiver() {
         endOfRound(rankCardCollections());
     }
 
+    /**
+     * Distribute the pots and prepare the game for the next round
+     *
+     * @param rankings the standing of the round
+     *                 index represents the player
+     *                 element represents their rank (0 is high)
+     */
     public void endOfRound(int rankings[]) {
         betController.distributePots(rankings);
         betController.asynchronousReset();
@@ -249,6 +271,10 @@ public class PokerGameState extends GameState implements Serializable {
         startRound();
     }
 
+    /**
+     * Starts the next round by setting up the new cards and forcing the
+     * blinds to contribute to the pot
+     */
     private void startRound() {
         communityCards.clear();
         playingDeck = new Deck();

@@ -1,8 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
-import android.os.Build;
-import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,9 +30,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PokerHumanPlayer extends GameHumanPlayer implements
@@ -59,7 +53,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private TextView player2Action;
     private TextView player3Action;
     private TextView player4Action;
-    private int lastMaxBet = 0;
 
     // pot TextView
     private TextView jackpot;
@@ -113,8 +106,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     private GameMainActivity myActivity;
     protected PokerGameState state;
-    private static final int MAX_INTEGER = 2147483647;
-
 
     /**
      * constructor
@@ -123,7 +114,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      */
     public PokerHumanPlayer(String name) {
         super(name);
-        lastMaxBet = 0;
     }
 
     @Override
@@ -144,42 +134,38 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         activity.setContentView(R.layout.activity_main);
 
         // Setting all TextViews to local variables
-        this.player1Chips = (TextView) activity.findViewById(R.id.currChips);
-        this.player2Chips = (TextView) activity.findViewById(R.id.player2Chips);
-        this.player3Chips = (TextView) activity.findViewById(R.id.player3Chips);
-        this.player4Chips = (TextView) activity.findViewById(R.id.player4Chips);
-        this.turnTracker = (TextView) activity.findViewById(R.id.turnText);
-        this.jackpot = (TextView) activity.findViewById(R.id.totalPot);
+        this.player1Chips = activity.findViewById(R.id.currChips);
+        this.player2Chips = activity.findViewById(R.id.player2Chips);
+        this.player3Chips = activity.findViewById(R.id.player3Chips);
+        this.player4Chips = activity.findViewById(R.id.player4Chips);
+        this.turnTracker = activity.findViewById(R.id.turnText);
+        this.jackpot = activity.findViewById(R.id.totalPot);
 
         // Setting all players' names TextViews to local variables
-        this.player1Name = (TextView) activity.findViewById(R.id.player1Name);
-        this.player2Name = (TextView) activity.findViewById(R.id.player2Name);
-        this.player3Name = (TextView) activity.findViewById(R.id.player3Name);
-        this.player4Name = (TextView) activity.findViewById(R.id.player4Name);
+        this.player1Name = activity.findViewById(R.id.player1Name);
+        this.player2Name = activity.findViewById(R.id.player2Name);
+        this.player3Name = activity.findViewById(R.id.player3Name);
+        this.player4Name = activity.findViewById(R.id.player4Name);
 
-        this.player1Action = (TextView) activity.findViewById(R.id.player1Move);
-        this.player2Action = (TextView) activity.findViewById(R.id.player2Move);
-        this.player3Action = (TextView) activity.findViewById(R.id.player3Move);
-        this.player4Action = (TextView) activity.findViewById(R.id.player4Move);
+        this.player1Action = activity.findViewById(R.id.player1Move);
+        this.player2Action = activity.findViewById(R.id.player2Move);
+        this.player3Action = activity.findViewById(R.id.player3Move);
+        this.player4Action = activity.findViewById(R.id.player4Move);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
-        this.chipBetSeekbar = (SeekBar) activity.findViewById(R.id.bettingSearch);
+        this.chipBetSeekbar = activity.findViewById(R.id.bettingSearch);
         chipBetSeekbar.setOnSeekBarChangeListener(this);
-        this.chipBetText = (EditText) activity.findViewById(R.id.betInsertText);
+        this.chipBetText = activity.findViewById(R.id.betInsertText);
 
         // Setting references to the variables needed for the buttons in the
         // GUI
-        this.foldButton =
-                (Button) activity.findViewById(R.id.foldButton);
-        this.sitOutButton =
-                (Button) activity.findViewById(R.id.sitoutButton);
-        this.betButton = (Button) activity.findViewById(R.id.betButton);
-        this.checkButton = (Button) activity.findViewById(R.id.checkButton);
-        this.showHideCardsButton =
-                (Button) activity.findViewById(R.id.showHideCardsButton);
-        this.callButton =
-                (Button) activity.findViewById(R.id.callButton);
+        this.foldButton = activity.findViewById(R.id.foldButton);
+        this.sitOutButton = activity.findViewById(R.id.sitoutButton);
+        this.betButton = activity.findViewById(R.id.betButton);
+        this.checkButton = activity.findViewById(R.id.checkButton);
+        this.showHideCardsButton = activity.findViewById(R.id.showHideCardsButton);
+        this.callButton = activity.findViewById(R.id.callButton);
 
         // Setting listeners to all the buttons
         this.showHideCardsButton.setOnClickListener(this);
@@ -226,6 +212,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.roundNum = activity.findViewById(R.id.roundNum);
     }
 
+    /**
+     * Update the GUI for a given PokerGameState
+     *
+     * Flash the screen if we have an invalid action
+     *
+     * @param info about the game
+     */
     @Override
     public void receiveInfo(GameInfo info) {
 
@@ -234,9 +227,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         if (info instanceof PokerGameState) {
+            // we do not want to update if it is the same state
             if (state != null){
                 if (state.equals(info)) {
-                    return; // we do not want to update if it is the same state
+                    return;
                 }
             }
             state = (PokerGameState) info;
@@ -250,7 +244,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     /**
      * Method updates the player's view on the game
      */
-    public void updateGui() {
+    private void updateGui() {
         TextView player1TV = null;
         TextView player2TV = null;
         TextView player3TV = null;
@@ -354,8 +348,22 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         setCard(hands.get(playerCount).getHole1(), player4Card1);
         setCard(hands.get(playerCount).getHole2(), player4Card2);
 
-        turnTracker.setText(allPlayerNames[state.getTurnTracker().
-                getActivePlayerID()] + "'s Turn");
+        int activePlayerID = state.getTurnTracker().
+                getActivePlayerID();
+
+        // if the active player is not actually a player (ID < 0), then set
+        // the turnTracker TextView to loading
+
+        // if the active player from the turn tracker is >= 0, set the
+        // turnTracker TextView to the name of the player
+
+        if (activePlayerID < 0) {
+            turnTracker.setText("Loading...");
+        } else {
+            turnTracker.setText(allPlayerNames[state.getTurnTracker().
+                    getActivePlayerID()] + "'s Turn");
+        }
+
         callButton.setText("Call(" + state.getBetController().
                 getCallAmount(playerNum) + ")");
 
@@ -445,9 +453,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     }
 
     /**
+     * Reset the community cards to clean up past rounds.
+     *
      * External Citation
      * Date: March 31, 2019
-     * <p>
      * Problem: Unable to reset cards to nothing for community cards
      * Resource: https://inducesmile.com/android-programming/how-to-remove-
      * image-or-bitmap-from-imageview-in-android/
@@ -462,7 +471,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         riverCard.setImageResource(0);
     }
 
-
+    /**
+     * Updates the GUI to show cards. This is a long method since there are
+     * 52 cards in a deck, plus we need to check if the card is blank to show
+     * a card backing.
+     *
+     * @param card1 the CardSlot from the PokerGameState
+     * @param cardImage the ImageView to update in the GUI
+     */
     private void setCard(CardSlot card1, ImageView cardImage) {
         // Checks if the card or Image view is set
         assert (cardImage != null);
@@ -642,23 +658,31 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
         } else if (card1 instanceof BlankCard) {
-            BlankCard card2 = (BlankCard) card1;
             cardImage.setImageResource(R.drawable.card_b);
         } else {
             return;
         }
 
-
     }
 
+    /**
+     * Updates the GUI to show each player's last action
+     *
+     * @param tv the text view of the player to update
+     * @param action the player's last action
+     */
     private void updateAction(TextView tv, GameAction action) {
         if (action == null) {
             tv.setText("");
         }
+
         int nextMaxBet = state.getBetController().getMaxBet();
         if (action instanceof PokerAllIn) {
             tv.setText("All In");
         }
+
+        // if they call when the max bet is zero, name it a check action for
+        // clarity of the human player
         else if (action instanceof PokerCall) {
             if (nextMaxBet == 0) {
                 tv.setText("Check");
@@ -676,7 +700,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int amount = ((PokerRaiseBet) action).getRaiseAmount();
             tv.setText("Raised by " + amount);
         }
-        lastMaxBet = nextMaxBet;
     }
 
     /**
@@ -690,7 +713,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      */
 
     /**
-     * @param v
+     * Determine which button was pressed and send the corresponding action
+     *
+     * @param v the view that was clicked
      */
     @Override
     public void onClick(View v) {
@@ -698,66 +723,75 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             return;
         }
 
-            if (v == foldButton) {
-                game.sendAction(new PokerFold(this));
-            } else if (v.equals(callButton)) {
-                game.sendAction(new PokerCall(this));
-            } else if (v.equals(checkButton)) {
-                game.sendAction(new PokerCheck(this));
-            } else if (v.equals(betButton)) {
+        if (v == foldButton) {
+            game.sendAction(new PokerFold(this));
+        } else if (v.equals(callButton)) {
+            game.sendAction(new PokerCall(this));
+        } else if (v.equals(checkButton)) {
+            game.sendAction(new PokerCheck(this));
+        } else if (v.equals(betButton)) {
 
-                int playerID = state.getTurnTracker().getActivePlayerID();
-                int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+            // make sure the TextEdit contains an integer and the player has
+            // enough to bet the amount
+            int playerID = state.getTurnTracker().getActivePlayerID();
+            int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
 
-                int bet;
-                try{
-                    bet = Integer.parseInt(chipBetText.getText().toString());
-                }
-                catch(NumberFormatException i){
-                    MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
-                    Log.i("bet variable", "Bet variable was not in proper format.");
-                    return;
-                }
-
-                /**
-                 External Citation
-                    Date: 1 April 2019
-                    Problem:    Needed to find a way to check if a bet integer was declared.
-                                because in the GUI, when they choose to type in the amount they
-                                want to raise, it defaults to "place bets" when nothing is typed,
-                                and the game will crash if this method tries to access an integer
-                                that does not exist.
-                    Resource:
-                        https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#parseInt-
-                            java.lang.String-
-                    Solution:   After inspecting the parseInt() method, we realised that it throws
-                                a NumberFormatException. With this information, we used a try/catch
-                                that would prevent the program from crashing.
-                 */
-
-                if (bet > allPlayerMoney) {
-                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
-                    Log.i("PlaceBets error", "User has attempted to raise more money than they " +
-                            "have");
-                }
-                else if(bet < 0){
-                    MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
-                }
-
-                game.sendAction(new PokerRaiseBet(this, bet));
-            } else if (v.equals(showHideCardsButton)) {
-
-                if (showHideCardsButton.getText().equals("SHOW CARDS")) {
-                    showHideCardsButton.setText("HIDE CARDS");
-                } else {
-                    showHideCardsButton.setText("SHOW CARDS");
-                }
-                game.sendAction(new PokerShowHideCards(this));
-            } else if (v.equals(sitOutButton)) {
-                game.sendAction(new PokerSitOut(this));
+            int bet;
+            try{
+                bet = Integer.parseInt(chipBetText.getText().toString());
             }
+            catch(NumberFormatException i){
+                MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
+                Log.i("bet variable", "Bet variable was not in proper format.");
+                return;
+            }
+
+            /**
+             External Citation
+                Date: 1 April 2019
+                Problem:    Needed to find a way to check if a bet integer was declared.
+                            because in the GUI, when they choose to type in the amount they
+                            want to raise, it defaults to "place bets" when nothing is typed,
+                            and the game will crash if this method tries to access an integer
+                            that does not exist.
+                Resource:
+                    https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#parseInt-
+                        java.lang.String-
+                Solution:   After inspecting the parseInt() method, we realised that it throws
+                            a NumberFormatException. With this information, we used a try/catch
+                            that would prevent the program from crashing.
+             */
+
+            if (bet > allPlayerMoney) {
+                MessageBox.popUpMessage("Entry too big!", this.myActivity);
+                Log.i("PlaceBets error", "User has attempted to raise more money than they " +
+                        "have");
+            }
+            else if(bet < 0){
+                MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
+            }
+
+            game.sendAction(new PokerRaiseBet(this, bet));
+
+        } else if (v.equals(showHideCardsButton)) {
+
+            if (showHideCardsButton.getText().equals("SHOW CARDS")) {
+                showHideCardsButton.setText("HIDE CARDS");
+            } else {
+                showHideCardsButton.setText("SHOW CARDS");
+            }
+            game.sendAction(new PokerShowHideCards(this));
+
+        } else if (v.equals(sitOutButton)) {
+
+            game.sendAction(new PokerSitOut(this));
+        }
     }
 
+    /**
+     * Update the seek bar to show the betting amount with respect to the
+     * amount needed to call
+     */
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (state == null) {
@@ -770,11 +804,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        // not used
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
+        // not used
     }
 }

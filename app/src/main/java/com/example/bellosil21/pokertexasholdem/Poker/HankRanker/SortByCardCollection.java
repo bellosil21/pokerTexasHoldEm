@@ -5,6 +5,14 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import java.io.Serializable;
 import java.util.Comparator;
 
+/**
+ * Sorts CardCollections in descending order
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class SortByCardCollection implements Comparator<CardCollection>, Serializable {
 
     @Override
