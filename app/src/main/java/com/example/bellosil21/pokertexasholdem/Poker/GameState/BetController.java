@@ -2,11 +2,14 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import android.util.Log;
 
+import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
+import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PlayerChipCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.Money.PotTracker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class BetController implements Serializable {
 
@@ -42,6 +45,7 @@ public class BetController implements Serializable {
     private int totalAmount;
     private int smallBlind;
     private int bigBlind;
+    private GameMainActivity myActivity;
 
     /** constants **/
     public static final int RAISE_INVALID = -1;
@@ -260,15 +264,6 @@ public class BetController implements Serializable {
 
         addToPot(playerID, allChips);
         return maxBetChanged;
-
-        /*remove all the chips from given player object.*/
-        //players.get(playerID).removeChips(allChips); //is done in addToPot
-
-        /*set isAllIn variable to true*/
-        //isPlayerAllIn = true;
-
-        /*set players last bet to this all in amount*/
-        //players.get(playerID).setLastBet(allChips); //done in addToPot
     }
 
     /**
@@ -380,44 +375,19 @@ public class BetController implements Serializable {
      *
      */
     public void distributePots(int[] rankings){
-
         for(PotTracker p: pots){
             ArrayList<Integer> winners = getHighestRankingPlayers(p.getContributors(), rankings);
             int amountInPot = p.getContribution();
             int contributorsPerPot = p.getContributors().size();
             int potTotal = amountInPot * contributorsPerPot;
             int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get.
-
             for(int i: winners){
                 players.get(i).addChips(chipsWon);
+
             }
         }
         /*reset maxBet and totalAmount */
         asynchronousReset();
-        /*
-        int n;
-        ArrayList<Integer> winners;
-        for(PotTracker p : pots){
-            winners = new ArrayList<>();
-            n = getHighestRankingPlayers(p.getContributors(), rankings);
-                for(int i = 0; i<rankings.length; i++){
-                    if(rankings[i] == n){
-                        winners.add(i);
-                    }
-                }
-               int money = p.pot.getChips();
-            if(winners.size() >1){
-                //split money into groups equal to the amount of winners.
-                money = money/winners.size();
-                for(int i = 0; i<winners.size(); i++){
-                    players.get(winners.get(i)).addChips(money);
-                }
-            }
-            else{
-                players.get(winners.get(0)).addChips(money);
-            }
-        }
-        */
     }
 
 
@@ -438,16 +408,6 @@ public class BetController implements Serializable {
      */
     private ArrayList<Integer> getHighestRankingPlayers(ArrayList<Integer> contributors,
                                                     int[] rankings){
-        /* 0 is the highest possible rank, which makes the for loop weird. */
-        /*
-        int highestRank = rankings[contributors.get(0)];
-        for(int i = 0; i < contributors.size(); i++){
-            if(highestRank < rankings[contributors.get(i)]) {
-                highestRank = rankings[contributors.get(i)];
-            }
-        }
-        return highestRank;
-        */
         ArrayList<Integer> highestRanks = new ArrayList<>();
         if(rankings == null){
             Log.i("BetController.java", "rankings array is null");
