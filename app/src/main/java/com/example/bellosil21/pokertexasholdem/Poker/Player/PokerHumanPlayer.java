@@ -701,7 +701,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
                 /**
                  External Citation
+                 Date:   31 March 2019
+                 Problem: Users were able to place bets that were larger than the amount of
+                 money they had in their personal pot
 
+                 Resource:
+                 /
+                 Solution: We
                  */
 
                 if (bet > allPlayerMoney) {
