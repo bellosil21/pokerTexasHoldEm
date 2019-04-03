@@ -26,7 +26,7 @@ public class PokerLocalGame extends LocalGame {
 
     private PokerGameState state;
 
-    private static final int STARTING_CHIPS = 200;
+    private static final int STARTING_CHIPS = 1000;
     private static final int STARTING_SMALL_BLIND = 50;
     private static final int STARTING_BIG_BLIND = 100;
     private static final int NUM_PLAYERS = 4;
