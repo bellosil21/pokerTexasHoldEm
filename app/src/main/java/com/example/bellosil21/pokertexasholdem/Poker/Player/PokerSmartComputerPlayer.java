@@ -24,7 +24,6 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info) {
-        sleep(100); //slow down
         double random = Math.random();
         if(info instanceof NotYourTurnInfo || info == null){
             return;
@@ -32,11 +31,11 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
         else if(info instanceof PokerGameState){
            BetController betController =
                    new BetController(((PokerGameState) info).getBetController());
-            TurnTracker turnTracker = new TurnTracker(((PokerGameState) info).getTurnTracker());
 
-            int myID = turnTracker.getActivePlayerID(); //my ID because its my turn right?
-            int myChips = betController.getPlayerChips(myID);
+            int myChips = betController.getPlayerChips(this.playerNum);
             int maxBet = betController.getMaxBet();
+
+            sleep(500); //slow down
 
             if(betController.getMaxBet() == 0){
                 game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.
@@ -46,7 +45,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                 if(difference > 100){
                     game.sendAction(new PokerRaiseBet(this, maxBet + 50));
                 }
-                if (random > 0.25) {
+                else if (random > 0.25) {
                     game.sendAction(new PokerCall(this));
                 }
                 else {
