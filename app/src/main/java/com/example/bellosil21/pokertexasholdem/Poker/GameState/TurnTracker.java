@@ -31,6 +31,8 @@ public class TurnTracker implements Serializable {
     // to bet (an amount of 0)
     private int numPlayers; // the number of players in this game
     private int dealerID; // is a marker for blinds and who takes the first
+    private int smallBlindID;
+    private int bigBlindID;
     // turn when dealerID == playerID, the player is smallBlind
     // (dealerID + 1) % numPlayers == playerID, the player is bigBlind
     // (dealerID + 2) % numPlayers == playerID, the player takes the first turn
@@ -61,6 +63,8 @@ public class TurnTracker implements Serializable {
         this.removedPlayers = new ArrayList<>();
         this.numPlayers = numPlayers;
         this.dealerID = dealerID % numPlayers;
+        smallBlindID = -1; // not initialized yet
+        bigBlindID = -1; // not initialized yet
 
         for(int i=0; i<numPlayers; i++){
             activePlayers.add(i);
@@ -85,6 +89,8 @@ public class TurnTracker implements Serializable {
 
         this.numPlayers = toCopy.numPlayers;
         this.dealerID = toCopy.dealerID;
+        this.smallBlindID = toCopy.smallBlindID;
+        this.bigBlindID = toCopy.bigBlindID;
     }
 
     /**
@@ -178,14 +184,19 @@ public class TurnTracker implements Serializable {
      * sitting out, they will regain control of their actions.
      *
      * @param playerID the ID of the player who is sitting in/out
+     * @return false if the player has been removed
      */
-    public void toggleSitting(Integer playerID){
+    public boolean toggleSitting(Integer playerID){
+        if (removedPlayers.contains(playerID)) {
+            return false;
+        }
         if(sittingOutPlayers.contains(playerID)){
             sittingOutPlayers.remove(playerID);
         }
         else{
             sittingOutPlayers.add(playerID);
         }
+        return true;
     }
 
     /**
@@ -345,6 +356,22 @@ public class TurnTracker implements Serializable {
             toReturn[i] = activePlayers.get(i);
         }
         return toReturn;
+    }
+
+    public void setSmallBlindID(int smallBlindID) {
+        this.smallBlindID = smallBlindID;
+    }
+
+    public void setBigBlindID(int bigBlindID) {
+        this.bigBlindID = bigBlindID;
+    }
+
+    public int getSmallBlindID() {
+        return smallBlindID;
+    }
+
+    public int getBigBlindID() {
+        return bigBlindID;
     }
 
     @Override

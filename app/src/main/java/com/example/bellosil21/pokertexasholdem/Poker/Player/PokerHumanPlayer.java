@@ -229,6 +229,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         if (info instanceof PokerGameState) {
+            if (state != null){
+                if (state.equals(info)) {
+                    return; // we do not want to update if it is the same state
+                }
+            }
             state = (PokerGameState) info;
             updateGui();
         } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
@@ -359,28 +364,42 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     }
 
+    /**
+     * Sets the small blind and big blind image next to the player icon
+     */
     private void setBlinds() {
-
         player1Status.setImageResource(0);
         player2Status.setImageResource(0);
         player3Status.setImageResource(0);
         player4Status.setImageResource(0);
 
-        if (state.getTurnTracker().getDealerID() == playerNum){
+        int playerSB = state.getTurnTracker().getSmallBlindID();
+        int playerBB = state.getTurnTracker().getBigBlindID();
+
+        if (playerSB == playerNum) {
             player1Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 1) % 4) {
+            player2Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 2) % 4) {
+            player3Status.setImageResource(R.drawable.small_blind);
+        }
+        else if (playerSB == (playerNum + 3) % 4) {
+            player4Status.setImageResource(R.drawable.small_blind);
+        }
+
+        if (playerBB == playerNum) {
+            player1Status.setImageResource(R.drawable.big_blind);
+        }
+        else if (playerBB == (playerNum + 1) % 4) {
             player2Status.setImageResource(R.drawable.big_blind);
         }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 1) % 4){
-            player2Status.setImageResource(R.drawable.small_blind);
+        else if (playerBB == (playerNum + 2) % 4) {
             player3Status.setImageResource(R.drawable.big_blind);
         }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 2) % 4){
-            player3Status.setImageResource(R.drawable.small_blind);
+        else if (playerBB == (playerNum + 3) % 4) {
             player4Status.setImageResource(R.drawable.big_blind);
-        }
-        else if (state.getTurnTracker().getDealerID() == (playerNum + 3) % 4){
-            player4Status.setImageResource(R.drawable.small_blind);
-            player1Status.setImageResource(R.drawable.big_blind);
         }
     }
 
