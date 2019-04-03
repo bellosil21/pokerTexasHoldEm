@@ -89,8 +89,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:layout_marginRight="150dp"
-            android:layout_toLeftOf="@id/flop3"
+            android:layout_toLeftOf="@id/player2Status"
             android:background="@android:color/holo_purple"
             app:srcCompat="@drawable/player" />
 
@@ -303,13 +302,13 @@
             app:fontFamily="@font/anton" />
 
         <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="34dp"
-            android:layout_height="30dp"
+            android:id="@+id/player4Status"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/player4"
             android:layout_toRightOf="@+id/player4"
-            app:srcCompat="@drawable/dealer" />
+            app:srcCompat="@drawable/small_blind" />
 
         <ImageView
             android:id="@+id/logo"
@@ -397,6 +396,42 @@
             android:textColor="@android:color/white"
             android:textSize="32dp"
             app:fontFamily="@font/anton" />
+
+        <ImageView
+            android:id="@+id/player1Status"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:srcCompat="@drawable/big_blind" />
+
+        <ImageView
+            android:id="@+id/player2Status"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@+id/flop3"
+            android:layout_alignBottom="@id/player2"
+            android:layout_marginRight="110dp"
+            app:srcCompat="@drawable/big_blind" />
+
+        <ImageView
+            android:id="@+id/player3Status"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/player3"
+            android:layout_alignBottom="@id/player3"
+            app:srcCompat="@drawable/big_blind" />
+
+        <TextView
+            android:id="@+id/roundNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/anton"
+            android:layout_alignParentEnd="true"
+            android:textSize="30dp"
+            android:text="Round"
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 

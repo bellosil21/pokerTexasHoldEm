@@ -48,6 +48,8 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
                 game.sendAction(new PokerShowHideCards(this));
             }
 
+            sleep(4000);
+
             if(Math.random() > 0.5){
                 game.sendAction(new PokerCall(this));
             }

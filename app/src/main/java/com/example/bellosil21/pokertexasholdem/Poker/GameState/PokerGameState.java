@@ -418,6 +418,8 @@ public class PokerGameState extends GameState implements Serializable {
     public ArrayList<Hand> getHands(){ return hands; }
     public Deck getDeck(){ return this.playingDeck; }
 
+    public int getRoundNumber(){return this.roundNumber;}
+
     public void updatelastAction(int playerID, GameAction action) {
         lastActions.set(playerID, action);
     }
