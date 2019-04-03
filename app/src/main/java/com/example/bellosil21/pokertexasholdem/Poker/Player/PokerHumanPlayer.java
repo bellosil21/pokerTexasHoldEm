@@ -196,16 +196,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
         // TODO: 3/31/2019 if statement to see if round is over, if true show all cards
+
+        // Setting references ImageView for each opponents' cards
         this.player2Card1 = activity.findViewById(R.id.player2Card1);
         this.player2Card2 = activity.findViewById(R.id.player2Card2);
         this.player3Card1 = activity.findViewById(R.id.player3Card1);
         this.player3Card2 = activity.findViewById(R.id.player3Card2);
         this.player4Card1 = activity.findViewById(R.id.player4Card1);
         this.player4Card2 = activity.findViewById(R.id.player4Card2);
-
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
 
+        // Setting refernces to the each player's images
         this.player1 = activity.findViewById(R.id.player1);
         this.player2 = activity.findViewById(R.id.player2);
         this.player3 = activity.findViewById(R.id.player3);
@@ -213,11 +215,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.chipStack = activity.findViewById(R.id.chipStack);
         this.bettingStack = activity.findViewById(R.id.bettingStack);
 
+        // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
         this.player2Status = activity.findViewById(R.id.player2Status);
         this.player3Status = activity.findViewById(R.id.player3Status);
         this.player4Status = activity.findViewById(R.id.player4Status);
 
+        // Setting a reference to the TextView informing players of the
+        // current round
         this.roundNum = activity.findViewById(R.id.roundNum);
     }
 
