@@ -2,6 +2,14 @@ package com.example.bellosil21.pokertexasholdem.Poker.HankRanker;
 
 import java.io.Serializable;
 
+/**
+ * Class to define the different types of hands possible with a collection of
+ * cards
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public enum HandRank implements Serializable {
     STRAIGHT_FLUSH(8),
     FOUR_OF_A_KIND(7),

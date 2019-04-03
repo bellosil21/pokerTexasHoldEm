@@ -16,10 +16,19 @@ import java.io.Serializable;
  */
 public class CardCollection implements Serializable {
 
+    // Instance variables for a card collection
     private Card[] cards;
     private HandRank handRank;
     private static final int NULL_INTEGER = -9999;
 
+    /**
+     * Constructor for a CardCollection object
+     *
+     * @param cards - array of cards containing the player's cards and
+     *              community cards
+     * @param handRank - the highest hand rank the player has with all cards
+     *                 in the cards array accounted for
+     */
     public CardCollection(Card[] cards, HandRank handRank) {
         this.cards = new Card[cards.length];
         for (int i = 0; i < cards.length; i++) {
@@ -36,15 +45,22 @@ public class CardCollection implements Serializable {
         return handRank;
     }
 
+    /**
+     * Compares all the cards to find the highest ranking card
+     *
+     * @return the rank of the highest card in the collection
+     */
     public Card.Rank getHighestRank() {
         Card.Rank highestRank = cards[0].getRank();
 
+        // Compares each card and saves the highest ranking card in the list
         for (int i = 1; i < cards.length; i++) {
             if (cards[0].getRank().getValue() > highestRank.getValue()) {
                 highestRank = cards[i].getRank();
             }
         }
 
+        // Returns the highest card's rank
         return highestRank;
     }
 
@@ -82,6 +98,7 @@ public class CardCollection implements Serializable {
         int thisHighRank = this.getHighestRank().getValue();
         int otherHighRank = other.getHighestRank().getValue();
 
+        // Checks which player has the highest Card
         if (thisHighRank > otherHighRank) {
             return 1;
         }
