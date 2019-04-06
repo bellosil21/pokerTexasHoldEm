@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_launcher_background" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <background android:drawable="@mipmap/ic_launcher_background"/>
+    <foreground android:drawable="@drawable/ic_launcher_foreground"/>
 </adaptive-icon>
+
+<!--
+External Citation
+    Date:   5 April 2019
+    Problem: Needed a custom image for application logo.
+    Resource:
+        http://www.gongyetang.com/qingchengyuletuijian/texas-holdem-odds-calculation-introduction/
+    Solution: Used this image off of google images.
+-->
