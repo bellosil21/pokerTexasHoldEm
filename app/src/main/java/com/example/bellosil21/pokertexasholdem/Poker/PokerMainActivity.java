@@ -23,7 +23,7 @@ public class PokerMainActivity extends GameMainActivity {
         //define player types?
         ArrayList<GamePlayerType> playerTypes = new ArrayList<GamePlayerType>();
 
-        playerTypes.add(new GamePlayerType("Human player") {
+        playerTypes.add(new GamePlayerType("Human Player") {
             @Override
             public GamePlayer createPlayer(String name) {
                 return new PokerHumanPlayer(name);

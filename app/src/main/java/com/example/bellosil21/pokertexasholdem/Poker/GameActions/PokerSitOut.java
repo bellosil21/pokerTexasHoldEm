@@ -11,7 +11,7 @@ import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerSitOut extends GameAction {
+public class PokerSitOut extends GameAction implements AnytimeAction {
     /**
      * constructor for SitOut
      *

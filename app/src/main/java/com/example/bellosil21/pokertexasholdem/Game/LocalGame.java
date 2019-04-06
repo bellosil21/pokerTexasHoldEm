@@ -12,6 +12,7 @@ import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.StartGameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.GameTimer;
 import com.example.bellosil21.pokertexasholdem.Game.util.Tickable;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.AnytimeAction;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -265,8 +266,9 @@ public abstract class LocalGame implements Game, Tickable {
 		int playerId = getPlayerIdx(player);
 		
 		// if the player is NOT a player who is presently allowed to
-		// move, send the player a message
-		if (!canMove(playerId)) {;
+		// move and the action is not an action that can be sent at any time,
+		// send the player a message
+		if (!canMove(playerId) && !(action instanceof AnytimeAction)) {;
 			player.sendInfo(new NotYourTurnInfo());
 			return;
 		}

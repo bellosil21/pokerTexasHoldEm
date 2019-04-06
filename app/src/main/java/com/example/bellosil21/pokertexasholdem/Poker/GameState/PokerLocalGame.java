@@ -1,6 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
@@ -283,11 +282,6 @@ public class PokerLocalGame extends LocalGame {
      * Otherwise, we check to see if we need to go to the next phase.
      */
     private void endTurnCleanUp() {
-        // if next player is sitting out, fold them
-        if (state.getTurnTracker().isActivePlayerSittingOut()) {
-            state.getTurnTracker().fold();
-        }
-
         // check if one player is left
         int onlyPlayerLeft = state.getTurnTracker().isRoundOver();
         if (onlyPlayerLeft != -1) {
@@ -304,9 +298,13 @@ public class PokerLocalGame extends LocalGame {
 
         // check if everyone has been prompted
         else if (state.getTurnTracker().isPhaseOver()) {
-            //TODO: if last round, show all cards and sleep thread
-
             nextPhase();
+        }
+
+        // if next player is sitting out, fold them
+        if (state.getTurnTracker().isActivePlayerSittingOut()) {
+            state.getTurnTracker().fold();
+            endTurnCleanUp();
         }
     }
 

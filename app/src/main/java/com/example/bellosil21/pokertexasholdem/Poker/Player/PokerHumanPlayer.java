@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
-import android.content.Context;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +34,14 @@ import com.example.bellosil21.pokertexasholdem.R;
 
 import java.util.ArrayList;
 
+/**
+ * The human player GUI
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class PokerHumanPlayer extends GameHumanPlayer implements
         View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -114,6 +120,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     /** constants **/
     private static final String SHOW_CARDS = "SHOW CARDS";
     private static final String HIDE_CARDS = "HIDE CARDS";
+    private static final String SIT_OUT = "SIT OUT";
+    private static final String SIT_IN = "SIT IN";
 
     /**
      * Constructor
@@ -832,7 +840,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             game.sendAction(new PokerRaiseBet(this, bet));
 
         } else if (v.equals(showHideCardsButton)) {
-
+            // toggle the display and send the action
             if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
                 showHideCardsButton.setText(HIDE_CARDS);
             } else {
@@ -841,7 +849,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             game.sendAction(new PokerShowHideCards(this));
 
         } else if (v.equals(sitOutButton)) {
-
+            // toggle the display and send the action
+            if (sitOutButton.getText().equals(SIT_IN)) {
+                sitOutButton.setText(SIT_OUT);
+            } else {
+                sitOutButton.setText(SIT_IN);
+            }
             game.sendAction(new PokerSitOut(this));
         }
     }

@@ -46,7 +46,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
         if(info instanceof NotYourTurnInfo){
             return;
         }
-        if(info instanceof PokerGameState){
+        if(info instanceof PokerGameState) {
             boolean showCards =
                     ((PokerGameState) info).getHands().get(this.playerNum).isShowCards();
             if (!showCards) {
@@ -55,12 +55,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
 
             sleep(500); //slow the computer down so the human player can see what is going on
 
-            if(Math.random() > 0.5){
-                game.sendAction(new PokerCall(this));
-            }
-            else{
-                game.sendAction(new PokerCall(this));
-            }
-        }
-    }
+            game.sendAction(new PokerCall(this));
+        }// if
+    }// receiveInfo()
 }

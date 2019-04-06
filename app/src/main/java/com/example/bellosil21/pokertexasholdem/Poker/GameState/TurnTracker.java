@@ -190,11 +190,14 @@ public class TurnTracker implements Serializable {
         if (removedPlayers.contains(playerID)) {
             return false;
         }
-        if(sittingOutPlayers.contains(playerID)){
+        if (sittingOutPlayers.contains(playerID)){
             sittingOutPlayers.remove(playerID);
         }
-        else{
+        else {
             sittingOutPlayers.add(playerID);
+            if (getActivePlayerID() == playerID) {
+                fold();
+            }
         }
         return true;
     }
