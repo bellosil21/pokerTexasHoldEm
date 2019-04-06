@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.content.Context;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
@@ -768,9 +771,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         "have");
             }
             else if(bet < 0){
-                MessageBox.popUpMessage("Cant bet a negative amount! Try again. ", this.myActivity);
+                MessageBox.popUpMessage("Cant bet a negative amount!", this.myActivity);
             }
-
+            else if(bet == 420) {
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), "Pass the boof",
+                        duration).show();
+            }
+            else if(bet == 69){
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
+                        duration).show();
+            }
             game.sendAction(new PokerRaiseBet(this, bet));
 
         } else if (v.equals(showHideCardsButton)) {
