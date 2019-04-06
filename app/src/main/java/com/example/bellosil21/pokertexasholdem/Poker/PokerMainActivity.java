@@ -71,8 +71,7 @@ public class PokerMainActivity extends GameMainActivity {
         Solution:   Used the configuration examples from these repositories.
      */
 
-    @Override
-    public LocalGame createLocalGame() {
-        return new PokerLocalGame();
+    public LocalGame createLocalGame(int numPlayers) {
+        return new PokerLocalGame(numPlayers);
     }
 }

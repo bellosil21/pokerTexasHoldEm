@@ -44,6 +44,8 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 	private GameTimer myTimer = new GameTimer(this); // my player's timer
 	private boolean gameOver; // whether the game is over
 
+	private static final int BACKGROUND_COLOR = 0xFF268b3a;
+
 	/**
 	 * constructor
 	 * 
@@ -143,15 +145,15 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 		// get the top view, ignoring if null
 		View top = this.getTopView();
 		if (top == null) return;
-		
-		// save the original background color; set the new background
-		// color
-		int savedColor = getBackgroundColor(top);
+
 		top.setBackgroundColor(color);
 		
 		// set up a timer event to set the background color back to
 		// the original.
-		myHandler.postDelayed(new Unflasher(savedColor), duration);
+
+        // changed to hard coded color since repeated flashes will save the
+        // flash color
+		myHandler.postDelayed(new Unflasher(BACKGROUND_COLOR), duration);
 	}
 	
 	/**

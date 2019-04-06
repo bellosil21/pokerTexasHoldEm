@@ -1,10 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import android.util.Log;
-
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
-import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
@@ -52,17 +49,18 @@ public class PokerGameState extends GameState implements Serializable {
      * constant
      */
     private static final int INIT_PHASE_NUM = 0;
-    private static final int PHASE_PRE_FLOP = 0;
-    private static final int PHASE_FLOP = 1;
-    private static final int PHASE_TURN = 2;
-    private static final int PHASE_RIVER = 3;
 
-    private static final int CARDS_FLOP = 3;
+    public static final int PHASE_PRE_FLOP = 0;
+    public static final int PHASE_FLOP = 1;
+    public static final int PHASE_TURN = 2;
+    public static final int PHASE_RIVER = 3;
+
+    public static final int CARDS_FLOP = 3;
 
     private static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
-    private static final int ROUNDS_PER_BLIND_INCREMENT = 5;
+    public static final int ROUNDS_PER_BLIND_INCREMENT = 5;
     private static final long serialVersionUID = -8269749892027578792L;
 
     /**
@@ -101,7 +99,6 @@ public class PokerGameState extends GameState implements Serializable {
         }
 
         turnTracker.nextRound();
-        startRound();
     }
 
     /**
@@ -143,163 +140,6 @@ public class PokerGameState extends GameState implements Serializable {
     }
 
     /**
-     * Sets up the game for the next phase
-     */
-    public void nextPhase() {
-        if (numPhase == PHASE_PRE_FLOP) {
-            phasePreFlop();
-        } else if (numPhase == PHASE_FLOP) {
-            phaseFlop();
-        } else if (numPhase == PHASE_TURN) {
-            phaseTurn();
-        } else if (numPhase == PHASE_RIVER) {
-            phaseRiver();
-        } else {
-            // should never occur
-            Log.i("PokeGameState.java","The numPhase variable in PokerGameState.java is " +
-                    "probably null");
-        }
-    }
-
-    /**
-     * It is the end of the pre-fop, so set up the game for the flop
-     */
-    private void phasePreFlop() {
-        for (int i = 0; i < CARDS_FLOP; i++) {
-            communityCards.add(playingDeck.getACard());
-        }
-
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = turnTracker.promptPlayers();
-        if (!startPhase) {
-            phaseFlop();
-            return;
-        }
-
-        betController.startPhase();
-
-        numPhase = PHASE_FLOP;
-
-    }
-
-    /**
-     * It is the end of the flop, so set up the game for the turn
-     */
-    private void phaseFlop() {
-        communityCards.add(playingDeck.getACard());
-
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = turnTracker.promptPlayers();
-        if (!startPhase) {
-            phaseTurn();
-            return;
-        }
-
-        betController.startPhase();
-
-        numPhase = PHASE_TURN;
-    }
-
-    /**
-     * It is the end of the turn, so set up the game for the river
-     */
-    private void phaseTurn() {
-        communityCards.add(playingDeck.getACard());
-
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = turnTracker.promptPlayers();
-        if (!startPhase) {
-            phaseRiver();
-            return;
-        }
-
-        betController.startPhase();
-
-        numPhase = PHASE_RIVER;
-        /** can something null happen here*/
-    }
-
-    /**
-     * It is the end of the river, so distribute the pots to the winners
-     */
-    private void phaseRiver() {
-        endOfRound(rankCardCollections());
-    }
-
-    /**
-     * Distribute the pots and prepare the game for the next round
-     *
-     * @param rankings the standing of the round
-     *                 index represents the player
-     *                 element represents their rank (0 is high)
-     */
-    public void endOfRound(int rankings[]) {
-        betController.distributePots(rankings);
-        betController.asynchronousReset();
-        betController.startPhase();
-
-        //remove players who are out of funds and set their cards to blank cards
-        for (int i = 0; i < numPlayers; i++) {
-            if (betController.getPlayerChips(i) == 0) {
-                turnTracker.remove(i);
-                hands.get(i).setHole1(new BlankCard());
-                hands.get(i).setHole2(new BlankCard());
-
-            }
-        }
-
-        turnTracker.nextRound();
-
-        //if no one left, do nothing. the game framework should notice
-        if (turnTracker.checkIfGameOver() != -1) {
-            return;
-        }
-
-        roundNumber++; // increment the round;
-        if (roundNumber % ROUNDS_PER_BLIND_INCREMENT == 0) {
-            betController.incrementBlinds();
-        }
-
-        //reset the game actions for the new round
-        for (int i = 0; i < lastActions.size(); i++) {
-            lastActions.set(i, null);
-        }
-
-        startRound();
-    }
-
-    /**
-     * Starts the next round by setting up the new cards and forcing the
-     * blinds to contribute to the pot
-     */
-    private void startRound() {
-        communityCards.clear();
-        playingDeck = new Deck();
-        deal();
-
-        turnTracker.determineBlinds();
-
-        // get the small blind player, make them bet, and tell the turn
-        // tracker the result
-        int activePlayerID = turnTracker.getActivePlayerID();
-        turnTracker.setSmallBlindID(activePlayerID);
-        boolean forcedAllInSB = betController.forceSmallBlinds(activePlayerID);
-        turnTracker.queueBlind(forcedAllInSB);
-
-        // get the big blind player, make them bet, and tell the turn
-        // tracker the result
-        activePlayerID = turnTracker.getActivePlayerID();
-        turnTracker.setBigBlindID(activePlayerID);
-        boolean forcedAllInBB = betController.forceBigBlinds(activePlayerID);
-        turnTracker.queueBlind(forcedAllInBB);
-
-        numPhase = PHASE_PRE_FLOP;
-    }
-
-    /**
      * Give players their cards. (Only if they are an active player)
      */
     public void deal() {
@@ -318,7 +158,7 @@ public class PokerGameState extends GameState implements Serializable {
      * the players ranking, where 0 is the best rank, a higher int is a lower rank, and the max
      * integer means the player has folded.
      */
-    private int[] rankCardCollections() {
+    public int[] rankCardCollections() {
         ArrayList<CardCollection> finalHands = new ArrayList<>();
 
         // find the best hand for every player still in the game
@@ -365,6 +205,15 @@ public class PokerGameState extends GameState implements Serializable {
         } // sorted CardCollections loop
 
         return finalRanks;
+    }
+
+    /**
+     * Hides the hands of all players
+     */
+    public void hideHands() {
+        for (Hand h : hands) {
+            h.setShowCards(false);
+        }
     }
 
     public BetController getBetController() {
@@ -447,11 +296,27 @@ public class PokerGameState extends GameState implements Serializable {
 
     public int getRoundNumber(){return this.roundNumber;}
 
+    public void incrementRoundNumber() {
+        roundNumber++;
+    }
+
     public void updateLastAction(int playerID, GameAction action) {
         lastActions.set(playerID, action);
     }
 
     public ArrayList<GameAction> getLastActions() {
         return lastActions;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public int getNumPhase() {
+        return numPhase;
+    }
+
+    public void setNumPhase(int numPhase) {
+        this.numPhase = numPhase;
     }
 }

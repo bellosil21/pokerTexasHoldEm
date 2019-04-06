@@ -22,23 +22,7 @@ public class Deck implements Serializable {
      */
     public Deck() {
         deckOfCards = new ArrayList<>();
-        for (Card.Suit s : Card.Suit.values()) {
-            for (Card.Rank r : Card.Rank.values()) {
-                Card newCard = new Card(s, r);
-                deckOfCards.add(newCard);
-            }
-        }
-
-        /*
-         * External Citation
-         *  Date:     22 Feburary 2019
-         *  Problem:  Did not know how to enumerate through all enums in a type.
-         *  Resource: https://stackoverflow.com/questions/1104975/
-         *            a-for-loop-to-iterate-over-an-enum-in-java
-         *  Solution: Implemented the code in this example.
-         */
-
-        Collections.shuffle(deckOfCards);
+        reset();
     }
 
     /**
@@ -78,7 +62,26 @@ public class Deck implements Serializable {
         return deckOfCards.remove(0);
     }
 
+    public void reset() {
+        deckOfCards.clear();
+        for (Card.Suit s : Card.Suit.values()) {
+            for (Card.Rank r : Card.Rank.values()) {
+                Card newCard = new Card(s, r);
+                deckOfCards.add(newCard);
+            }
+        }
 
+        /*
+         * External Citation
+         *  Date:     22 Feburary 2019
+         *  Problem:  Did not know how to enumerate through all enums in a type.
+         *  Resource: https://stackoverflow.com/questions/1104975/
+         *            a-for-loop-to-iterate-over-an-enum-in-java
+         *  Solution: Implemented the code in this example.
+         */
+
+        Collections.shuffle(deckOfCards);
+    }
 
     /**
      * Describes the deck.

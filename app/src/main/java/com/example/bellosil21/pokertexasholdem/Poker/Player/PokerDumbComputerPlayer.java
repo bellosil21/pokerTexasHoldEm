@@ -38,9 +38,6 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        //slow the computer down so the human player can see what is going on
-        sleep(100);
-
         /*checking for null object */
         if(info == null){
             //this should never happen right? does it make sense?
@@ -56,7 +53,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
                 game.sendAction(new PokerShowHideCards(this));
             }
 
-            sleep(500); //slow down
+            sleep(500); //slow the computer down so the human player can see what is going on
 
             if(Math.random() > 0.5){
                 game.sendAction(new PokerCall(this));

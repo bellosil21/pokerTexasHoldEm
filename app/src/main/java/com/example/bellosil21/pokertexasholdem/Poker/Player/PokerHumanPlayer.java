@@ -26,6 +26,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
@@ -109,6 +110,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     private GameMainActivity myActivity;
     protected PokerGameState state;
+
+    /** constants **/
+    private static final String SHOW_CARDS = "SHOW CARDS";
+    private static final String HIDE_CARDS = "HIDE CARDS";
 
     /**
      * Constructor
@@ -240,6 +245,25 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             updateGui();
         } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
+        } else if (info instanceof PokerEndOfRound) {
+            int[] winnings = ((PokerEndOfRound) info).getWinnings();
+            String toDisplay = "Round " + state.getRoundNumber() + " " +
+                    "Standings:\n\n";
+
+            for (int i = 0; i < allPlayerNames.length; i++) {
+                toDisplay += "\n\n" + allPlayerNames[i] + ": \n\t";
+
+                toDisplay += state.getBetController().getPlayerChips(i) + " (";
+
+                // add a plus sign for positive numbers
+                if (winnings[i] >= 0) {
+                    toDisplay += "+";
+                }
+
+                toDisplay += "" + winnings[i] + ")";
+            }
+
+            MessageBox.popUpMessage(toDisplay, myActivity);
         }
 
     }
@@ -305,22 +329,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         int playerCount = this.playerNum;
         player1Nm.setText(this.allPlayerNames[(playerCount) % 4]);
         player2Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
-        player3Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
-        player4Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        if (state.getNumPlayers() > 2) {
+            player3Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        }
+        if (state.getNumPlayers() > 3) {
+            player4Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        }
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
         player1TV.setText("$ " + state.getChips((playerCount) % 4));
         player2TV.setText("$ " + state.getChips((++playerCount) % 4));
-        player3TV.setText("$ " + state.getChips((++playerCount) % 4));
-        player4TV.setText("$ " + state.getChips((++playerCount) % 4));
+        if (state.getNumPlayers() > 2) {
+            player3TV.setText("$ " + state.getChips((++playerCount) % 4));
+        }
+        if (state.getNumPlayers() > 3) {
+            player4TV.setText("$ " + state.getChips((++playerCount) % 4));
+        }
 
         playerCount = this.playerNum;
         ArrayList<GameAction> lastActions = state.getLastActions();
         updateAction(player1Action, lastActions.get(playerCount));
         updateAction(player2Action, lastActions.get((++playerCount) % 4));
-        updateAction(player3Action, lastActions.get((++playerCount) % 4));
-        updateAction(player4Action, lastActions.get((++playerCount) % 4));
+        if (state.getNumPlayers() > 2) {
+            updateAction(player3Action, lastActions.get((++playerCount) % 4));
+        }
+        if (state.getNumPlayers() > 3) {
+            updateAction(player4Action, lastActions.get((++playerCount) % 4));
+        }
 
 
         // Sets the current total pot amount
@@ -344,12 +380,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         playerCount = (playerCount + 1) % 4;
         setCard(hands.get(playerCount).getHole1(), player2Card1);
         setCard(hands.get(playerCount).getHole2(), player2Card2);
-        playerCount = (playerCount + 1) % 4;
-        setCard(hands.get(playerCount).getHole1(), player3Card1);
-        setCard(hands.get(playerCount).getHole2(), player3Card2);
-        playerCount = (playerCount + 1) % 4;
-        setCard(hands.get(playerCount).getHole1(), player4Card1);
-        setCard(hands.get(playerCount).getHole2(), player4Card2);
+        if (state.getNumPlayers() > 2) {
+            playerCount = (playerCount + 1) % 4;
+            setCard(hands.get(playerCount).getHole1(), player3Card1);
+            setCard(hands.get(playerCount).getHole2(), player3Card2);
+        }
+        if (state.getNumPlayers() > 3) {
+            playerCount = (playerCount + 1) % 4;
+            setCard(hands.get(playerCount).getHole1(), player4Card1);
+            setCard(hands.get(playerCount).getHole2(), player4Card2);
+        }
 
         int activePlayerID = state.getTurnTracker().
                 getActivePlayerID();
@@ -369,6 +409,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         callButton.setText("Call(" + state.getBetController().
                 getCallAmount(playerNum) + ")");
+
+        if (state.getHands().get(playerNum).isShowCards()) {
+            showHideCardsButton.setText(SHOW_CARDS);
+        } else {
+            showHideCardsButton.setText(HIDE_CARDS);
+        }
 
         chipBetSeekbar.setMax(
                 state.getChips(playerNum) - state.getBetController()
@@ -787,10 +833,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         } else if (v.equals(showHideCardsButton)) {
 
-            if (showHideCardsButton.getText().equals("SHOW CARDS")) {
-                showHideCardsButton.setText("HIDE CARDS");
+            if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
+                showHideCardsButton.setText(HIDE_CARDS);
             } else {
-                showHideCardsButton.setText("SHOW CARDS");
+                showHideCardsButton.setText(SHOW_CARDS);
             }
             game.sendAction(new PokerShowHideCards(this));
 

@@ -2,11 +2,11 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
 import org.junit.Test;
 
-public class PokerLocalGame {
+public class PokerLocalGameTest {
 
     @Test
     public void constructor() {
-        PokerLocalGame lg = new PokerLocalGame();
+        PokerLocalGameTest lg = new PokerLocalGameTest();
     }
 
 }

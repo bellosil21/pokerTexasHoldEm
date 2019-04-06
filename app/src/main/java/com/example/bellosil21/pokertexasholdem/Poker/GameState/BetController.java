@@ -52,6 +52,9 @@ public class BetController implements Serializable {
     private int smallBlind;
     private int bigBlind;
 
+    private int[] winnings; //keeps track of how much much a player losses
+    // and gains in a round
+
     /** constants **/
     public static final int RAISE_INVALID = -1;
     public static final int RAISE_FUNDS_LEFT = 0;
@@ -75,6 +78,7 @@ public class BetController implements Serializable {
         this.smallBlind = smBlind;
         this.bigBlind = bgBlind;
         this.totalAmount = DEFAULT_POT_AMOUNT;
+        this.winnings = new int[numPlayers];
     }
 
     /**
@@ -89,6 +93,11 @@ public class BetController implements Serializable {
         totalAmount = toCopy.totalAmount;
         smallBlind = toCopy.smallBlind;
         bigBlind = toCopy.bigBlind;
+
+        winnings = new int[toCopy.winnings.length];
+        for (int i = 0; i < winnings.length; i++) {
+            winnings[i] = toCopy.winnings[i];
+        }
     }
 
     /**
@@ -337,6 +346,8 @@ public class BetController implements Serializable {
         totalAmount += potContribution;
         player.removeChips(potContribution);
         nextPot.addContributor(playerID);
+        winnings[playerID] -= potContribution; //update the winnings for this
+                                               // bet
 
         int remaining = amount - potContribution;
 
@@ -390,11 +401,10 @@ public class BetController implements Serializable {
             int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get.
             for(int i: winners){
                 players.get(i).addChips(chipsWon);
+                winnings[i] += chipsWon;
 
             }
         }
-        /*reset maxBet and totalAmount */
-        asynchronousReset();
     }
 
 
@@ -460,6 +470,8 @@ public class BetController implements Serializable {
      * This resets the BetController at the end of a round. The pot array is
      * emptied, the maximum bet is reset, the total bet amount is reset, and
      * the player's lastContributedPot is reset.
+     *
+     * Also, reset tracking of the winnings to zero for all players
      */
     public void asynchronousReset(){
         this.pots.clear();
@@ -468,6 +480,14 @@ public class BetController implements Serializable {
         for (PlayerChipCollection p : players) {
             p.resetLastContributedPot();
         }
+
+        for (int i = 0; i < winnings.length; i++) {
+            winnings[i] = 0;
+        }
+    }
+
+    public int[] getWinnings() {
+        return winnings;
     }
 
     @Override
