@@ -118,9 +118,9 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_below="@id/player2"
-            android:layout_toRightOf="@id/player2Card1"
-            android:layout_marginHorizontal="5dp"
             android:layout_centerInParent="true"
+            android:layout_marginHorizontal="5dp"
+            android:layout_toRightOf="@id/player2Card1"
             app:srcCompat="@drawable/card_b" />
 
         <TextView
@@ -173,10 +173,10 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_above="@id/flop1"
-            android:layout_toLeftOf="@id/player3Card2"
+            android:layout_centerInParent="true"
             android:layout_marginHorizontal="5dp"
             android:layout_marginBottom="30dp"
-            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/player3Card2"
             app:srcCompat="@drawable/card_2c" />
 
         <ImageView
@@ -184,10 +184,10 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_above="@id/flop1"
-            android:layout_toLeftOf="@id/player3"
+            android:layout_centerInParent="true"
             android:layout_marginHorizontal="5dp"
             android:layout_marginBottom="30dp"
-            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/player3"
             app:srcCompat="@drawable/card_jh" />
 
         <TextView
@@ -273,9 +273,9 @@
             android:layout_width="60dp"
             android:layout_height="110dp"
             android:layout_below="@id/player4"
-            android:layout_toRightOf="@id/player4Card1"
-            android:layout_marginHorizontal="5dp"
             android:layout_centerInParent="true"
+            android:layout_marginHorizontal="5dp"
+            android:layout_toRightOf="@id/player4Card1"
             app:srcCompat="@drawable/card_b" />
 
         <TextView
@@ -409,29 +409,29 @@
             android:id="@+id/player2Status"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@+id/flop3"
             android:layout_alignBottom="@id/player2"
             android:layout_marginRight="110dp"
+            android:layout_toLeftOf="@+id/flop3"
             app:srcCompat="@drawable/big_blind" />
 
         <ImageView
             android:id="@+id/player3Status"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toRightOf="@id/player3"
             android:layout_alignBottom="@id/player3"
+            android:layout_toRightOf="@id/player3"
             app:srcCompat="@drawable/big_blind" />
 
         <TextView
             android:id="@+id/roundNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:fontFamily="@font/anton"
             android:layout_alignParentEnd="true"
-            android:textSize="30dp"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/anton"
             android:text="Round"
-            android:layout_alignParentRight="true" />
+            android:textColor="@color/white"
+            android:textSize="30dp" />
 
     </RelativeLayout>
 
@@ -471,9 +471,22 @@
                     android:layout_weight="1"
                     app:srcCompat="@drawable/chip_stack" />
 
+                <TextView
+                    android:id="@+id/betAmountText"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:text="Bet Amount:"
+                    android:textColor="@android:color/holo_orange_light"
+                    android:textColorHighlight="@android:color/darker_gray"
+                    android:textColorHint="@android:color/holo_orange_light"
+                    android:textSize="18sp"
+                    app:fontFamily="@font/anton" />
+
                 <EditText
                     android:id="@+id/betInsertText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -500,11 +513,11 @@
                     android:text="SHOW CARDS" />
 
                 <Button
-                    android:id="@+id/foldButton"
+                    android:id="@+id/betButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="FOLD" />
+                    android:text="RAISE/BET" />
 
                 <Button
                     android:id="@+id/sitoutButton"
@@ -627,11 +640,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/betButton"
+                    android:id="@+id/foldButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Raise / Bet" />
+                    android:text="FOLD" />
 
                 <Button
                     android:id="@+id/callButton"
