@@ -60,7 +60,8 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
             else{
                 int difference = myChips - maxBet;
                 if(difference > 100){
-                    game.sendAction(new PokerRaiseBet(this, maxBet + 50));
+                    game.sendAction(new PokerRaiseBet(this, maxBet + 50,
+                            ((PokerGameState) info).getBetController().getCallAmount(playerNum)));
                 }
                 else if (random > 0.25) {
                     game.sendAction(new PokerCall(this));

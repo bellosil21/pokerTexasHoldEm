@@ -40,7 +40,9 @@ public class PotTracker implements Serializable {
      */
     public PotTracker(int amount, ArrayList<Integer> players) {
         contributors = new ArrayList<>();
-        contributors.addAll(players);
+        for (int i : players) {
+            contributors.add(i);
+        }
         contribution = amount;
     }
 
@@ -49,7 +51,9 @@ public class PotTracker implements Serializable {
      */
     public PotTracker(PotTracker toCopy) {
         this.contributors = new ArrayList<>();
-        this.contributors.addAll(toCopy.contributors);
+        for (int i : toCopy.contributors) {
+            contributors.add(i);
+        }
 
         this.contribution = toCopy.contribution;
     }

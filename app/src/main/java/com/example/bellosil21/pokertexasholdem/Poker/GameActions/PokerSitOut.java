@@ -3,6 +3,8 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 
+import java.io.Serializable;
+
 /**
  * Class for sending an Instance of a Sit Out Action
  *
@@ -11,7 +13,7 @@ import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerSitOut extends GameAction implements AnytimeAction {
+public class PokerSitOut extends GameAction implements AnytimeAction, Serializable {
     /**
      * constructor for SitOut
      *

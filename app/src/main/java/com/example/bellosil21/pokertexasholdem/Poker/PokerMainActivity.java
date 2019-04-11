@@ -6,6 +6,7 @@ import com.example.bellosil21.pokertexasholdem.Game.LocalGame;
 import com.example.bellosil21.pokertexasholdem.Game.config.GameConfig;
 import com.example.bellosil21.pokertexasholdem.Game.config.GamePlayerType;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerLocalGame;
+import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerAllInComputer;
 import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerDumbComputerPlayer;
 import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerSmartComputerPlayer;
@@ -41,6 +42,13 @@ public class PokerMainActivity extends GameMainActivity {
             @Override
             public GamePlayer createPlayer(String name) {
                 return new PokerSmartComputerPlayer(name);
+            }
+        });
+
+        playerTypes.add(new GamePlayerType("Computer Player (Allin)") {
+            @Override
+            public GamePlayer createPlayer(String name) {
+                return new PokerAllInComputer(name);
             }
         });
 
