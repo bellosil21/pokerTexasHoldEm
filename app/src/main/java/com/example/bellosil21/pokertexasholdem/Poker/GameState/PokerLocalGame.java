@@ -13,6 +13,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
@@ -32,6 +33,7 @@ public class PokerLocalGame extends LocalGame {
     private static final int STARTING_SMALL_BLIND = 50;
     private static final int STARTING_BIG_BLIND = 100;
     private static final int NUM_PLAYERS = 4;
+    private static final int SLEEP_TIME_POST_ROUND = 5000;
 
     public PokerLocalGame(int numPlayers) {
         Log.i("SJLocalGame", "creating game");
@@ -49,7 +51,7 @@ public class PokerLocalGame extends LocalGame {
      * @param p the player to send info to
      */
     @Override
-    protected void sendUpdatedStateTo(GamePlayer p) {
+    protected synchronized void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
             Log.i("PokerLocalGame.java", "GamePlayer object is null");
             return;
@@ -102,12 +104,14 @@ public class PokerLocalGame extends LocalGame {
      * @return True if the move was legal; false otherwise.
      */
     @Override
-    protected boolean makeMove(GameAction action) {
+    protected synchronized boolean makeMove(GameAction action) {
         /*check if GameAction object is null*/
         if(action == null){
             Log.i("PokerLocalGame.java", "GameAction object is null.");
             return false;
         }
+
+        int playerID = getPlayerIdx(action.getPlayer());
 
         boolean isValid = false; // by default, we return false
         boolean nextTurn = false; // by default, we return false
@@ -115,21 +119,18 @@ public class PokerLocalGame extends LocalGame {
         /*Game Actions*/
         // ALL IN
         if (action instanceof PokerAllIn) {
-            int playerID = getPlayerIdx(action.getPlayer());
             allIn(playerID);
             nextTurn = true;
         }
 
         // CALL
         else if (action instanceof PokerCall) {
-            int playerID = getPlayerIdx(action.getPlayer());
             call(playerID);
             nextTurn = true;
         }
 
         // CHECK
         else if (action instanceof PokerCheck) {
-            int playerID = getPlayerIdx(action.getPlayer());
             nextTurn = check(playerID);
         }
 
@@ -141,27 +142,29 @@ public class PokerLocalGame extends LocalGame {
 
         // RAISE BET
         else if (action instanceof PokerRaiseBet) {
-            int playerID = getPlayerIdx(action.getPlayer());
             int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
             nextTurn = raiseBet(playerID, raiseAmount);
         }
 
         // SHOW HIDE CARDS
         else if (action instanceof PokerShowHideCards) {
-            int playerID = getPlayerIdx(action.getPlayer());
-            toggleShowHideCards(playerID);
-
+            boolean isShown = ((PokerShowHideCards) action).isShown();
+            showHideCards(playerID, isShown);
             isValid = true;
         }
 
         // SIT OUT/IN
         else if (action instanceof PokerSitOut) {
-            int playerID = getPlayerIdx(action.getPlayer());
             isValid = state.getTurnTracker().toggleSitting(playerID);
+
+            // if the player is currently sitting out and it is their turn,
+            // fold their hand
+            if (state.getTurnTracker().isActivePlayerSittingOut()) {
+                makeMove(new PokerFold(players[playerID]));
+            }
         }
 
         if (nextTurn) {
-            int playerID = getPlayerIdx(action.getPlayer());
             state.updateLastAction(playerID, action);
             endTurnCleanUp();
             return true;
@@ -265,11 +268,9 @@ public class PokerLocalGame extends LocalGame {
      *
      * @param playerID The ID of the player showing a card.
      */
-    private void toggleShowHideCards(int playerID) {
+    private void showHideCards(int playerID, boolean isShown) {
         Hand playerHand  = state.getHands().get(playerID);
-
-        boolean isShown = playerHand.isShowCards();
-        playerHand.setShowCards(!isShown);
+        playerHand.setShowCards(isShown);
     }
 
     /**
@@ -287,22 +288,25 @@ public class PokerLocalGame extends LocalGame {
         if (onlyPlayerLeft != -1) {
 
             //go to the end of the round, passing this playerID as the best rank
-            int[] rankings = new int[NUM_PLAYERS];
+            int[] rankings = new int[NUM_PLAYERS]; //TODO: Check for x number of players.
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (onlyPlayerLeft != i) {
                     rankings[i] = Integer.MAX_VALUE;
                 }
             }
             endOfRound(rankings);
+        } else {
+
+            // go to the next phase if it is over
+            while (state.getTurnTracker().isPhaseOver()) {
+                nextPhase();
+            }
         }
 
-        // check if everyone has been prompted
-        else if (state.getTurnTracker().isPhaseOver()) {
-            nextPhase();
-        }
-
-        // if next player is sitting out, fold them
+        // if next player is sitting out, fold them and clean up the turn.
         if (state.getTurnTracker().isActivePlayerSittingOut()) {
+            int playerID = state.getTurnTracker().getActivePlayerID();
+            state.updateLastAction(playerID, new PokerFold(players[playerID]));
             state.getTurnTracker().fold();
             endTurnCleanUp();
         }
@@ -336,14 +340,6 @@ public class PokerLocalGame extends LocalGame {
             state.getCommunityCards().add(state.getDeck().getACard());
         }
 
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = state.getTurnTracker().promptPlayers();
-        if (!startPhase) {
-            phaseFlop();
-            return;
-        }
-
         state.getBetController().startPhase();
 
         state.setNumPhase(PokerGameState.PHASE_FLOP);
@@ -356,14 +352,6 @@ public class PokerLocalGame extends LocalGame {
     private void phaseFlop() {
         state.getCommunityCards().add(state.getDeck().getACard());
 
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = state.getTurnTracker().promptPlayers();
-        if (!startPhase) {
-            phaseTurn();
-            return;
-        }
-
         state.getBetController().startPhase();
 
         state.setNumPhase(PokerGameState.PHASE_TURN);
@@ -375,18 +363,9 @@ public class PokerLocalGame extends LocalGame {
     private void phaseTurn() {
         state.getCommunityCards().add(state.getDeck().getACard());
 
-        // if there are no players left to prompt, go to the text phase until
-        // we end the round
-        boolean startPhase = state.getTurnTracker().promptPlayers();
-        if (!startPhase) {
-            phaseRiver();
-            return;
-        }
-
         state.getBetController().startPhase();
 
         state.setNumPhase(PokerGameState.PHASE_RIVER);
-        /** can something null happen here*/
     }
 
     /**
@@ -404,10 +383,7 @@ public class PokerLocalGame extends LocalGame {
      *                 element represents their rank (0 is high)
      */
     private void endOfRound(int rankings[]) {
-        BetController betController = state.getBetController();
-        TurnTracker turnTracker = state.getTurnTracker();
-
-        betController.distributePots(rankings);
+        state.getBetController().distributePots(rankings);
 
         // reveal the cards after the end of the round
         int numFolded = 0;
@@ -433,42 +409,46 @@ public class PokerLocalGame extends LocalGame {
         }
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(SLEEP_TIME_POST_ROUND);
         } catch (InterruptedException ex) {
             // continue
         }
 
-
-
         state.hideHands();
-        betController.asynchronousReset();
-        betController.startPhase();
+
+        state.getBetController().asynchronousReset();
 
         //remove players who are out of funds and set their cards to blank cards
         for (int i = 0; i < state.getNumPlayers(); i++) {
-            if (betController.getPlayerChips(i) == 0) {
-                turnTracker.remove(i);
+            if (state.getBetController().getPlayerChips(i) == 0) {
+                state.getTurnTracker().remove(i);
                 state.getHands().get(i).setHole1(new BlankCard());
                 state.getHands().get(i).setHole2(new BlankCard());
 
             }
         }
 
-        turnTracker.nextRound();
+        state.getTurnTracker().nextRound();
 
-        //if no one left, do nothing. the game framework should notice
-        if (turnTracker.checkIfGameOver() != -1) {
+        // if no one left, do nothing. the game framework should notice
+        if (state.getTurnTracker().checkIfGameOver() != -1) {
             return;
         }
 
-        state.incrementRoundNumber(); // increment the round;
+        state.incrementRoundNumber();
+
+        // Increase the blinds if we are at a multiple of rounds per blind
+        // increment. Also, inform the players.
         if (state.getRoundNumber() % PokerGameState.ROUNDS_PER_BLIND_INCREMENT == 0) {
-            betController.incrementBlinds();
+            state.getBetController().incrementBlinds();
+            int newSmall = state.getBetController().getSmallBlind();
+            int newBig = state.getBetController().getBigBlind();
+            tellPlayersIncreasingBlinds(newSmall, newBig);
         }
 
         //reset the game actions for the new round
         for (int i = 0; i < state.getLastActions().size(); i++) {
-            state.getLastActions().set(i, null);
+            state.updateLastAction(i, null);
         }
 
         startRound();
@@ -479,31 +459,41 @@ public class PokerLocalGame extends LocalGame {
      * blinds to contribute to the pot
      */
     private void startRound() {
-        BetController betController = state.getBetController();
-        TurnTracker turnTracker = state.getTurnTracker();
-
         state.getCommunityCards().clear();
         state.getDeck().reset();
         state.deal();
 
-        turnTracker.determineBlinds();
+        state.getTurnTracker().determineBlinds();
 
         // get the small blind player, make them bet, and tell the turn
         // tracker the result
-        int activePlayerID = turnTracker.getActivePlayerID();
-        turnTracker.setSmallBlindID(activePlayerID);
-        boolean forcedAllInSB = betController.forceSmallBlinds(activePlayerID);
-        turnTracker.queueBlind(forcedAllInSB);
+        int smallBlindID = state.getTurnTracker().getActivePlayerID();
+        state.getTurnTracker().setSmallBlindID(smallBlindID);
+        boolean forcedAllInSB = state.getBetController().forceSmallBlinds(smallBlindID);
+        state.getTurnTracker().queueBlind(forcedAllInSB);
 
         // get the big blind player, make them bet, and tell the turn
         // tracker the result
-        activePlayerID = turnTracker.getActivePlayerID();
-        turnTracker.setBigBlindID(activePlayerID);
-        boolean forcedAllInBB = betController.forceBigBlinds(activePlayerID);
-        turnTracker.queueBlind(forcedAllInBB);
+        int bigBlindID = state.getTurnTracker().getActivePlayerID();
+        state.getTurnTracker().setBigBlindID(bigBlindID);
+        boolean forcedAllInBB = state.getBetController().forceBigBlinds(bigBlindID);
+        state.getTurnTracker().queueBlind(forcedAllInBB);
 
         state.setNumPhase(PokerGameState.PHASE_PRE_FLOP);
     }
 
+    /**
+     * Sends players a PokerIncreasingBlinds GameInfo
+     *
+     * @param newSmall the new small blind
+     * @param newBig the new big blind
+     */
+    private void tellPlayersIncreasingBlinds(int newSmall, int newBig) {
+        PokerIncreasingBlinds info = new PokerIncreasingBlinds(newSmall,
+                newBig);
+        for (GamePlayer p : players) {
+            p.sendInfo(info);
+        }
+    }
 
 }

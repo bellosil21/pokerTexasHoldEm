@@ -85,9 +85,15 @@ public class BetController implements Serializable {
      * Copy constructor
      */
     public BetController(BetController toCopy) {
-        pots = new ArrayList<>(toCopy.pots);
+        pots = new ArrayList<>();
+        for (PotTracker p : toCopy.pots) {
+            pots.add(new PotTracker(p));
+        }
 
-        players = new ArrayList<>(toCopy.players);
+        players = new ArrayList<>();
+        for (PlayerChipCollection p : toCopy.players) {
+            players.add(new PlayerChipCollection(p));
+        }
 
         maxBet = toCopy.maxBet;
         totalAmount = toCopy.totalAmount;
@@ -286,18 +292,15 @@ public class BetController implements Serializable {
     /**
      * The main method to add to the pots array.
      *
-     * Before we add anything to the pots, we withdraw the amount from the
-     * player. Then, we determine if this is a case A of making a new pot. If
-     * so, add
-     *
+     * Before we add anything to the pots, we determine if the maximum bet
+     * has changed. If so, add a new pot to accept the difference between the
+     * new max bet and the old max bet.
      *
      */
     private void addToPot(int playerID, int amount) {
-        PlayerChipCollection player = players.get(playerID);
-
         //adjust the player's last bet
-        int accumulativeBet = player.getLastBet() + amount;
-        player.setLastBet(accumulativeBet);
+        int accumulativeBet = players.get(playerID).getLastBet() + amount;
+        players.get(playerID).setLastBet(accumulativeBet);
 
         // determine if this is the highest bet
         // if so, make a new pot
@@ -307,12 +310,6 @@ public class BetController implements Serializable {
             pots.add(newPot);
             maxBet = accumulativeBet;
         }
-
-        int nextPotIndex = player.getLastContributedPot() + 1;
-
-        // determine if we are trying to add an amount less than the next pot
-        // to contribute
-        checkIfAddSmallerPot(amount, nextPotIndex);
 
         // the pot array is now ready to accept any new contributions
         addToPotHelper(playerID, amount);
@@ -475,7 +472,7 @@ public class BetController implements Serializable {
      */
     public void asynchronousReset(){
         this.pots.clear();
-        this.maxBet = DEFAULT_POT_AMOUNT;
+        startPhase();
         this.totalAmount = DEFAULT_POT_AMOUNT;
         for (PlayerChipCollection p : players) {
             p.resetLastContributedPot();
@@ -493,5 +490,13 @@ public class BetController implements Serializable {
     @Override
     public String toString() {
         return "TotalPot: " + totalAmount + " MaxBet: " + maxBet;
+    }
+
+    public ArrayList<PlayerChipCollection> getPlayers() {
+        return players;
+    }
+
+    public ArrayList<PotTracker> getPots() {
+        return pots;
     }
 }

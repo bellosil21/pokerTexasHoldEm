@@ -25,6 +25,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
@@ -69,6 +70,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Player's turn informer
     private TextView turnTracker;
+
+    // Round Standings
+    private TextView roundStandings;
 
     // Player's Editable TextView to make bet
     private EditText chipBetText;
@@ -168,6 +172,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.player3Action = activity.findViewById(R.id.player3Move);
         this.player4Action = activity.findViewById(R.id.player4Move);
 
+        //MY BUTTON TEXTVIEW THINGS
+        this.roundStandings = activity.findViewById(R.id.roundResults);
+
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
         this.chipBetSeekbar = activity.findViewById(R.id.bettingSearch);
@@ -197,7 +204,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.thirdFlop = activity.findViewById(R.id.flop1);
         this.turnCard = activity.findViewById(R.id.turn);
         this.riverCard = activity.findViewById(R.id.river);
-        // TODO: 3/31/2019 if statement to see if round is over, if true show all cards
 
         // Setting references ImageView for each opponents' cards
         this.player2Card1 = activity.findViewById(R.id.player2Card1);
@@ -254,26 +260,54 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
         } else if (info instanceof PokerEndOfRound) {
+            //tell the player of the new round standings
+
             int[] winnings = ((PokerEndOfRound) info).getWinnings();
             String toDisplay = "Round " + state.getRoundNumber() + " " +
-                    "Standings:\n\n";
+                    "Standings:\n";
+
+            /**
+             * External Citation
+             *  Date:     6 April 2019
+             *  Problem:  Android Studio was staying to use a StringBuilder
+             *  instead of concatenation.
+             *  Resource: https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html
+             *  Solution: Read the javadoc to see how it was used.
+             */
+            StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
 
             for (int i = 0; i < allPlayerNames.length; i++) {
-                toDisplay += "\n\n" + allPlayerNames[i] + ": \n\t";
-
-                toDisplay += state.getBetController().getPlayerChips(i) + " (";
+                toDisplayBuilder.append("\n\n");
+                toDisplayBuilder.append(allPlayerNames[i]);
+                toDisplayBuilder.append(": \n\t ");
+                toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
+                toDisplayBuilder.append(" (");
 
                 // add a plus sign for positive numbers
                 if (winnings[i] >= 0) {
-                    toDisplay += "+";
+                    toDisplayBuilder.append("+");
                 }
 
-                toDisplay += "" + winnings[i] + ")";
+                toDisplayBuilder.append(winnings[i]) ;
+                toDisplayBuilder.append(")");
             }
+            roundStandings.setText(toDisplayBuilder);
+            //MessageBox.popUpMessage(toDisplayBuilder.toString(), myActivity);
+        } else if (info instanceof PokerIncreasingBlinds) {
+            // tell the player of the new blinds
 
-            MessageBox.popUpMessage(toDisplay, myActivity);
+            int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
+            int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
+            StringBuilder toDisplay = new StringBuilder();
+
+            toDisplay.append("The blinds are increasing!\n\n");
+            toDisplay.append("New Big Blind: ");
+            toDisplay.append(bigBlind);
+            toDisplay.append("\nNew Small Blind: ");
+            toDisplay.append(smallBlind);
+
+            MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         }
-
     }
 
     /**
@@ -415,8 +449,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                     getActivePlayerID()] + "'s Turn");
         }
 
-        callButton.setText("Call(" + state.getBetController().
-                getCallAmount(playerNum) + ")");
+        int callAmount = state.getBetController().getCallAmount(playerNum);
+
+        callButton.setText("Call(" + callAmount + ")");
 
         if (state.getHands().get(playerNum).isShowCards()) {
             showHideCardsButton.setText(SHOW_CARDS);
@@ -427,6 +462,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipBetSeekbar.setMax(
                 state.getChips(playerNum) - state.getBetController()
                         .getCallAmount(playerNum));
+        chipBetSeekbar.setMax(callAmount);
 
         setBlinds();
 
@@ -754,8 +790,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             tv.setText("Fold");
         }
         else if (action instanceof PokerRaiseBet) {
-            int amount = ((PokerRaiseBet) action).getRaiseAmount();
-            tv.setText("Raised by " + amount);
+            int netRaise = ((PokerRaiseBet) action).netRaise();
+            tv.setText("Raised by " + netRaise);
         }
     }
 
@@ -837,16 +873,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 Toast.makeText(myActivity.getApplicationContext(), "Nice.",
                         duration).show();
             }
-            game.sendAction(new PokerRaiseBet(this, bet));
+            int callAmount = state.getBetController().getCallAmount(playerNum);
+            game.sendAction(new PokerRaiseBet(this, bet, callAmount));
 
         } else if (v.equals(showHideCardsButton)) {
             // toggle the display and send the action
             if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
                 showHideCardsButton.setText(HIDE_CARDS);
+                game.sendAction(new PokerShowHideCards(this, true));
             } else {
                 showHideCardsButton.setText(SHOW_CARDS);
+                game.sendAction(new PokerShowHideCards(this, false ));
             }
-            game.sendAction(new PokerShowHideCards(this));
 
         } else if (v.equals(sitOutButton)) {
             // toggle the display and send the action
