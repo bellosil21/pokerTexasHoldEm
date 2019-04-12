@@ -64,9 +64,13 @@ public class Hand implements Serializable {
         this.hole2 = hole2;
     }
 
-    public CardSlot getHole1() { return this.hole1; }
+    public CardSlot getHole1() {
+        return this.hole1;
+    }
 
-    public CardSlot getHole2() { return this.hole2; }
+    public CardSlot getHole2() {
+        return this.hole2;
+    }
 
     /**
      * Describes the hand.

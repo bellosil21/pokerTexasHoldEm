@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -104,6 +105,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView player4;
     private ImageView chipStack;
     private ImageView bettingStack;
+    private ImageView logo;
+
+    // ImageButtons for the help, settings, and exitGame
+    private ImageButton helpButton;
+    private ImageButton settings;
+    private ImageButton exitGame;
 
     // ImageViews for the blind positions for each player
     private ImageView player1Status;
@@ -209,13 +216,19 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.playerHole1 = activity.findViewById(R.id.userFirstCard);
         this.playerHole2 = activity.findViewById(R.id.userSecCard);
 
-        // Setting refernces to the each player's images
+        // Setting references to the each player's images
         this.player1 = activity.findViewById(R.id.player1);
         this.player2 = activity.findViewById(R.id.player2);
         this.player3 = activity.findViewById(R.id.player3);
         this.player4 = activity.findViewById(R.id.player4);
         this.chipStack = activity.findViewById(R.id.chipStack);
         this.bettingStack = activity.findViewById(R.id.bettingStack);
+        this.logo = activity.findViewById(R.id.logo);
+
+        // Setting references to the ImageButtons
+        this.helpButton = activity.findViewById(R.id.helpButton);
+        this.settings = activity.findViewById(R.id.settings);
+        this.exitGame = activity.findViewById(R.id.exitGame);
 
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
@@ -379,7 +392,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         player4.setImageResource(R.drawable.player);
         chipStack.setImageResource(R.drawable.chip_stack);
         bettingStack.setImageResource(R.drawable.chip_stack);
+        logo.setImageResource(R.drawable.logo);
 
+        //helpButton.setImageResource(R.drawable.ic_menu_help);
         // Updates the player's hole cards
         playerCount = playerNum;
         ArrayList<Hand> hands = state.getHands();

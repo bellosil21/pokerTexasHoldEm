@@ -335,8 +335,8 @@ public class HandRanker implements Serializable {
         // toCheck is decreased once found until all cards the straight is found
         // because we once want one card of each rank in the straight
 
-        int ind = 0; // tracks how many cards are in the toReturn array
-                     // once it is 5, we found all the cards
+        int ind = 0; // tracks how many cards are in the toReturn array once it is 5, we found
+        // all the cards
         for (Card card : cardSet) {
             if (toCheck == card.getRank().getValue()) {
                 toReturn[ind] = new Card(card);
@@ -363,8 +363,7 @@ public class HandRanker implements Serializable {
     private CardCollection findThreeOfAKind() {
         int toCheck = -1;
 
-        // Creates and finds the rank in which three instances of that kind
-        // exists
+        // Creates and finds the rank in which three instances of that kind exists
         Card[] toReturn = new Card[THREE_CARD_HAND];
         for (int index = rankOccurrences.length - 1; index >=0 ; index--){
             if (rankOccurrences[index] == THREE_CARD_HAND){
@@ -377,8 +376,7 @@ public class HandRanker implements Serializable {
         if (toCheck == -1){return null;}
 
 
-        // Adds all the cards with the highest rank to the array of cards
-        // to be returned
+        // Adds all the cards with the highest rank to the array of cards to be returned
         int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
@@ -388,8 +386,8 @@ public class HandRanker implements Serializable {
             if (ind == THREE_CARD_HAND){break;}
         }
 
-        // Creates, initializes, and returns a CardCollection object
-        // containing the highest three of a kind hand
+        // Creates, initializes, and returns a CardCollection object containing the highest three
+        // of a kind hand
         return new CardCollection(toReturn, HandRank.THREE_OF_A_KIND);
     }
 
@@ -401,13 +399,11 @@ public class HandRanker implements Serializable {
      */
     private CardCollection findTwoPair() {
 
-        // Initializing the instances variables for storing the ranks
-        // with pairs
+        // Initializing the instances variables for storing the ranks with pairs
         int toCheck1 = -1;
         int toCheck2 = -1;
 
-        // Checks each rank and finds two highest ranks that has at least two
-        // cards in the hand
+        // Checks each rank and finds two highest ranks that has at least two cards in the hand
         Card[] toReturn = new Card[FOUR_CARD_HAND];
         for (int index = rankOccurrences.length - 1; index >= 0; index--){
             if (rankOccurrences[index] >= TWO_CARD_HAND){
@@ -415,8 +411,7 @@ public class HandRanker implements Serializable {
                     toCheck1 = index;
                 }
                 else {
-                    // if the first occurrence is found, then we found the
-                    // second one and we're done
+                    // if the first occurrence is found, then we found the second one and we're done
                     toCheck2 = index;
                     break;
                 }
@@ -426,11 +421,14 @@ public class HandRanker implements Serializable {
         // if two ranks cannot be found, return null
         if ((toCheck1 < 0) || (toCheck2 < 0)){return null;}
 
-        // Adds all the cards with either of the two found ranks into the
-        // array of cards
-        int occurencesPair1 = 0; // amount of the first pair added
-        int occurencesPair2 = 0; // amount of the second pair added
-        int ind = 0; // keeps track of the index for the toReturn array
+        // Adds all the cards with either of the two found ranks into the array of cards
+
+        // amount of the first pair added
+        int occurencesPair1 = 0;
+        // amount of the second pair added
+        int occurencesPair2 = 0;
+        // keeps track of the index for the toReturn array
+        int ind = 0;
 
         // find the first two cards of the same pair and only the first two
         for (Card card: cardSet){
@@ -476,8 +474,8 @@ public class HandRanker implements Serializable {
 
         if (toCheck == -1){return null;}
 
-        // find the pair
-        int ind = 0; // keeps track of the index for toReturn
+        // find the and keeps track of the index for toReturn
+        int ind = 0;
         for (Card card: cardSet){
             if (card.getRank().getValue() == toCheck){
                 toReturn[ind] = new Card(card);
@@ -545,7 +543,7 @@ public class HandRanker implements Serializable {
      */
     public static CardCollection getHigherCardCollection(CardCollection a,
                                              CardCollection b) {
-        //handing null cases
+        // handing null cases
         if (a == null && b == null) {
             return null;
         }
@@ -556,7 +554,7 @@ public class HandRanker implements Serializable {
             return a;
         }
 
-        //non-null cases
+        // non-null cases
         int compareTo = a.compareTo(b);
         if (compareTo > 1) {
             return a;

@@ -23,7 +23,11 @@ public enum HandRank implements Serializable {
 
     private int numVal;
 
-    HandRank(int rank){this.numVal = rank;}
+    HandRank(int rank){
+        this.numVal = rank;
+    }
 
-    public int getValue(){return this.numVal;}
+    public int getValue(){
+        return this.numVal;
+    }
 }

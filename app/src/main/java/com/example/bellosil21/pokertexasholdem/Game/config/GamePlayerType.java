@@ -16,26 +16,26 @@ import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 
 public abstract class GamePlayerType implements Cloneable /*, Serializable*/ {
 
-//	/** satisfy the Serializable interface */
-//	private static final long serialVersionUID = 01072013L;
+	//	satisfy the Serializable interface
+	//	private static final long serialVersionUID = 01072013L;
 
 	/**
 	 * this is a short description of the player type used in GUI widgets
 	 */
 	private String typeName;
 
-//	/**
-//	 * this is the fully qualified name of the class that will provides moves
-//	 * from a player of this type. For example, for a local human player in a
-//	 * chess game you might specify the string "edu.up.chess.ChessHumanPlayer"
-//	 * 
-//	 * IMPORTANT: All player classes (AI, human or remote) must be a subclass of
-//	 * Activity and must implement the GamePlayerOld interface and must be
-//	 * registered in your AndroidManifest.xml file.
-//	 */
+	/**
+	 * this is the fully qualified name of the class that will provides moves
+	 * from a player of this type. For example, for a local human player in a
+	 * chess game you might specify the string "edu.up.chess.ChessHumanPlayer"
+	 *
+	 * IMPORTANT: All player classes (AI, human or remote) must be a subclass of
+	 * Activity and must implement the GamePlayerOld interface and must be
+	 * registered in your AndroidManifest.xml file.
+	 */
 //	public String playerClassName;
 
-	/** ctor provided for convenience to initialize instance variables */
+	/** actor provided for convenience to initialize instance variables */
 	public GamePlayerType(String typeName) {
 		this.typeName = typeName;
 	}
@@ -49,7 +49,7 @@ public abstract class GamePlayerType implements Cloneable /*, Serializable*/ {
 		try {
 			return super.clone();
 		} catch (Exception e) {
-			return null; // failure! lmao!
+			return null;
 		}
 	}
 	

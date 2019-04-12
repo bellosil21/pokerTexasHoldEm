@@ -35,8 +35,8 @@ public abstract class GameComputerPlayer implements GamePlayer, Tickable {
 	private Handler myHandler; // the handler for this player's thread
 	private boolean running; // whether the player's thread is running
 	private boolean gameOver = false; // whether the game is over
-	private GameMainActivity myActivity; // the game's main activity, set only
-			// this game is connected to the GUI
+	private GameMainActivity myActivity; // the game's main activity, set only this game is
+	// connected to the GUI
 	private GameTimer myTimer = new GameTimer(this); // my timer
 	
 	/**

@@ -60,7 +60,7 @@ public class BetController implements Serializable {
     public static final int RAISE_FUNDS_LEFT = 0;
     public static final int RAISE_NO_FUNDS_LEFT = 1;
 
-    /* The factor at which the small/big blinds will be incremented */
+    // The factor at which the small/big blinds will be incremented
     private static final int MULTIPLIER = 2;
     private static final int DEFAULT_POT_AMOUNT = 0;
 
@@ -240,21 +240,17 @@ public class BetController implements Serializable {
     public int raiseBet(int playerID, int amount){
         PlayerChipCollection player = players.get(playerID);
         int playerChips = player.getChips();
-
         // check if bet is valid
         int accumulativeBet = player.getLastBet() + amount;
         if (accumulativeBet <= maxBet || playerChips < amount) {
             return RAISE_INVALID;
         }
-
         addToPot(playerID, amount);
-
         // check if the player is out of funds
         playerChips = player.getChips();
         if (playerChips == 0) {
             return RAISE_NO_FUNDS_LEFT;
         }
-
         return RAISE_FUNDS_LEFT;
     }
 
@@ -288,8 +284,7 @@ public class BetController implements Serializable {
      *
      * Before we add anything to the pots, we withdraw the amount from the
      * player. Then, we determine if this is a case A of making a new pot. If
-     * so, add
-     *
+     * so, add their max bet to a new pot
      *
      */
     private void addToPot(int playerID, int amount) {
@@ -346,8 +341,7 @@ public class BetController implements Serializable {
         totalAmount += potContribution;
         player.removeChips(potContribution);
         nextPot.addContributor(playerID);
-        winnings[playerID] -= potContribution; //update the winnings for this
-                                               // bet
+        winnings[playerID] -= potContribution; //update the winnings for this bet
 
         int remaining = amount - potContribution;
 
@@ -398,7 +392,7 @@ public class BetController implements Serializable {
             int amountInPot = p.getContribution();
             int contributorsPerPot = p.getContributors().size();
             int potTotal = amountInPot * contributorsPerPot;
-            int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get.
+            int chipsWon = potTotal/winners.size(); //how much the winner or multiple winners get
             for(int i: winners){
                 players.get(i).addChips(chipsWon);
                 winnings[i] += chipsWon;

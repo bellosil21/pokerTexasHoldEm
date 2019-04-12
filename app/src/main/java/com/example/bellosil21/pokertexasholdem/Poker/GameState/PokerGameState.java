@@ -267,7 +267,6 @@ public class PokerGameState extends GameState implements Serializable {
         for (int i = 0; i < numPlayers; i++) {
             toReturn += "\nPlayer " + (i + 1) + ": " + betController.getPlayerChips(i);
         }
-        ;
 
         return toReturn;
     }

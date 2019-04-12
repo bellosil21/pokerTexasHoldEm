@@ -103,16 +103,18 @@ public class PokerLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
-        /*check if GameAction object is null*/
+        //check if GameAction object is null
         if(action == null){
             Log.i("PokerLocalGame.java", "GameAction object is null.");
             return false;
         }
 
-        boolean isValid = false; // by default, we return false
-        boolean nextTurn = false; // by default, we return false
+        // by default, we return false
+        boolean isValid = false;
+        // by default, we return false
+        boolean nextTurn = false;
 
-        /*Game Actions*/
+        //Game Actions:
         // ALL IN
         if (action instanceof PokerAllIn) {
             int playerID = getPlayerIdx(action.getPlayer());
@@ -197,7 +199,7 @@ public class PokerLocalGame extends LocalGame {
     private void call(int playerID) {
         boolean usedAllFunds = state.getBetController().call(playerID);
 
-        // we need to keep track if the player used all their funds
+        // checks to see if the player used all their funds
         if (usedAllFunds) {
             state.getTurnTracker().allIn();
             return;
@@ -286,7 +288,7 @@ public class PokerLocalGame extends LocalGame {
         int onlyPlayerLeft = state.getTurnTracker().isRoundOver();
         if (onlyPlayerLeft != -1) {
 
-            //go to the end of the round, passing this playerID as the best rank
+            // go to the end of the round, passing this playerID as the best rank
             int[] rankings = new int[NUM_PLAYERS];
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (onlyPlayerLeft != i) {
@@ -444,7 +446,7 @@ public class PokerLocalGame extends LocalGame {
         betController.asynchronousReset();
         betController.startPhase();
 
-        //remove players who are out of funds and set their cards to blank cards
+        // remove players who are out of funds and set their cards to blank cards
         for (int i = 0; i < state.getNumPlayers(); i++) {
             if (betController.getPlayerChips(i) == 0) {
                 turnTracker.remove(i);
@@ -461,12 +463,13 @@ public class PokerLocalGame extends LocalGame {
             return;
         }
 
-        state.incrementRoundNumber(); // increment the round;
+        // increment the round
+        state.incrementRoundNumber();
         if (state.getRoundNumber() % PokerGameState.ROUNDS_PER_BLIND_INCREMENT == 0) {
             betController.incrementBlinds();
         }
 
-        //reset the game actions for the new round
+        // reset the game actions for the new round
         for (int i = 0; i < state.getLastActions().size(); i++) {
             state.getLastActions().set(i, null);
         }

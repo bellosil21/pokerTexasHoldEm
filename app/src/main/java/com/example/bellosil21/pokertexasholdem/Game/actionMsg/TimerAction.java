@@ -24,7 +24,8 @@ public class TimerAction extends GameAction {
 	 * 		the timer that caused this action
 	 */
 	public TimerAction(GameTimer timer) {
-		super(null); // (there is no player associated with this action)
+		// (there is no player associated with this action)
+		super(null);
 		myTimer = timer;
 	}
 	

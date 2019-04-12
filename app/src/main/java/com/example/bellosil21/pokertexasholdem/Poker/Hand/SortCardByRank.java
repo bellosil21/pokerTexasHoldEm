@@ -14,7 +14,6 @@ import java.util.Comparator;
 
 public class SortCardByRank implements Comparator<Card>, Serializable {
 
-
     @Override
     public int compare(Card card1, Card card2) {
         return card2.getRank().getValue() - card1.getRank().getValue();
