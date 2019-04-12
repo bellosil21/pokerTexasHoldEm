@@ -288,7 +288,7 @@ public class PokerLocalGame extends LocalGame {
         if (onlyPlayerLeft != -1) {
 
             //go to the end of the round, passing this playerID as the best rank
-            int[] rankings = new int[NUM_PLAYERS];
+            int[] rankings = new int[NUM_PLAYERS]; //TODO: Check for x number of players.
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (onlyPlayerLeft != i) {
                     rankings[i] = Integer.MAX_VALUE;

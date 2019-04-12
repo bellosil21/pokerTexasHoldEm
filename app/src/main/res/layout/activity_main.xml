@@ -59,7 +59,7 @@
     <RelativeLayout
         android:id="@+id/top_gui_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="50"
         android:background="#268b3a">
 
@@ -70,6 +70,16 @@
             android:text="Turn: Player 4"
             android:textColor="@android:color/white"
             android:textSize="30dp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/roundResults"
+            android:layout_width="172dp"
+            android:layout_height="384dp"
+            android:layout_below="@id/turnText"
+            android:text="Round Standings: "
+            android:textColor="@android:color/white"
+            android:textSize="15dp"
             app:fontFamily="@font/anton" />
 
         <TextView

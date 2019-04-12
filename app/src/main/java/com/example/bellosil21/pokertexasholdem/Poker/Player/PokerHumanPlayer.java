@@ -71,6 +71,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     // Player's turn informer
     private TextView turnTracker;
 
+    // Round Standings
+    private TextView roundStandings;
+
     // Player's Editable TextView to make bet
     private EditText chipBetText;
 
@@ -169,6 +172,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.player3Action = activity.findViewById(R.id.player3Move);
         this.player4Action = activity.findViewById(R.id.player4Move);
 
+        //MY BUTTON TEXTVIEW THINGS
+        this.roundStandings = activity.findViewById(R.id.roundResults);
+
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
         this.chipBetSeekbar = activity.findViewById(R.id.bettingSearch);
@@ -258,9 +264,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             int[] winnings = ((PokerEndOfRound) info).getWinnings();
             String toDisplay = "Round " + state.getRoundNumber() + " " +
-                    "Standings:\n\n";
+                    "Standings:\n";
 
-            /*
+            /**
              * External Citation
              *  Date:     6 April 2019
              *  Problem:  Android Studio was staying to use a StringBuilder
@@ -285,8 +291,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 toDisplayBuilder.append(winnings[i]) ;
                 toDisplayBuilder.append(")");
             }
-
-            MessageBox.popUpMessage(toDisplayBuilder.toString(), myActivity);
+            roundStandings.setText(toDisplayBuilder);
+            //MessageBox.popUpMessage(toDisplayBuilder.toString(), myActivity);
         } else if (info instanceof PokerIncreasingBlinds) {
             // tell the player of the new blinds
 
@@ -302,7 +308,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         }
-
     }
 
     /**
@@ -834,7 +839,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 return;
             }
 
-            /*
+            /**
              External Citation
                 Date: 1 April 2019
                 Problem:    Needed to find a way to check if a bet integer was declared.
@@ -868,8 +873,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 Toast.makeText(myActivity.getApplicationContext(), "Nice.",
                         duration).show();
             }
-            game.sendAction(new PokerRaiseBet(this, bet,
-                    state.getBetController().getCallAmount(playerNum)));
+            int callAmount = state.getBetController().getCallAmount(playerNum);
+            game.sendAction(new PokerRaiseBet(this, bet, callAmount));
 
         } else if (v.equals(showHideCardsButton)) {
             // toggle the display and send the action
