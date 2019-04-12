@@ -74,8 +74,8 @@
 
         <TextView
             android:id="@+id/roundResults"
-            android:layout_width="172dp"
-            android:layout_height="384dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/turnText"
             android:text="Round Standings: "
             android:textColor="@android:color/white"
@@ -442,6 +442,19 @@
             android:text="Round"
             android:textColor="@color/white"
             android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/blinds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/roundNum"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:text="Big Blind: \nSmall Blind: "
+            android:textColor="@android:color/white"
+            android:textSize="15dp"
+            app:fontFamily="@font/anton" />
 
     </RelativeLayout>
 

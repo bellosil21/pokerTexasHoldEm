@@ -32,7 +32,6 @@ public class PokerLocalGame extends LocalGame {
     private static final int STARTING_CHIPS = 1000;
     private static final int STARTING_SMALL_BLIND = 50;
     private static final int STARTING_BIG_BLIND = 100;
-    private static final int NUM_PLAYERS = 4;
     private static final int SLEEP_TIME_POST_ROUND = 5000;
 
     public PokerLocalGame(int numPlayers) {
@@ -288,8 +287,8 @@ public class PokerLocalGame extends LocalGame {
         if (onlyPlayerLeft != -1) {
 
             //go to the end of the round, passing this playerID as the best rank
-            int[] rankings = new int[NUM_PLAYERS]; //TODO: Check for x number of players.
-            for (int i = 0; i < NUM_PLAYERS; i++) {
+            int[] rankings = new int[state.getNumPlayers()];
+            for (int i = 0; i < state.getNumPlayers(); i++) {
                 if (onlyPlayerLeft != i) {
                     rankings[i] = Integer.MAX_VALUE;
                 }
@@ -330,6 +329,7 @@ public class PokerLocalGame extends LocalGame {
             Log.i("PokerLocalGame.java","The numPhase variable in " +
                     "PokerGameState.java is probably null");
         }
+        state.getTurnTracker().promptPlayers();
     }
 
     /**

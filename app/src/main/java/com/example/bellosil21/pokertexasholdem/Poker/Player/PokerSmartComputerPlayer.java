@@ -14,9 +14,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 
-import java.io.Serializable;
-import java.util.Random;
-
 /**
  * The "smart" AI for Poker
  *
@@ -53,6 +50,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
+        double random = Math.random();
         if(info instanceof NotYourTurnInfo || info == null){
             return;
         }
