@@ -50,7 +50,6 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        double random = Math.random();
         if(info instanceof NotYourTurnInfo || info == null){
             return;
         }
@@ -112,11 +111,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                 raiseAmount = state.getChips(this.playerNum);
             }
 
-            if(betController.getCallAmount(this.playerNum) == 0){
-                game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.
-                return;
-            }
-            else if(betController.getCallAmount(this.playerNum) ==
+            if(betController.getCallAmount(this.playerNum) ==
                     state.getChips(this.playerNum)){
                 confidence -= 25;
             }
@@ -151,7 +146,12 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                 }
             }
             else if (confidence > FAIRLY_CONFIDENT) {
-                game.sendAction(new PokerCall(this));
+                if (state.getBetController().getCallAmount(this.playerNum) == 0){
+                    game.sendAction(new PokerCheck(this));
+                }
+                else {
+                    game.sendAction(new PokerCall(this));
+                }
             }
             else {
                 game.sendAction(new PokerFold(this));
