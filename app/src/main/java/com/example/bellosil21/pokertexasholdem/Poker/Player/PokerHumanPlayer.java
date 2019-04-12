@@ -74,6 +74,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     // Round Standings
     private TextView roundStandings;
 
+    // Shows the current blinds
+    private TextView blinds;
+
     // Player's Editable TextView to make bet
     private EditText chipBetText;
 
@@ -174,6 +177,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         //MY BUTTON TEXTVIEW THINGS
         this.roundStandings = activity.findViewById(R.id.roundResults);
+        this.roundStandings.setText("");
+        this.blinds = activity.findViewById(R.id.blinds);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
@@ -264,7 +269,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             int[] winnings = ((PokerEndOfRound) info).getWinnings();
             String toDisplay = "Round " + state.getRoundNumber() + " " +
-                    "Standings:\n";
+                    "Standings:";
 
             /**
              * External Citation
@@ -277,9 +282,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
 
             for (int i = 0; i < allPlayerNames.length; i++) {
-                toDisplayBuilder.append("\n\n");
+                toDisplayBuilder.append("\n\t");
                 toDisplayBuilder.append(allPlayerNames[i]);
-                toDisplayBuilder.append(": \n\t ");
+                toDisplayBuilder.append(":\n\t\t");
                 toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
                 toDisplayBuilder.append(" (");
 
@@ -292,7 +297,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 toDisplayBuilder.append(")");
             }
             roundStandings.setText(toDisplayBuilder);
-            //MessageBox.popUpMessage(toDisplayBuilder.toString(), myActivity);
         } else if (info instanceof PokerIncreasingBlinds) {
             // tell the player of the new blinds
 
@@ -301,9 +305,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             StringBuilder toDisplay = new StringBuilder();
 
             toDisplay.append("The blinds are increasing!\n\n");
-            toDisplay.append("New Big Blind: ");
+            toDisplay.append("New Big Blind: $");
             toDisplay.append(bigBlind);
-            toDisplay.append("\nNew Small Blind: ");
+            toDisplay.append("\nNew Small Blind: $");
             toDisplay.append(smallBlind);
 
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
@@ -462,16 +466,15 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipBetSeekbar.setMax(
                 state.getChips(playerNum) - state.getBetController()
                         .getCallAmount(playerNum));
-        chipBetSeekbar.setMax(callAmount);
 
         setBlinds();
 
         roundNum.setText("Round: " + state.getRoundNumber());
-
     }
 
     /**
-     * Sets the small blind and big blind image next to the player icon
+     * Sets the small blind and big blind image next to the player icon and
+     * display the blinds amount in the TextView
      */
     private void setBlinds() {
         player1Status.setImageResource(0);
@@ -507,6 +510,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         else if (playerBB == (playerNum + 3) % 4) {
             player4Status.setImageResource(R.drawable.big_blind);
         }
+
+        // setting the blinds TextView
+        int bigBlind = state.getBetController().getBigBlind();
+        int smallBlind = state.getBetController().getSmallBlind();
+        StringBuilder toDisplay = new StringBuilder();
+        toDisplay.append("Big Blind: $");
+        toDisplay.append(bigBlind);
+        toDisplay.append("\nSmall Blind: $");
+        toDisplay.append(smallBlind);
+        blinds.setText(toDisplay);
     }
 
     /**

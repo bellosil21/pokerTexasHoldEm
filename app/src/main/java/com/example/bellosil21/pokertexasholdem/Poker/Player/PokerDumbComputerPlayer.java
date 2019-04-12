@@ -53,7 +53,7 @@ public class PokerDumbComputerPlayer extends GameComputerPlayer {
                 game.sendAction(new PokerShowHideCards(this, true));
             }
 
-            sleep(500); // slow the computer down so the human player
+            sleep(1000); // slow the computer down so the human player
                                    // can see what is going on
 
             game.sendAction(new PokerCall(this));

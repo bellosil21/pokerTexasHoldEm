@@ -52,7 +52,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
             int maxBet = betController.getMaxBet();
 
             // slow down so the human player can see what is going
-            sleep(500);
+            sleep(1000);
 
             if(betController.getMaxBet() == 0){
                 game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.
