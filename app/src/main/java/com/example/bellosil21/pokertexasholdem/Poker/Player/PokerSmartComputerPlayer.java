@@ -9,6 +9,11 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
+import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
+import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
+
+import java.io.Serializable;
+import java.util.Random;
 
 /**
  * The "smart" AI for Poker
@@ -20,6 +25,8 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
  */
 public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
+    private int confidence;
+
     /**
      * constructor
      *
@@ -27,6 +34,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
      */
     public PokerSmartComputerPlayer(String name) {
         super(name);
+        confidence = 0;
     }
 
     /**
@@ -40,35 +48,83 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        double random = Math.random();
         if(info instanceof NotYourTurnInfo || info == null){
             return;
         }
         else if(info instanceof PokerGameState){
-           BetController betController =
-                   new BetController(((PokerGameState) info).getBetController());
+            Random rand = new Random();
+
+            PokerGameState state = (PokerGameState) info;
+            BetController betController =
+                   new BetController(state.getBetController());
+
+            HandRanker hand =
+                    new HandRanker(state.getPlayerHand(this.playerNum),
+                            state.getCommunityCards());
+
+            CardCollection handRank = hand.computeHandRank();
+
+            int chance = 0;
+
+            switch (handRank.getHandRank()){
+                case STRAIGHT_FLUSH:
+                    chance = 9;
+                    break;
+                case FOUR_OF_A_KIND:
+                    chance = 8;
+                    break;
+                case FULL_HOUSE:
+                    chance = 7;
+                    break;
+                case FLUSH:
+                    chance = 6;
+                    break;
+                case STRAIGHT:
+                    chance = 5;
+                    break;
+                case THREE_OF_A_KIND:
+                    chance = 4;
+                    break;
+                case TWO_PAIR:
+                    chance = 3;
+                    break;
+                case PAIR:
+                    chance = 2;
+                    break;
+                case HIGH_CARD:
+                    chance = 1;
+                    break;
+            }
 
             int myChips = betController.getPlayerChips(this.playerNum);
             int maxBet = betController.getMaxBet();
+            int difference = myChips - maxBet;
 
             // slow down so the human player can see what is going
             sleep(500);
 
-            if(betController.getMaxBet() == 0){
+            if(betController.getMaxBet() == 0 && chance < 20){
                 game.sendAction(new PokerCheck(this)); //its my turn and no one has bet.
             }
-            else{
-                int difference = myChips - maxBet;
-                if(difference > 100){
-                    game.sendAction(new PokerRaiseBet(this, maxBet + 50));
-                }
-                else if (random > 0.25) {
-                    game.sendAction(new PokerCall(this));
-                }
-                else {
-                    game.sendAction(new PokerFold(this));
-                }
+            else if (difference > state.getBetController().getSmallBlind() * 3){
+                chance -= 15;
             }
+            else if (difference > state.getBetController().getBigBlind() * 3){
+                chance -= 30;
+            }
+
+            int confidence = (int)(Math.random() * chance + 1);
+
+            if(confidence > chance * .6){
+                game.sendAction(new PokerRaiseBet(this, maxBet + 50));
+            }
+            else if (confidence > chance * .3) {
+                game.sendAction(new PokerCall(this));
+            }
+            else {
+                game.sendAction(new PokerFold(this));
+            }
+
         }
         /**
          External Citation

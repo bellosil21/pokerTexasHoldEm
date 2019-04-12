@@ -319,4 +319,6 @@ public class PokerGameState extends GameState implements Serializable {
     public void setNumPhase(int numPhase) {
         this.numPhase = numPhase;
     }
+
+    public Hand getPlayerHand(int playerIndex){return hands.get(playerIndex);}
 }
