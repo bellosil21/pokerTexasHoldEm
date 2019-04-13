@@ -456,6 +456,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // Updates the Community Card fields to all existing community cards
         setCommCards(state.getCommunityCards());
 
+        // sets image resources for player icons, chip stacks, etc.
         player1.setImageResource(R.drawable.player);
         player2.setImageResource(R.drawable.player);
         player3.setImageResource(R.drawable.player);
@@ -463,10 +464,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipStack.setImageResource(R.drawable.chip_stack);
         bettingStack.setImageResource(R.drawable.chip_stack);
         logo.setImageResource(R.drawable.logo);
-
         helpButton.setImageResource(android.R.drawable.ic_menu_help);
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+
         // Updates the player's hole cards
         playerCount = playerNum;
         ArrayList<Hand> hands = state.getHands();
@@ -956,6 +957,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 sitOutButton.setText(SIT_IN);
             }
             game.sendAction(new PokerSitOut(this));
+            //todo: implement functionality 
+        } else if(v.equals(helpButton)) {
+            // implement some sort of guide on the hand rankings and instructions
+        } else if(v.equals(settings)) {
+            // potential language change and other
+        } else if(v.equals(exitGame)){
+            // quit the game
         }
     }
 
