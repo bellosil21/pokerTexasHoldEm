@@ -6,6 +6,8 @@ import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.NetworkObjectPasser;
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * A Player object that is used as a proxy for the real player that is on another
  * machine on the network. Whenever a message is sent to the ProxyPlayer object,
@@ -16,7 +18,7 @@ import android.util.Log;
  * @author Steven R. Vegdahl
  * @version July 2013
  */
-public class ProxyPlayer implements GamePlayer {
+public class ProxyPlayer implements GamePlayer, Serializable {
     
     // the game object
     private Game game;
