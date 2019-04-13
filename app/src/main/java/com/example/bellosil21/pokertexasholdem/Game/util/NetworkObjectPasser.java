@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
@@ -23,7 +24,7 @@ import android.util.Pair;
  * @version July 2013
  *
  */
-public abstract class NetworkObjectPasser {
+public abstract class NetworkObjectPasser{
 	/**
 	 * instance variables
 	 */

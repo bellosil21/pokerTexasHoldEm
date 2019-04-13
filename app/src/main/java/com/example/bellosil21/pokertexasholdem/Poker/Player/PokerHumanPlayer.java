@@ -464,7 +464,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         bettingStack.setImageResource(R.drawable.chip_stack);
         logo.setImageResource(R.drawable.logo);
 
-        //helpButton.setImageResource(R.drawable.ic_menu_help);
+        helpButton.setImageResource(android.R.drawable.ic_menu_help);
+        settings.setImageResource(android.R.drawable.ic_menu_manage);
+        exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         // Updates the player's hole cards
         playerCount = playerNum;
         ArrayList<Hand> hands = state.getHands();
