@@ -29,9 +29,9 @@ public class PokerLocalGame extends LocalGame {
 
     private PokerGameState state;
 
-    private static final int STARTING_CHIPS = 1000;
-    private static final int STARTING_SMALL_BLIND = 50;
-    private static final int STARTING_BIG_BLIND = 100;
+    private static final int STARTING_CHIPS = 100000;
+    private static final int STARTING_SMALL_BLIND = 100;
+    private static final int STARTING_BIG_BLIND = 200;
     private static final int SLEEP_TIME_POST_ROUND = 5000;
 
     public PokerLocalGame(int numPlayers) {
@@ -80,6 +80,7 @@ public class PokerLocalGame extends LocalGame {
     @Override
     protected boolean canMove(int playerIdx) {
         int activePlayer = state.getTurnTracker().getActivePlayerID();
+        boolean canMove;
         return (activePlayer == playerIdx);
     }
 

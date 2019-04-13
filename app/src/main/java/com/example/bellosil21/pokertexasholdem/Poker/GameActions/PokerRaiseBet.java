@@ -26,7 +26,7 @@ public class PokerRaiseBet extends GameAction implements Serializable {
      */
     public PokerRaiseBet(GamePlayer player, int amount, int callAmount) {
         super(player);
-        raiseAmount = amount;
+        this.raiseAmount = amount;
         this.callAmount = callAmount;
     }
 
