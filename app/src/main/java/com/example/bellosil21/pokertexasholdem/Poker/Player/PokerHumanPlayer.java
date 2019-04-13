@@ -414,13 +414,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Changing all the player's names
         int playerCount = this.playerNum;
-        player1Nm.setText(this.allPlayerNames[(playerCount) % 4]);
-        player2Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+        player1Nm.setText(this.allPlayerNames[(playerCount) % state.getNumPlayers()]);
+        player2Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         if (state.getNumPlayers() > 2) {
-            player3Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+            player3Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
         if (state.getNumPlayers() > 3) {
-            player4Nm.setText(this.allPlayerNames[(++playerCount) % 4]);
+            player4Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
 
         // Changes all the chip count to how much each player has
@@ -466,16 +466,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         ArrayList<Hand> hands = state.getHands();
         setCard(hands.get(playerCount).getHole1(), playerHole1);
         setCard(hands.get(playerCount).getHole2(), playerHole2);
-        playerCount = (playerCount + 1) % 4;
+        playerCount = (playerCount + 1) % state.getNumPlayers();
         setCard(hands.get(playerCount).getHole1(), player2Card1);
         setCard(hands.get(playerCount).getHole2(), player2Card2);
         if (state.getNumPlayers() > 2) {
-            playerCount = (playerCount + 1) % 4;
+            playerCount = (playerCount + 1) % state.getNumPlayers();
             setCard(hands.get(playerCount).getHole1(), player3Card1);
             setCard(hands.get(playerCount).getHole2(), player3Card2);
         }
         if (state.getNumPlayers() > 3) {
-            playerCount = (playerCount + 1) % 4;
+            playerCount = (playerCount + 1) % state.getNumPlayers();
             setCard(hands.get(playerCount).getHole1(), player4Card1);
             setCard(hands.get(playerCount).getHole2(), player4Card2);
         }
@@ -531,26 +531,26 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         if (playerSB == playerNum) {
             player1Status.setImageResource(R.drawable.small_blind);
         }
-        else if (playerSB == (playerNum + 1) % 4) {
+        else if (playerSB == (playerNum + 1) % state.getNumPlayers()) {
             player2Status.setImageResource(R.drawable.small_blind);
         }
-        else if (playerSB == (playerNum + 2) % 4) {
+        else if (playerSB == (playerNum + 2) % state.getNumPlayers()) {
             player3Status.setImageResource(R.drawable.small_blind);
         }
-        else if (playerSB == (playerNum + 3) % 4) {
+        else if (playerSB == (playerNum + 3) % state.getNumPlayers()) {
             player4Status.setImageResource(R.drawable.small_blind);
         }
 
         if (playerBB == playerNum) {
             player1Status.setImageResource(R.drawable.big_blind);
         }
-        else if (playerBB == (playerNum + 1) % 4) {
+        else if (playerBB == (playerNum + 1) % state.getNumPlayers()) {
             player2Status.setImageResource(R.drawable.big_blind);
         }
-        else if (playerBB == (playerNum + 2) % 4) {
+        else if (playerBB == (playerNum + 2) % state.getNumPlayers()) {
             player3Status.setImageResource(R.drawable.big_blind);
         }
-        else if (playerBB == (playerNum + 3) % 4) {
+        else if (playerBB == (playerNum + 3) % state.getNumPlayers()) {
             player4Status.setImageResource(R.drawable.big_blind);
         }
 
