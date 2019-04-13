@@ -35,7 +35,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -47,7 +46,7 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class PokerHumanPlayer extends GameHumanPlayer implements
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener, Serializable {
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
 
     // Instance variables for player's chips TextViews

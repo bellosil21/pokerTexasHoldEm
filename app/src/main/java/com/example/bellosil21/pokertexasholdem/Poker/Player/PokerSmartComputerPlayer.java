@@ -10,11 +10,9 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
-import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 
-import java.io.Serializable;
 
 /**
  * The "smart" AI for Poker
@@ -24,7 +22,7 @@ import java.io.Serializable;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerSmartComputerPlayer extends GameComputerPlayer implements Serializable {
+public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
     private int confidence;
     private final int FAIRLY_CONFIDENT = 45;

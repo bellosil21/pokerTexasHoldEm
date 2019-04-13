@@ -9,7 +9,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.SortByCardCollection;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,7 +20,7 @@ import java.util.Collections;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerGameState extends GameState implements Serializable {
+public class PokerGameState extends GameState {
 
     /**
      * instance variables
