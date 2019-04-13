@@ -54,7 +54,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      * @param p the player to send info to
      */
     @Override
-    protected synchronized void sendUpdatedStateTo(GamePlayer p) {
+    protected void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
             Log.i("PokerLocalGame.java", "GamePlayer object is null");
             return;
@@ -108,7 +108,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      * @return True if the move was legal; false otherwise.
      */
     @Override
-    protected synchronized boolean makeMove(GameAction action) {
+    protected boolean makeMove(GameAction action) {
         /*check if GameAction object is null*/
         if(action == null){
             Log.i("PokerLocalGame.java", "GameAction object is null.");
