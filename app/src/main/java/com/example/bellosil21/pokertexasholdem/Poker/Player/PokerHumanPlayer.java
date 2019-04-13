@@ -425,24 +425,24 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("$ " + state.getChips((playerCount) % 4));
-        player2TV.setText("$ " + state.getChips((++playerCount) % 4));
+        player1TV.setText("$ " + state.getChips((playerCount) % state.getNumPlayers()));
+        player2TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         if (state.getNumPlayers() > 2) {
-            player3TV.setText("$ " + state.getChips((++playerCount) % 4));
+            player3TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
         if (state.getNumPlayers() > 3) {
-            player4TV.setText("$ " + state.getChips((++playerCount) % 4));
+            player4TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
 
         playerCount = this.playerNum;
         ArrayList<GameAction> lastActions = state.getLastActions();
         updateAction(player1Action, lastActions.get(playerCount));
-        updateAction(player2Action, lastActions.get((++playerCount) % 4));
+        updateAction(player2Action, lastActions.get((++playerCount) % state.getNumPlayers()));
         if (state.getNumPlayers() > 2) {
-            updateAction(player3Action, lastActions.get((++playerCount) % 4));
+            updateAction(player3Action, lastActions.get((++playerCount) % state.getNumPlayers()));
         }
         if (state.getNumPlayers() > 3) {
-            updateAction(player4Action, lastActions.get((++playerCount) % 4));
+            updateAction(player4Action, lastActions.get((++playerCount) % state.getNumPlayers()));
         }
 
 
