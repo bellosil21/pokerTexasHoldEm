@@ -101,6 +101,13 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
                     break;
             }
 
+            if (state.getNumPhase() == PokerGameState.PHASE_PRE_FLOP){
+                confidence += 10;
+            }
+            else if (state.getNumPhase() == PokerGameState.PHASE_FLOP){
+                confidence += 5;
+            }
+
             int myChips = betController.getPlayerChips(this.playerNum);
             int maxBet = betController.getMaxBet();
             int difference = myChips - maxBet;
@@ -124,6 +131,9 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
             double chance = Math.random() * (100);
             confidence += chance;
+            if (confidence < 0){
+                confidence = confidence * (-1);
+            }
 
             if (confidence > VERY_CONFIDENT){
                 if (raiseAmount == state.getChips(this.playerNum)) {
