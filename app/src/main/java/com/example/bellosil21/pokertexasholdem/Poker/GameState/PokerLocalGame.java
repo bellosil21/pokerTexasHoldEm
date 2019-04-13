@@ -64,16 +64,10 @@ public class PokerLocalGame extends LocalGame implements Serializable {
             return;
         }
 
-        PokerGameState stateForPlayer;
+        PokerGameState stateForPlayer = new PokerGameState(state,
+                this.getPlayerIdx(p));
 
-        // make the copy of the game for the player
-        for (int i = 0; i < this.players.length; i++) {
-            if (this.players[i].equals(p)) {
-                stateForPlayer = new PokerGameState(state, i);
-                p.sendInfo(stateForPlayer);
-                break;
-            }
-        }
+        p.sendInfo(stateForPlayer);
     }
 
     /**
