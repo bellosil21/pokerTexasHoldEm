@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import android.accessibilityservice.FingerprintGestureController;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;

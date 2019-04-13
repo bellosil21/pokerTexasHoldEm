@@ -1,7 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Hand;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 /**
  * Defines a playing card, which is composed of a suit and rank.
