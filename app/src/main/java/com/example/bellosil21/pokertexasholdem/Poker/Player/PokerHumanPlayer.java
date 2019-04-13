@@ -35,6 +35,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -434,15 +435,19 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         playerCount = this.playerNum;
-        ArrayList<GameAction> lastActions = state.getLastActions();
-        updateAction(player1Action, lastActions.get(playerCount));
-        updateAction(player2Action, lastActions.get((++playerCount) % state.getNumPlayers()));
-        if (state.getNumPlayers() > 2) {
-            updateAction(player3Action, lastActions.get((++playerCount) % state.getNumPlayers()));
-        }
-        if (state.getNumPlayers() > 3) {
-            updateAction(player4Action, lastActions.get((++playerCount) % state.getNumPlayers()));
-        }
+        //TODO: CLEAN UP
+        //ArrayList<GameAction> lastActions = state.getLastActions();
+        //updateAction(player1Action, lastActions.get(playerCount));
+        //updateAction(player2Action,
+        //        lastActions.get((++playerCount) % state.getNumPlayers()));
+        //if (state.getNumPlayers() > 2) {
+        //    updateAction(player3Action,
+        //        lastActions.get((++playerCount) % state.getNumPlayers()));
+        //}
+        //if (state.getNumPlayers() > 3) {
+        //    updateAction(player4Action,
+        //        lastActions.get((++playerCount) % state.getNumPlayers()));
+        //}
 
 
         // Sets the current total pot amount

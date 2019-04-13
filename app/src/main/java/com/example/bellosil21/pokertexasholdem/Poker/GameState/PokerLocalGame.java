@@ -163,7 +163,8 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         }
 
         if (nextTurn) {
-            state.updateLastAction(playerID, action);
+            //TODO: CLEAN UP
+            //state.updateLastAction(playerID, action);
             endTurnCleanUp();
             return true;
         }
@@ -304,7 +305,8 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         // if next player is sitting out, fold them and clean up the turn.
         if (state.getTurnTracker().isActivePlayerSittingOut()) {
             int playerID = state.getTurnTracker().getActivePlayerID();
-            state.updateLastAction(playerID, new PokerFold(players[playerID]));
+            //state.updateLastAction(playerID, new PokerFold
+            // (players[playerID]));
             state.getTurnTracker().fold();
             endTurnCleanUp();
         }
@@ -453,9 +455,9 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         }
 
         //reset the game actions for the new round
-        for (int i = 0; i < state.getLastActions().size(); i++) {
-            state.updateLastAction(i, null);
-        }
+        //for (int i = 0; i < state.getLastActions().size(); i++) {
+        //    state.updateLastAction(i, null);
+        //}
 
         startRound();
     }
