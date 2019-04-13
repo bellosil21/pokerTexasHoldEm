@@ -18,6 +18,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFu
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerLocalGame extends LocalGame {
+public class PokerLocalGame extends LocalGame implements Serializable {
 
     private PokerGameState state;
 
