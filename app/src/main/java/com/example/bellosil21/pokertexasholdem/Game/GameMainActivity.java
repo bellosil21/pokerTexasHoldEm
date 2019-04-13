@@ -271,9 +271,8 @@ View.OnClickListener {
 			}
 		}
 
-		//////////////////////////////////////
+
 		// create the players
-		//////////////////////////////////////
 		int requiresGuiCount = 0; // the number of players that require a GUI
 		guiPlayer = null; // the player that will be our GUI player
 		players = new GamePlayer[config.getNumPlayers()]; // the array to contains our players

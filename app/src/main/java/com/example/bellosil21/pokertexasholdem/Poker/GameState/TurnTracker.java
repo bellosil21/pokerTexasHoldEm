@@ -17,21 +17,22 @@ import java.util.LinkedList;
 public class TurnTracker implements Serializable {
 
     /** instance variables **/
-    private LinkedList<Integer> activePlayers; // players who haven't taken a
-    // turn in this phase
-    private LinkedList<Integer> promptedPlayers; // players who taken a turn in
-    // this phase
-    private ArrayList<Integer> allInPlayers; // players who have committed
-    // their whole chip collection to the pot
-    private ArrayList<Integer> foldedPlayers; // players who folded and no
-    // longer in this round
-    private ArrayList<Integer> sittingOutPlayers; // players who are sitting out
-    // and fold on the first phase
-    private ArrayList<Integer> removedPlayers; // players who left the game or
-    // no longer have any chips
-    // to bet (an amount of 0)
-    private int numPlayers; // the number of players in this game
-    private int dealerID; // is a marker for blinds and who takes the first
+    // players who haven't taken a turn in this phase
+    private LinkedList<Integer> activePlayers;
+    // players who taken a turn in this phase
+    private LinkedList<Integer> promptedPlayers;
+    // players who have committed their whole chip collection to the pot
+    private ArrayList<Integer> allInPlayers;
+    // players who folded and no longer in this round
+    private ArrayList<Integer> foldedPlayers;
+    // players who are sitting out and fold on the first phase
+    private ArrayList<Integer> sittingOutPlayers;
+    // players who left the game or no longer have any chips to bet (an amount of 0)
+    private ArrayList<Integer> removedPlayers;
+    // the number of players in this game
+    private int numPlayers;
+    // is a marker for blinds and who takes the first
+    private int dealerID;
     private int smallBlindID;
     private int bigBlindID;
     // turn when dealerID == playerID, the player is smallBlind
@@ -65,8 +66,10 @@ public class TurnTracker implements Serializable {
         this.removedPlayers = new ArrayList<>();
         this.numPlayers = numPlayers;
         this.dealerID = dealerID % numPlayers;
-        smallBlindID = -1; // not initialized yet
-        bigBlindID = -1; // not initialized yet
+        // not initialized yet
+        smallBlindID = -1;
+        // not initialized yet
+        bigBlindID = -1;
 
         for(int i=0; i<numPlayers; i++){
             activePlayers.add(i);
@@ -192,9 +195,8 @@ public class TurnTracker implements Serializable {
 
             activePlayers.remove((Integer)playerID);
             promptedPlayers.remove((Integer)playerID);
-
-            allInPlayers.remove((Integer)playerID); // cast integer to remove
-            // the object and not reference the index
+            // cast integer to remove the object and not reference the index
+            allInPlayers.remove((Integer)playerID);
             foldedPlayers.remove((Integer)playerID);
             sittingOutPlayers.remove((Integer)playerID);
 

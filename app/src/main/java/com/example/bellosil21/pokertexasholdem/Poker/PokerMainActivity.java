@@ -21,7 +21,7 @@ public class PokerMainActivity extends GameMainActivity {
 
     @Override
     public GameConfig createDefaultConfig() {
-        //define player types?
+        //define player types
         ArrayList<GamePlayerType> playerTypes = new ArrayList<GamePlayerType>();
 
         playerTypes.add(new GamePlayerType("Human Player") {
@@ -56,15 +56,15 @@ public class PokerMainActivity extends GameMainActivity {
         GameConfig defaultConfig = new GameConfig(playerTypes, 2, 4,
                 "Texas Holdem", PORT_NUMBER);
 
-        //Add the default players.
+        // add the default players.
         defaultConfig.addPlayer("Human", 0); // this index represents the index in
 
-        //the playerTypes array list.
+        // the playerTypes array list.
         defaultConfig.addPlayer("Computer 1", 1);
         defaultConfig.addPlayer("Computer 2", 1);
         defaultConfig.addPlayer("Computer 3", 1);
 
-        //set the initial information for the remote player.
+        // set the initial information for the remote player.
         defaultConfig.setRemoteData("Poker Guest", "",
                 0);
         return defaultConfig;

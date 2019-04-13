@@ -71,7 +71,7 @@ public class Deck implements Serializable {
             }
         }
 
-        /*
+        /**
          * External Citation
          *  Date:     22 Feburary 2019
          *  Problem:  Did not know how to enumerate through all enums in a type.
@@ -98,6 +98,8 @@ public class Deck implements Serializable {
         return toReturn;
     }
 
-    public ArrayList<Card> getDeck(){return this.deckOfCards;}
+    public ArrayList<Card> getDeck(){
+        return this.deckOfCards;
+    }
 
 }

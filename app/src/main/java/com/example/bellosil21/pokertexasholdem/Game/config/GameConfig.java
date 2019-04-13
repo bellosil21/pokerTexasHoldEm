@@ -428,7 +428,7 @@ public class GameConfig {
 	 * @return the available player types
 	 */
 	public GamePlayerType[] getAvailTypes() {
-		return availTypes;
+	    return availTypes;
 	}// getAvailTypes
 	
 	/**
@@ -437,7 +437,7 @@ public class GameConfig {
 	 * 		the port number used by this game for internet connections
 	 */
 	public int getPortNum() {
-		return portNum;
+	    return portNum;
 	}// getPortNum
 
 	/**
@@ -518,7 +518,8 @@ public class GameConfig {
 				return this.selNames.get(index);
 			}
 		}
-		else { // we're remote: the only valid index is zero, so
+		else {
+			// we're remote: the only valid index is zero, so
 			// return the remote name or null, depending on whether the
 			// index is zero
 			if (index == 0) {
@@ -588,7 +589,7 @@ public class GameConfig {
 	 * @return whether the current configuration denotes a local game
 	 */
 	public boolean isLocal() {
-		return isLocal;
+	    return isLocal;
 	}// isLocal
 
 	/**
@@ -599,14 +600,14 @@ public class GameConfig {
 	 *            whether the game is to be set to "local game"
 	 */
 	public void setLocal(boolean isLocal) {
-		this.isLocal = isLocal;
+	    this.isLocal = isLocal;
 	}// setLocal
 
 	/**
 	 * @return the name of the remote player
 	 */
 	public String getRemoteName() {
-		return remoteName;
+	    return remoteName;
 	}// getRemoteName
 	
 	/**
@@ -614,7 +615,7 @@ public class GameConfig {
 	 * 		the type of the remote player
 	 */
 	public GamePlayerType getRemoteSelType() {
-		return remoteSelType;
+	    return remoteSelType;
 	}// getRemotePlayerType
 
 	/**
@@ -624,7 +625,7 @@ public class GameConfig {
 	 *            the name
 	 */
 	public void setRemoteName(String remoteName) {
-		this.remoteName = remoteName;
+	    this.remoteName = remoteName;
 	}// setRemoteName
 	
 	/**
@@ -645,7 +646,7 @@ public class GameConfig {
 	 * @return the IP code
 	 */
 	public String getIpCode() {
-		return ipCode;
+	    return ipCode;
 	}// getIpCode
 
 	/**
@@ -655,21 +656,21 @@ public class GameConfig {
 	 *            the code to set
 	 */
 	public void setIpCode(String ipCode) {
-		this.ipCode = ipCode;
+	    this.ipCode = ipCode;
 	}// setIpCode
 
 	/**
 	 * @return the minimum number of players allowed in the game
 	 */
 	public int getMinPlayers() {
-		return minPlayers;
+	    return minPlayers;
 	}// getMinPlayers
 
 	/**
 	 * @return the maximum number of players allowed in the game
 	 */
 	public int getMaxPlayers() {
-		return maxPlayers;
+	    return maxPlayers;
 	}
 
 	/**
@@ -679,7 +680,7 @@ public class GameConfig {
 	 * 
 	 */
 	public int getNumPlayers() {
-		return isLocal ? selNames.size() : 1;
+	    return isLocal ? selNames.size() : 1;
 	}// getNumPlayers
 
 	/**
