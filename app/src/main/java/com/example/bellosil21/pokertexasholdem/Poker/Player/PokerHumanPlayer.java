@@ -27,6 +27,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCa
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
@@ -323,6 +324,32 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             toDisplay.append("\nNew Small Blind: $");
             toDisplay.append(smallBlind);
 
+            MessageBox.popUpMessage(toDisplay.toString(), myActivity);
+        } else if (info instanceof PokerPlayerOutOfFunds) {
+            // tell this player a player is out of funds
+            ArrayList<Integer> outOfFundPlayers =
+                    ((PokerPlayerOutOfFunds) info).getPlayerIDs();
+
+            StringBuilder toDisplay = new StringBuilder();
+
+            // build the string to tell the human player
+            if (outOfFundPlayers.size() == 1) {
+                toDisplay.append("Player ");
+                toDisplay.append(outOfFundPlayers.get(0) + 1);
+                toDisplay.append(" is out of funds!\nThey are now out of the game" +
+                        ".");
+            } else {
+                toDisplay.append("Player ");
+                for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
+                    toDisplay.append(outOfFundPlayers.get(i) + 1);
+                    toDisplay.append(" and ");
+                }
+                int lastPlayer =
+                        outOfFundPlayers.get(outOfFundPlayers.size() - 1);
+                toDisplay.append(lastPlayer + 1);
+                toDisplay.append(" are out of funds!\nThey are now out of the game" +
+                        ".");
+            }
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         }
     }

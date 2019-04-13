@@ -14,8 +14,11 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCa
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+
+import java.util.ArrayList;
 
 /**
  * The local game to control the master PokerGameState
@@ -420,13 +423,20 @@ public class PokerLocalGame extends LocalGame {
         state.getBetController().asynchronousReset();
 
         //remove players who are out of funds and set their cards to blank cards
+        ArrayList<Integer> newlyRemovedPlayers = new ArrayList<>();
         for (int i = 0; i < state.getNumPlayers(); i++) {
             if (state.getBetController().getPlayerChips(i) == 0) {
-                state.getTurnTracker().remove(i);
+                boolean newPlayerIsOut = state.getTurnTracker().remove(i);
+                if (newPlayerIsOut) {
+                    newlyRemovedPlayers.add(i);
+                }
                 state.getHands().get(i).setHole1(new BlankCard());
                 state.getHands().get(i).setHole2(new BlankCard());
 
             }
+        }
+        if (!newlyRemovedPlayers.isEmpty()) {
+            tellPlayersAPlayerIsOutOfFunds(newlyRemovedPlayers);
         }
 
         state.getTurnTracker().nextRound();
@@ -492,6 +502,18 @@ public class PokerLocalGame extends LocalGame {
     private void tellPlayersIncreasingBlinds(int newSmall, int newBig) {
         PokerIncreasingBlinds info = new PokerIncreasingBlinds(newSmall,
                 newBig);
+        for (GamePlayer p : players) {
+            p.sendInfo(info);
+        }
+    }
+
+    /**
+     * Sends players a PokerPlayerOutOfFunds GameIngo
+     *
+     * @param playerIDs the playerID who is out of funds
+     */
+    private void tellPlayersAPlayerIsOutOfFunds(ArrayList<Integer> playerIDs) {
+        PokerPlayerOutOfFunds info = new PokerPlayerOutOfFunds(playerIDs);
         for (GamePlayer p : players) {
             p.sendInfo(info);
         }

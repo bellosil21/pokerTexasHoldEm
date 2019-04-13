@@ -187,8 +187,9 @@ public class TurnTracker implements Serializable {
      * any other list.
      *
      * @param playerID The ID of the player who lost or left.
+     * @return true if a new player is added to the removed list
      */
-    public void remove(int playerID){
+    public boolean remove(int playerID){
         if (!removedPlayers.contains(playerID)) {
 
             removedPlayers.add(playerID);
@@ -199,8 +200,9 @@ public class TurnTracker implements Serializable {
             allInPlayers.remove((Integer)playerID);
             foldedPlayers.remove((Integer)playerID);
             sittingOutPlayers.remove((Integer)playerID);
-
+            return true;
         }
+        return false;
     }
 
     /**
