@@ -1,5 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import android.accessibilityservice.FingerprintGestureController;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -78,17 +80,35 @@ public class TurnTracker implements Serializable {
      * Copy constructor
      */
     public TurnTracker(TurnTracker toCopy) {
-        this.activePlayers = (LinkedList) toCopy.activePlayers.clone();
+        this.activePlayers = new LinkedList<>();
+        for (int i : toCopy.activePlayers) {
+            activePlayers.offer(i);
+        }
 
-        this.promptedPlayers = (LinkedList) toCopy.promptedPlayers.clone();
+        this.promptedPlayers = new LinkedList<>();
+        for (int i : toCopy.promptedPlayers) {
+            promptedPlayers.offer(i);
+        }
 
-        this.allInPlayers = new ArrayList<>(toCopy.allInPlayers);
+        this.allInPlayers = new ArrayList<>();
+        for (int i : toCopy.allInPlayers) {
+            allInPlayers.add(i);
+        }
 
-        this.foldedPlayers = new ArrayList<>(toCopy.foldedPlayers);
+        this.foldedPlayers = new ArrayList<>();
+        for (int i : toCopy.foldedPlayers) {
+            foldedPlayers.add(i);
+        }
 
-        this.sittingOutPlayers = new ArrayList<>(toCopy.sittingOutPlayers);
+        this.sittingOutPlayers = new ArrayList<>();
+        for (int i : toCopy.sittingOutPlayers) {
+            sittingOutPlayers.add(i);
+        }
 
-        this.removedPlayers = new ArrayList<>(toCopy.removedPlayers);
+        this.removedPlayers = new ArrayList<>();
+        for (int i : toCopy.removedPlayers) {
+            removedPlayers.add(i);
+        }
 
         this.numPlayers = toCopy.numPlayers;
         this.dealerID = toCopy.dealerID;
@@ -125,11 +145,7 @@ public class TurnTracker implements Serializable {
         if(activePlayers.size() < 1){
             return -1;
         }
-        Integer toReturn = activePlayers.peek(); // TODO: FIND WHERE WE ARE
-        // INJECTING A NULL
-        if (toReturn == null) {
-            return Integer.MIN_VALUE;
-        }
+        Integer toReturn = activePlayers.peek();
         return toReturn;
     }
 
@@ -145,9 +161,13 @@ public class TurnTracker implements Serializable {
     /**
      * Removes a player from the round. This player will no longer be
      * prompted until the next round.
+     * If the player folding is sitting out, don't add them to any array
      */
     public void fold(){
-        foldedPlayers.add(activePlayers.poll());
+        int activePlayer = activePlayers.poll();
+        if (!sittingOutPlayers.contains(activePlayer)) {
+            foldedPlayers.add(activePlayer);
+        }
     }
 
     /**
@@ -155,7 +175,10 @@ public class TurnTracker implements Serializable {
      * player is still in the round.
      */
     public void allIn() {
-        allInPlayers.add(activePlayers.poll());
+        int activePlayer = activePlayers.poll();
+        if (!sittingOutPlayers.contains(activePlayer)) {
+            allInPlayers.add(activePlayer);
+        }
     }
 
     /**
@@ -197,9 +220,6 @@ public class TurnTracker implements Serializable {
         }
         else {
             sittingOutPlayers.add(playerID);
-            if (getActivePlayerID() == playerID) {
-                fold();
-            }
         }
         return true;
     }
@@ -220,11 +240,10 @@ public class TurnTracker implements Serializable {
             return false;
         }
 
-        int size = promptedPlayers.size();
-        for (int i = 0; i < size; i++) {
-            int toAdd = promptedPlayers.poll();
-            activePlayers.offer(toAdd);
+        while (!promptedPlayers.isEmpty()) {
+            activePlayers.offer(promptedPlayers.poll());
         }
+
         return true;
     }
 
@@ -267,7 +286,12 @@ public class TurnTracker implements Serializable {
      * @return true if the active player queue is empty
      */
     public boolean isPhaseOver() {
-        return activePlayers.isEmpty();
+        if (activePlayers.isEmpty()) {
+            return true;
+        } else if (numPlayers - allInPlayers.size() - foldedPlayers.size() < 2) {
+            return true;
+        }
+        return false;
     }
 
     /**

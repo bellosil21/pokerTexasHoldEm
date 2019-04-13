@@ -57,7 +57,7 @@ public class PokerGameState extends GameState implements Serializable {
 
     public static final int CARDS_FLOP = 3;
 
-    private static final int INIT_ROUND_NUM = 1;
+    public static final int INIT_ROUND_NUM = 1;
     // the first player of the small blind
     private static final int INIT_DEALER_ID = 0;
     public static final int ROUNDS_PER_BLIND_INCREMENT = 5;
@@ -124,7 +124,10 @@ public class PokerGameState extends GameState implements Serializable {
             }
         }
 
-        communityCards = new ArrayList<>(toCopy.communityCards);
+        communityCards = new ArrayList<>();
+        for (Card c : toCopy.communityCards) {
+            communityCards.add(new Card(c));
+        }
 
         roundNumber = toCopy.roundNumber;
 
@@ -318,4 +321,6 @@ public class PokerGameState extends GameState implements Serializable {
     public void setNumPhase(int numPhase) {
         this.numPhase = numPhase;
     }
+
+    public Hand getPlayerHand(int playerIndex){return hands.get(playerIndex);}
 }

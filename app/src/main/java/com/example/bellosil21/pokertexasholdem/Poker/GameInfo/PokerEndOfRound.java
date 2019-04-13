@@ -1,7 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameInfo;
 
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
-import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
+import java.io.Serializable;
 
 /**
  * Stores the differences of the players' chip collections
@@ -11,11 +11,9 @@ import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerEndOfRound extends GameInfo {
+public class PokerEndOfRound extends GameInfo implements Serializable {
 
     private int[] winnings;
-    private CardCollection bestCollection;
-    private int sleepTime;
 
     /**
      * Constructor
