@@ -14,6 +14,8 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 
+import java.io.Serializable;
+
 /**
  * The "smart" AI for Poker
  *
@@ -22,7 +24,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerSmartComputerPlayer extends GameComputerPlayer {
+public class PokerSmartComputerPlayer extends GameComputerPlayer implements Serializable {
 
     private int confidence;
     private final int FAIRLY_CONFIDENT = 45;

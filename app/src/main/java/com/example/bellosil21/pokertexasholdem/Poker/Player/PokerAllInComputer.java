@@ -10,6 +10,8 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 
+import java.io.Serializable;
+
 /**
  * Another "dumb" AI for Poker
  * This player mostly goes all in.
@@ -19,7 +21,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerAllInComputer extends GameComputerPlayer {
+public class PokerAllInComputer extends GameComputerPlayer implements Serializable {
     /**
      * constructor
      *
