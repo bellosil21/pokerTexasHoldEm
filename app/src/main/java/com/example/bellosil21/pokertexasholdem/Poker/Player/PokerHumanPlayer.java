@@ -472,7 +472,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         callButton.setText("Call(" + callAmount + ")");
 
-        //TODO: fix this
         if (state.getHands().get(playerNum).isShowCards()) {
             showHideCardsButton.setText(HIDE_CARDS);
         } else {
