@@ -474,9 +474,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         //TODO: fix this
         if (state.getHands().get(playerNum).isShowCards()) {
-            showHideCardsButton.setText(SHOW_CARDS);
-        } else {
             showHideCardsButton.setText(HIDE_CARDS);
+        } else {
+            showHideCardsButton.setText(SHOW_CARDS);
         }
 
         chipBetSeekbar.setMax(
@@ -900,11 +900,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 sitOutButton.setText(SIT_IN);
             }
             game.sendAction(new PokerSitOut(this));
-            //todo: implement functionality 
         } else if(v.equals(helpButton)) {
-            // implement some sort of guide on the hand rankings and instructions
+            // TODO: implement some sort of guide on the hand rankings and
+            // instructions
         } else if(v.equals(settings)) {
-            // potential language change and other
+            // TODO: potential language change and other
         } else if(v.equals(exitGame)){
             MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
                     this, null, myActivity);
