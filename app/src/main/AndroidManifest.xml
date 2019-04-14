@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    External Citation
+    Date: April 14, 2019
+    Problem: Did not know how to lock the screen in landscape
+    Resource: https://stackoverflow.com/questions/15718869/how-to-lock-android-apps-orientation-to-portrait-mode
+    Solution: Implemented the solution in the reference
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bellosil21.pokertexasholdem">
 
