@@ -957,7 +957,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 sitOutButton.setText(SIT_IN);
             }
             game.sendAction(new PokerSitOut(this));
-            //todo: implement functionality 
+            //todo: implement functionality
         } else if(v.equals(helpButton)) {
             // implement some sort of guide on the hand rankings and instructions
         } else if(v.equals(settings)) {
