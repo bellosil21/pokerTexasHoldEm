@@ -934,9 +934,23 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // not used
     }
 
+    /**
+     * The onClickListener for the exit button. When pressed, send a quit
+     * action and leave the app
+     */
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         // this listener is for the positive action of the quit dialog
         game.sendAction(new PokerQuit(this));
+        myActivity.finish();
+        System.exit(0);
+
+        /**
+         * External Citation
+         *  Date:     14 April 2019
+         *  Problem:  Did not know how to quit the app.
+         *  Resource: https://stackoverflow.com/questions/6330200/how-to-quit-android-application-programmatically
+         *  Solution: Implemented the solution in the resource.
+         */
     }
 }
