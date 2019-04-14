@@ -47,6 +47,11 @@ public class PokerAllInComputer extends GameComputerPlayer {
             return;
         }
         if (info instanceof PokerGameState) {
+            // check if it is not our turn
+            if (((PokerGameState) info).getTurnTracker().getActivePlayerID() != playerNum) {
+                return;
+            }
+
             boolean showCards =
                     ((PokerGameState) info).getHands().get(this.playerNum).isShowCards();
             if (!showCards) {

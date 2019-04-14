@@ -10,6 +10,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.BetController;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
+import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.CardCollection;
 import com.example.bellosil21.pokertexasholdem.Poker.HankRanker.HandRanker;
 
@@ -40,6 +41,7 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
     }
 
     /**
+     * //TODO: update this comment
      * Updates the state of the other players and the game
      *
      * This smart AI checks for maxBets == 0, makes a bet when they have an
@@ -54,6 +56,10 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
             return;
         }
         else if(info instanceof PokerGameState){
+            // check if it is not our turn
+            if (((PokerGameState) info).getTurnTracker().getActivePlayerID() != playerNum) {
+                return;
+            }
 
             // Setting the current game state and declaring player's chances
             PokerGameState state = (PokerGameState) info;
@@ -103,6 +109,15 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
 
             if (state.getNumPhase() == PokerGameState.PHASE_PRE_FLOP){
                 confidence += 10;
+                // if we have a card greater than a ten during the pre-flop,
+                // we are more confident and if we have at least 3 big blinds
+                // left over, we are more confident
+                if (betController.getMaxBet() < betController.getPlayerChips(this.playerNum) - betController.getBigBlind() * 3) {
+                    confidence += 10;
+                }
+                else if (handRank.getHighestRank().getValue() > Card.Rank.TEN.getValue()) {
+                     confidence += 10;
+                }
             }
             else if (state.getNumPhase() == PokerGameState.PHASE_FLOP){
                 confidence += 5;

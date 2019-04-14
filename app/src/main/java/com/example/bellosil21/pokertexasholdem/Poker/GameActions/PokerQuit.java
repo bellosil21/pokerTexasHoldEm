@@ -1,30 +1,29 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
-import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
-
-import java.io.Serializable;
+import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 
 /**
- * Class for sending an Instance of a Call Action
+ * Class for sending a quit action
  *
  * @author Patrick Bellosillo
  * @author Jordan Ho
  * @author Kevin Hoser
  * @author Gabe Marcial
  */
-public class PokerCall extends GameAction implements Serializable {
+public class PokerQuit extends GameAction implements AnytimeAction {
+
     /**
-     * constructor for PokerCall
+     * constructor for GameAction
      *
      * @param player the player who created the action
      */
-    public PokerCall(GamePlayer player) {
+    public PokerQuit(GamePlayer player) {
         super(player);
     }
 
     @Override
     public String toString() {
-        return "Call";
+        return "Quit";
     }
 }

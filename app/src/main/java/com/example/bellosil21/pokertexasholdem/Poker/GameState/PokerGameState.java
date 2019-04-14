@@ -1,6 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
-import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
@@ -42,8 +41,7 @@ public class PokerGameState extends GameState {
     // controls and tracks the bets and pots
     private BetController betController;
 
-    //TODO: CLEAN UP
-    //private ArrayList<GameAction> lastActions;
+    private ArrayList<String> lastActions;
 
     /**
      * constant
@@ -93,10 +91,10 @@ public class PokerGameState extends GameState {
 
         numPhase = INIT_PHASE_NUM;
 
-        //lastActions = new ArrayList<>();
-        //for (int i = 0; i < numPlayers; i++)  {
-        //    lastActions.add(null);
-        //}
+        lastActions = new ArrayList<>();
+        for (int i = 0; i < numPlayers; i++)  {
+            lastActions.add(null);
+        }
 
         turnTracker.nextRound();
     }
@@ -139,7 +137,7 @@ public class PokerGameState extends GameState {
 
         numPhase = toCopy.numPhase;
 
-        //lastActions = new ArrayList<>(toCopy.lastActions);
+        lastActions = new ArrayList<>(toCopy.lastActions);
     }
 
     /**
@@ -302,13 +300,13 @@ public class PokerGameState extends GameState {
         roundNumber++;
     }
 
-    //public void updateLastAction(int playerID, GameAction action) {
-    //    lastActions.set(playerID, action);
-    //}
+    public void updateLastAction(int playerID, String action) {
+        lastActions.set(playerID, action);
+    }
 
-    //public ArrayList<GameAction> getLastActions() {
-    //    return lastActions;
-    //}
+    public ArrayList<String> getLastActions() {
+        return lastActions;
+    }
 
     public int getNumPlayers() {
         return numPlayers;

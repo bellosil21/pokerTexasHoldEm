@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,15 +14,14 @@ import android.widget.Toast;
 
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
-import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
-import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
@@ -35,7 +35,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -47,7 +46,7 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class PokerHumanPlayer extends GameHumanPlayer implements
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener, DialogInterface.OnClickListener {
 
 
     // Instance variables for player's chips TextViews
@@ -243,6 +242,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
 
+        this.helpButton.setOnClickListener(this);
+        this.settings.setOnClickListener(this);
+        this.exitGame.setOnClickListener(this);
+
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
         this.player2Status = activity.findViewById(R.id.player2Status);
@@ -277,8 +280,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             updateGui();
-        } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+        } else if (info instanceof IllegalMoveInfo) {
+                flash(0xFFFF0000, 50);
+                Toast.makeText(myActivity.getApplicationContext(), "Invalid " +
+                                "move.",
+                        Toast.LENGTH_SHORT).show();
+        } else if (info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
+            Toast.makeText(myActivity.getApplicationContext(), "It is not" +
+                            " your turn.",
+                    Toast.LENGTH_SHORT).show();
         } else if (info instanceof PokerEndOfRound) {
             //tell the player of the new round standings
 
@@ -359,95 +370,41 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * Method updates the player's view on the game
      */
     private void updateGui() {
-        TextView player1TV = null;
-        TextView player2TV = null;
-        TextView player3TV = null;
-        TextView player4TV = null;
-        TextView player1Nm = null;
-        TextView player2Nm = null;
-        TextView player3Nm = null;
-        TextView player4Nm = null;
-
-        // Sets the TextViews to change as their are the player
-        switch (this.playerNum) {
-            case 0:
-                player1TV = player1Chips;
-                player1Nm = player1Name;
-                player2TV = player2Chips;
-                player2Nm = player2Name;
-                player3TV = player3Chips;
-                player3Nm = player3Name;
-                player4TV = player4Chips;
-                player4Nm = player4Name;
-                break;
-            case 1:
-                player1TV = player2Chips;
-                player1Nm = player2Name;
-                player2TV = player3Chips;
-                player2Nm = player3Name;
-                player3TV = player4Chips;
-                player3Nm = player4Name;
-                player4TV = player1Chips;
-                player4Nm = player1Name;
-                break;
-            case 2:
-                player1TV = player3Chips;
-                player1Nm = player3Name;
-                player2TV = player4Chips;
-                player2Nm = player4Name;
-                player3TV = player1Chips;
-                player3Nm = player1Name;
-                player4TV = player2Chips;
-                player4Nm = player2Name;
-                break;
-            case 3:
-                player1TV = player4Chips;
-                player1Nm = player4Name;
-                player2TV = player1Chips;
-                player2Nm = player1Name;
-                player3TV = player2Chips;
-                player3Nm = player2Name;
-                player4TV = player3Chips;
-                player4Nm = player3Name;
-                break;
-        }
-
-        // Changing all the player's names
+       // Changing all the player's names
         int playerCount = this.playerNum;
-        player1Nm.setText(this.allPlayerNames[(playerCount) % state.getNumPlayers()]);
-        player2Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+        player1Name.setText(this.allPlayerNames[(playerCount) % state.getNumPlayers()]);
+        player2Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         if (state.getNumPlayers() > 2) {
-            player3Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+            player3Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
         if (state.getNumPlayers() > 3) {
-            player4Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+            player4Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("$ " + state.getChips((playerCount) % state.getNumPlayers()));
-        player2TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+        player1Chips.setText("$ " + state.getChips((playerCount) % state.getNumPlayers()));
+        player2Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         if (state.getNumPlayers() > 2) {
-            player3TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+            player3Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
         if (state.getNumPlayers() > 3) {
-            player4TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+            player4Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
 
         playerCount = this.playerNum;
-        //TODO: CLEAN UP
-        //ArrayList<GameAction> lastActions = state.getLastActions();
-        //updateAction(player1Action, lastActions.get(playerCount));
-        //updateAction(player2Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //if (state.getNumPlayers() > 2) {
-        //    updateAction(player3Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //}
-        //if (state.getNumPlayers() > 3) {
-        //    updateAction(player4Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //}
+        ArrayList<String> lastActions = state.getLastActions();
+        updateAction(player1Action, lastActions.get(playerCount));
+        updateAction(player2Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        if (state.getNumPlayers() > 2) {
+            updateAction(player3Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        }
+        if (state.getNumPlayers() > 3) {
+            updateAction(player4Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        }
 
 
         // Sets the current total pot amount
@@ -497,10 +454,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // turnTracker TextView to the name of the player
 
         if (activePlayerID < 0) {
-            turnTracker.setText("Loading...");
+            turnTracker.setText("Loading new round...");
         } else {
             turnTracker.setText(allPlayerNames[state.getTurnTracker().
                     getActivePlayerID()] + "'s Turn");
+
+            // tell the player if it is their turn
+            if (activePlayerID == playerNum) {
+                Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                "your turn.",
+                        Toast.LENGTH_SHORT).show();
+                flash(0x66FFFF66, 50);
+            }
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
@@ -508,9 +473,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         callButton.setText("Call(" + callAmount + ")");
 
         if (state.getHands().get(playerNum).isShowCards()) {
-            showHideCardsButton.setText(SHOW_CARDS);
-        } else {
             showHideCardsButton.setText(HIDE_CARDS);
+        } else {
+            showHideCardsButton.setText(SHOW_CARDS);
         }
 
         chipBetSeekbar.setMax(
@@ -827,34 +792,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param tv the text view of the player to update
      * @param action the player's last action
      */
-    private void updateAction(TextView tv, GameAction action) {
+    private void updateAction(TextView tv, String action) {
         if (action == null) {
             tv.setText("");
-        }
-
-        int nextMaxBet = state.getBetController().getMaxBet();
-        if (action instanceof PokerAllIn) {
-            tv.setText("All In");
-        }
-
-        // if they call when the max bet is zero, name it a check action for
-        // clarity of the human player
-        else if (action instanceof PokerCall) {
-            if (nextMaxBet == 0) {
-                tv.setText("Check");
-            } else {
-                tv.setText("Call");
-            }
-        }
-        else if (action instanceof PokerCheck) {
-            tv.setText("Check");
-        }
-        else if (action instanceof PokerFold) {
-            tv.setText("Fold");
-        }
-        else if (action instanceof PokerRaiseBet) {
-            int netRaise = ((PokerRaiseBet) action).netRaise();
-            tv.setText("Raised by " + netRaise);
+        } else {
+            tv.setText(action);
         }
     }
 
@@ -957,13 +899,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 sitOutButton.setText(SIT_IN);
             }
             game.sendAction(new PokerSitOut(this));
-            //todo: implement functionality
         } else if(v.equals(helpButton)) {
-            // implement some sort of guide on the hand rankings and instructions
+            // TODO: implement some sort of guide on the hand rankings and
+            // instructions
         } else if(v.equals(settings)) {
-            // potential language change and other
+            // TODO: potential language change and other
         } else if(v.equals(exitGame)){
-            // quit the game
+            MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
+                    this, null, myActivity);
         }
     }
 
@@ -989,5 +932,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         // not used
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        // this listener is for the positive action of the quit dialog
+        game.sendAction(new PokerQuit(this));
     }
 }
