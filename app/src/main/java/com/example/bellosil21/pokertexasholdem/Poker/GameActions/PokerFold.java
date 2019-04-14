@@ -22,4 +22,9 @@ public class PokerFold extends GameAction implements Serializable {
     public PokerFold(GamePlayer player) {
         super(player);
     }
+
+    @Override
+    public String toString() {
+        return "Fold";
+    }
 }

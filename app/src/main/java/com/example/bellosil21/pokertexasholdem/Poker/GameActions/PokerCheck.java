@@ -22,4 +22,9 @@ public class PokerCheck extends GameAction implements Serializable {
     public PokerCheck(GamePlayer player) {
         super(player);
     }
+
+    @Override
+    public String toString() {
+        return "Check";
+    }
 }

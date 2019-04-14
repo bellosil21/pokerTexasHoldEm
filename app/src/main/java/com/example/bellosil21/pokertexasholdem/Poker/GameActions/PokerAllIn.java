@@ -22,4 +22,9 @@ public class PokerAllIn extends GameAction implements Serializable {
     public PokerAllIn(GamePlayer player) {
         super(player);
     }
+
+    @Override
+    public String toString() {
+        return "All In";
+    }
 }

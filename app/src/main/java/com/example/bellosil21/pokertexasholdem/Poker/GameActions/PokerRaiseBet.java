@@ -43,4 +43,9 @@ public class PokerRaiseBet extends GameAction implements Serializable {
     public int netRaise() {
         return  raiseAmount - callAmount;
     }
+
+    @Override
+    public String toString() {
+        return "Raised by " + netRaise();
+    }
 }
