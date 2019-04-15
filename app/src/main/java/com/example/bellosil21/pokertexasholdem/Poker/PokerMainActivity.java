@@ -13,6 +13,29 @@ import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerSmartComputerPl
 
 import java.util.ArrayList;
 
+/**
+ * Upon beta release, our game has met all necessary requirements for this assignment. Currently,
+ * our game supports all the rules of play that we agreed to implement which includes the
+ * actions, and hand ranking procedure. Likewise, the user interface's functionality is working
+ * masterfully in that all the functionality of all buttons has been implemented and the GUI
+ * updates accordingly for each player respectively. The "smart" and "dumb" computer AI has been
+ * carefully crafted in order to visually and practically notice the change in play style.
+ * Moreover, our game now supports network play across Android tablets of the same model.
+ * Additionally, our game is also able to run with two, three, and four players locally and
+ * remotely. We have added small details to the GUI for style and neatness, and general user
+ * friendly environment that includes a text showing the round standings and a text showing the
+ * big and small blinds. Not to mention, we were also able to display the "help", "settings", and
+ * "exit" buttons.
+ *
+ * We are currently still having issues with the following bugs.
+ *
+ *
+ *
+ * @author Gabe Marcial
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Patrick Bellosillo
+ */
 public class PokerMainActivity extends GameMainActivity {
 
     public static final int PORT_NUMBER = 4763;

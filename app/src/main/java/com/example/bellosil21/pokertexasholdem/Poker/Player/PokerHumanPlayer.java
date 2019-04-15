@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -132,11 +133,20 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private GameMainActivity myActivity;
     protected PokerGameState state;
 
+    // Boolean for dealing with language change
+    private boolean isSpanish = false; //because getTopView needs it
+
     /** constants **/
     private static final String SHOW_CARDS = "SHOW CARDS";
     private static final String HIDE_CARDS = "HIDE CARDS";
     private static final String SIT_OUT = "SIT OUT";
     private static final String SIT_IN = "SIT IN";
+
+    /** Constants in spanish **/
+    private static final String MOSTRAR_CARTAS = "MOSTRAR CARTAS";
+    private static final String ESCONDE_CARTAS = "ESCONDE CARTAS";
+    private static final String SENTAR_AFUERA = "SENTAR_AFUERA";
+    private static final String SENTARSE_EN = "SENTARSE EN";
 
     /**
      * Constructor
@@ -149,7 +159,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     @Override
     public View getTopView() {
-        return myActivity.findViewById(R.id.top_gui_layout);
+        if(isSpanish) {
+            return myActivity.findViewById(R.id.top_gui_layout_spanish);
+        }
+        else{
+            return myActivity.findViewById(R.id.top_gui_layout);
+        }
     }
 
     /**
@@ -161,9 +176,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     public void setAsGui(GameMainActivity activity) {
 
         myActivity = activity;
-
-        activity.setContentView(R.layout.activity_main);
-
+        if(isSpanish) {
+            activity.setContentView(R.layout.activity_main_spanish);
+        }
+        else{
+            activity.setContentView(R.layout.activity_main);
+        }
         // Setting all TextViews to local variables
         this.player1Chips = activity.findViewById(R.id.currChips);
         this.player2Chips = activity.findViewById(R.id.player2Chips);
@@ -282,20 +300,39 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             updateGui();
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
-                Toast.makeText(myActivity.getApplicationContext(), "Invalid " +
-                                "move.",
-                        Toast.LENGTH_SHORT).show();
+                if(isSpanish){
+                    Toast.makeText(myActivity.getApplicationContext(), "Movimineto Invalido.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                            Toast.LENGTH_SHORT).show();
+                }
         } else if (info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
-            Toast.makeText(myActivity.getApplicationContext(), "It is not" +
-                            " your turn.",
-                    Toast.LENGTH_SHORT).show();
+            if(isSpanish){
+                Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(myActivity.getApplicationContext(), "It is not" +
+                                " your turn.",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else if (info instanceof PokerEndOfRound) {
             //tell the player of the new round standings
 
             int[] winnings = ((PokerEndOfRound) info).getWinnings();
-            String toDisplay = "Round " + state.getRoundNumber() + " " +
-                    "Standings:";
+
+            String toDisplay;
+            if(isSpanish){
+                toDisplay = "Ronda " + state.getRoundNumber() + " " +
+                        "Posiciones:";
+            }
+            else{
+                toDisplay = "Round " + state.getRoundNumber() + " " +
+                        "Standings:";
+            }
 
             /**
              * External Citation
@@ -330,11 +367,20 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
             StringBuilder toDisplay = new StringBuilder();
 
-            toDisplay.append("The blinds are increasing!\n\n");
-            toDisplay.append("New Big Blind: $");
-            toDisplay.append(bigBlind);
-            toDisplay.append("\nNew Small Blind: $");
-            toDisplay.append(smallBlind);
+            if(isSpanish){
+                toDisplay.append("Las ciegas estan aumentando!\n\n");
+                toDisplay.append("Nueva Ciega Grande: $");
+                toDisplay.append(bigBlind);
+                toDisplay.append("\nNueva Ciega pequena: $");
+                toDisplay.append(smallBlind);
+            }
+            else{
+                toDisplay.append("The blinds are increasing!\n\n");
+                toDisplay.append("New Big Blind: $");
+                toDisplay.append(bigBlind);
+                toDisplay.append("\nNew Small Blind: $");
+                toDisplay.append(smallBlind);
+            }
 
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         } else if (info instanceof PokerPlayerOutOfFunds) {
@@ -346,21 +392,41 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             // build the string to tell the human player
             if (outOfFundPlayers.size() == 1) {
-                toDisplay.append("Player ");
-                toDisplay.append(outOfFundPlayers.get(0) + 1);
-                toDisplay.append(" is out of funds!\nThey are now out of the game" +
-                        ".");
-            } else {
-                toDisplay.append("Player ");
-                for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
-                    toDisplay.append(outOfFundPlayers.get(i) + 1);
-                    toDisplay.append(" and ");
+                if(isSpanish){
+                    toDisplay.append("Jugador ");
+                    toDisplay.append(outOfFundPlayers.get(0) + 1);
+                    toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
                 }
-                int lastPlayer =
-                        outOfFundPlayers.get(outOfFundPlayers.size() - 1);
-                toDisplay.append(lastPlayer + 1);
-                toDisplay.append(" are out of funds!\nThey are now out of the game" +
-                        ".");
+                else{
+                    toDisplay.append("Player ");
+                    toDisplay.append(outOfFundPlayers.get(0) + 1);
+                    toDisplay.append(" is out of funds!\nThey are now out of the game.");
+                }
+            } else {
+
+               if(isSpanish){
+                   toDisplay.append("Jugador ");
+                   for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
+                       toDisplay.append(outOfFundPlayers.get(i) + 1);
+                       toDisplay.append(" y ");
+                   }
+                   int lastPlayer =
+                           outOfFundPlayers.get(outOfFundPlayers.size() - 1);
+                   toDisplay.append(lastPlayer + 1);
+                   toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
+               }
+               else{
+                   toDisplay.append("Player ");
+                   for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
+                       toDisplay.append(outOfFundPlayers.get(i) + 1);
+                       toDisplay.append(" and ");
+                   }
+                   int lastPlayer =
+                           outOfFundPlayers.get(outOfFundPlayers.size() - 1);
+                   toDisplay.append(lastPlayer + 1);
+                   toDisplay.append(" are out of funds!\nThey are now out of the game" +
+                           ".");
+               }
             }
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         }
@@ -454,28 +520,59 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // turnTracker TextView to the name of the player
 
         if (activePlayerID < 0) {
-            turnTracker.setText("Loading new round...");
+            if(isSpanish){
+                turnTracker.setText("Cargando neuva ronda...");
+            }
+            else{
+                turnTracker.setText("Loading new round...");
+            }
         } else {
-            turnTracker.setText(allPlayerNames[state.getTurnTracker().
-                    getActivePlayerID()] + "'s Turn");
+            if(isSpanish){
+                turnTracker.setText("Turno de "+
+                        allPlayerNames[state.getTurnTracker().getActivePlayerID()]);
+            }
+            else{
+                turnTracker.setText(allPlayerNames[state.getTurnTracker().
+                        getActivePlayerID()] + "'s Turn");
+            }
 
             // tell the player if it is their turn
             if (activePlayerID == playerNum) {
-                Toast.makeText(myActivity.getApplicationContext(), "It is " +
-                                "your turn.",
-                        Toast.LENGTH_SHORT).show();
+                if(isSpanish){
+                    Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                    "your turn.",
+                            Toast.LENGTH_SHORT).show();
+                }
                 flash(0x66FFFF66, 50);
             }
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
 
-        callButton.setText("Call(" + callAmount + ")");
+        if(isSpanish){
+            callButton.setText("Igualar(" + callAmount + ")");
+        }
+        else{
+            callButton.setText("Call(" + callAmount + ")");
+        }
 
-        if (state.getHands().get(playerNum).isShowCards()) {
-            showHideCardsButton.setText(HIDE_CARDS);
-        } else {
-            showHideCardsButton.setText(SHOW_CARDS);
+        if(isSpanish){
+            if (state.getHands().get(playerNum).isShowCards()) {
+                showHideCardsButton.setText(ESCONDE_CARTAS);
+            } else {
+                showHideCardsButton.setText(MOSTRAR_CARTAS);
+            }
+        }
+        else{
+            if (state.getHands().get(playerNum).isShowCards()) {
+                showHideCardsButton.setText(HIDE_CARDS);
+            } else {
+                showHideCardsButton.setText(SHOW_CARDS);
+            }
         }
 
         chipBetSeekbar.setMax(
@@ -484,7 +581,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         setBlinds();
 
-        roundNum.setText("Round: " + state.getRoundNumber());
+        if(isSpanish){
+            roundNum.setText("Ronda: " + state.getRoundNumber());
+        }
+        else{
+            roundNum.setText("Round: " + state.getRoundNumber());
+        }
     }
 
     /**
@@ -530,9 +632,15 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         int bigBlind = state.getBetController().getBigBlind();
         int smallBlind = state.getBetController().getSmallBlind();
         StringBuilder toDisplay = new StringBuilder();
-        toDisplay.append("Big Blind: $");
+        if(isSpanish){
+            toDisplay.append("Ciega Grande: $");
+            toDisplay.append("\nCiega Pequena: $");
+        }
+        else{
+            toDisplay.append("Big Blind: $");
+            toDisplay.append("\nSmall Blind: $");
+        }
         toDisplay.append(bigBlind);
-        toDisplay.append("\nSmall Blind: $");
         toDisplay.append(smallBlind);
         blinds.setText(toDisplay);
     }
@@ -839,7 +947,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 bet = Integer.parseInt(chipBetText.getText().toString());
             }
             catch(NumberFormatException i){
-                MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
+                if(isSpanish){
+                    MessageBox.popUpMessage("Ese movimiento no es valido!", this.myActivity);
+                }
+                else{
+                    MessageBox.popUpMessage("That move isn't valid!", this.myActivity);
+                }
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
             }
@@ -861,12 +974,23 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
              */
 
             if (bet > allPlayerMoney) {
-                MessageBox.popUpMessage("Entry too big!", this.myActivity);
+                if(isSpanish){
+                    MessageBox.popUpMessage("Entrada demasiado grande!!", this.myActivity);
+                }
+                else{
+                    MessageBox.popUpMessage("Entry too big!", this.myActivity);
+                }
                 Log.i("PlaceBets error", "User has attempted to raise more money than they " +
                         "have");
             }
             else if(bet < 0){
-                MessageBox.popUpMessage("Cant bet a negative amount!", this.myActivity);
+                if(isSpanish){
+                    MessageBox.popUpMessage("No se puede apostar una cantidad negativa!",
+                            this.myActivity);
+                }
+                else{
+                    MessageBox.popUpMessage("Cant bet a negative amount!", this.myActivity);
+                }
             }
             else if(bet == 420) {
                 int duration = Toast.LENGTH_SHORT;
@@ -883,31 +1007,87 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         } else if (v.equals(showHideCardsButton)) {
             // toggle the display and send the action
-            if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
-                showHideCardsButton.setText(HIDE_CARDS);
-                game.sendAction(new PokerShowHideCards(this, true));
-            } else {
-                showHideCardsButton.setText(SHOW_CARDS);
-                game.sendAction(new PokerShowHideCards(this, false ));
+            if(isSpanish){
+                if (showHideCardsButton.getText().equals(MOSTRAR_CARTAS)) {
+                    showHideCardsButton.setText(ESCONDE_CARTAS);
+                    game.sendAction(new PokerShowHideCards(this, true));
+                } else {
+                    showHideCardsButton.setText(MOSTRAR_CARTAS);
+                    game.sendAction(new PokerShowHideCards(this, false ));
+                }
+            }
+            else{
+                if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
+                    showHideCardsButton.setText(HIDE_CARDS);
+                    game.sendAction(new PokerShowHideCards(this, true));
+                } else {
+                    showHideCardsButton.setText(SHOW_CARDS);
+                    game.sendAction(new PokerShowHideCards(this, false ));
+                }
             }
 
         } else if (v.equals(sitOutButton)) {
             // toggle the display and send the action
-            if (sitOutButton.getText().equals(SIT_IN)) {
-                sitOutButton.setText(SIT_OUT);
-            } else {
-                sitOutButton.setText(SIT_IN);
+            if(isSpanish){
+                if (sitOutButton.getText().equals(SENTARSE_EN)) {
+                    sitOutButton.setText(SENTAR_AFUERA);
+                } else {
+                    sitOutButton.setText(SENTARSE_EN);
+                }
+            }
+            else{
+                if (sitOutButton.getText().equals(SIT_IN)) {
+                    sitOutButton.setText(SIT_OUT);
+                } else {
+                    sitOutButton.setText(SIT_IN);
+                }
             }
             game.sendAction(new PokerSitOut(this));
         } else if(v.equals(helpButton)) {
             // TODO: implement some sort of guide on the hand rankings and
             // instructions
         } else if(v.equals(settings)) {
-            // TODO: potential language change and other
+            MessageBox.popUpChoice("Select Language", "English", "Espanol",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            isSpanish = false;
+                            changeActivity();
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            isSpanish = true;
+                            changeActivity();
+                        }
+                    },
+                    myActivity);
+            updateGui();
         } else if(v.equals(exitGame)){
-            MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
-                    this, null, myActivity);
+            if(isSpanish){
+                MessageBox.popUpChoice("Quieres salir del juego?", "Si", "No",
+                        this, null, myActivity);
+            }
+            else{
+                MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
+                        this, null, myActivity);
+            }
         }
+    }
+
+    /**
+     * Helper method for OnClick method above.
+     */
+    private void changeActivity(){
+        if(isSpanish){
+            this.myActivity.setContentView(R.layout.activity_main_spanish);
+            setAsGui(this.myActivity);
+        }
+        else{
+            this.myActivity.setContentView(R.layout.activity_main);
+            setAsGui(this.myActivity);
+        }
+        updateGui();
     }
 
     /**
