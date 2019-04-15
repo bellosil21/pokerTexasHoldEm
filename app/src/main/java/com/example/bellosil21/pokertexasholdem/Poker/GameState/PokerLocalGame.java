@@ -21,6 +21,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFu
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -342,6 +343,14 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
             // go to the next phase if it is over
             if (state.getTurnTracker().isPhaseOver()) {
+
+                //have enough time so players can see everyone's actions
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    // do nothing
+                }
+
                 while (state.getTurnTracker ().isPhaseOver()) {
                     nextPhase();
                 }

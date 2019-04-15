@@ -111,34 +111,36 @@ public class PokerGameState extends GameState {
     public PokerGameState(PokerGameState toCopy, int playerID) {
         playingDeck = null;
 
-        // only pass the player their hand or the hand's showCards is true;
-        // otherwise, pass blank
-        // hands for the other players
-        hands = new ArrayList<>();
-        for (int i = 0; i < toCopy.hands.size(); i++) {
-            if (i == playerID || toCopy.hands.get(i).isShowCards()) {
-                hands.add(new Hand(toCopy.hands.get(i)));
-            } else {
-                hands.add(new Hand());
+        synchronized (toCopy) {
+            // only pass the player their hand or the hand's showCards is true;
+            // otherwise, pass blank
+            // hands for the other players
+            hands = new ArrayList<>();
+            for (int i = 0; i < toCopy.hands.size(); i++) {
+                if (i == playerID || toCopy.hands.get(i).isShowCards()) {
+                    hands.add(new Hand(toCopy.hands.get(i)));
+                } else {
+                    hands.add(new Hand());
+                }
             }
+
+            communityCards = new ArrayList<>();
+            for (Card c : toCopy.communityCards) {
+                communityCards.add(new Card(c));
+            }
+
+            roundNumber = toCopy.roundNumber;
+
+            numPlayers = toCopy.numPlayers;
+
+            turnTracker = new TurnTracker(toCopy.turnTracker);
+
+            betController = new BetController(toCopy.betController);
+
+            numPhase = toCopy.numPhase;
+
+            lastActions = new ArrayList<>(toCopy.lastActions);
         }
-
-        communityCards = new ArrayList<>();
-        for (Card c : toCopy.communityCards) {
-            communityCards.add(new Card(c));
-        }
-
-        roundNumber = toCopy.roundNumber;
-
-        numPlayers = toCopy.numPlayers;
-
-        turnTracker = new TurnTracker(toCopy.turnTracker);
-
-        betController = new BetController(toCopy.betController);
-
-        numPhase = toCopy.numPhase;
-
-        lastActions = new ArrayList<>(toCopy.lastActions);
     }
 
     /**
