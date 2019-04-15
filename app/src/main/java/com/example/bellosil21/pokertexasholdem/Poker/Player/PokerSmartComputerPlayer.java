@@ -41,12 +41,10 @@ public class PokerSmartComputerPlayer extends GameComputerPlayer {
     }
 
     /**
-     * //TODO: update this comment
      * Updates the state of the other players and the game
      *
-     * This smart AI checks for maxBets == 0, makes a bet when they have an
-     * excess amount of funds, otherwise they will call 75% of the time and
-     * fold 25% of the time.
+     * This smart AI using the hand ranking algorithm to weight the
+     * probability of whether to bet, call, or fold.
      *
      * @param info about the game
      */

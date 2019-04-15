@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.GameState;
 
+import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Deck;
@@ -41,7 +42,7 @@ public class PokerGameState extends GameState {
     // controls and tracks the bets and pots
     private BetController betController;
 
-    private ArrayList<String> lastActions;
+    private ArrayList<GameInfo> lastActions;
 
     /**
      * constant
@@ -300,11 +301,11 @@ public class PokerGameState extends GameState {
         roundNumber++;
     }
 
-    public void updateLastAction(int playerID, String action) {
+    public void updateLastAction(int playerID, GameInfo action) {
         lastActions.set(playerID, action);
     }
 
-    public ArrayList<String> getLastActions() {
+    public ArrayList<GameInfo> getLastActions() {
         return lastActions;
     }
 

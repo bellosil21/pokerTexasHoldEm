@@ -1,7 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,16 +25,23 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerAllInInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCallInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerRaiseBetInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+import com.example.bellosil21.pokertexasholdem.Poker.PokerMainActivity;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -126,10 +132,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView player2Status;
     private ImageView player3Status;
     private ImageView player4Status;
-
-    // sounds for different actions
-    private MediaPlayer chipSound;
-
 
     // TextView for Round Number
     private TextView roundNum;
@@ -250,9 +252,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
-
-        this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),
-                R.raw.chipmp);
 
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
@@ -401,7 +400,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         playerCount = this.playerNum;
-        ArrayList<String> lastActions = state.getLastActions();
+        ArrayList<GameInfo> lastActions = state.getLastActions();
         updateAction(player1Action, lastActions.get(playerCount));
         updateAction(player2Action,
                 lastActions.get((++playerCount) % state.getNumPlayers()));
@@ -800,11 +799,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param tv the text view of the player to update
      * @param action the player's last action
      */
-    private void updateAction(TextView tv, String action) {
+    private void updateAction(TextView tv, GameInfo action) {
         if (action == null) {
             tv.setText("");
         } else {
-            tv.setText(action);
+            if (action instanceof PokerAllInInfo) {
+                tv.setText("All In");
+            } else if (action instanceof PokerCallInfo) {
+                tv.setText("Call");
+            } else if (action instanceof PokerCheckInfo) {
+                tv.setText("Check");
+            } else if (action instanceof PokerFoldInfo) {
+                tv.setText("Fold");
+            } else if (action instanceof PokerRaiseBetInfo) {
+                tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+            }
         }
     }
 
@@ -844,7 +853,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             int bet;
 
-            chipSound.start();
             try{
                 bet = Integer.parseInt(chipBetText.getText().toString());
             }
