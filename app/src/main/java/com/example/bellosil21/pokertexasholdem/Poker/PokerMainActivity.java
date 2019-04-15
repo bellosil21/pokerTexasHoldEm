@@ -19,8 +19,8 @@ import java.util.ArrayList;
  * actions, and hand ranking procedure. Likewise, the user interface functionality is working
  * masterfully in that all the functionality of all buttons has been implemented and the GUI
  * updates accordingly for each player respectively. The "smart" and "dumb" computer AI has been
- * carefully crafted in order to visually and practically notice the change in play style.
- * Moreover, our game now supports network play across Android tablets of the same model.
+ * carefully crafted in order to visually and practically notice the change in play style and
+ * outcome. Moreover, our game now supports network play across Android tablets of the same model.
  * Additionally, our game is also able to run with two, three, and four players locally and
  * remotely. We have added small details to the GUI for style and neatness, and general user
  * friendly environment that includes a text showing the round standings and a text showing the
@@ -33,14 +33,14 @@ import java.util.ArrayList;
  * not yet been implemented.
  *
  * We have also added a new button that displays the various types of hand ranks for the user's
- * reference in learning which hands are better than others. As of the beta release, this
- * addition is functional.
+ * reference in learning which hands are better than others. For reference, this button is
+ * located in the most left side of the GUI above the "Texas Holdem" logo. As of the beta release,
+ * this addition is functional.
  *
  * We are currently still having issues with the following bugs. On game
- * start, there is a chance that the GUI and game will not load properly.
- * This chance is less when the user waits longer in the config screen before
- * starting.
- * The spanish implementation is not finished yet as in the actions are translated yet when
+ * start, there is a chance that the GUI and game will not load properly. This is less likely to
+ * happen when the user waits longer in the config screen before starting.
+ * The spanish implementation is not finished yet as in the actions are not translated yet when
  * playing the game.
 
  *
