@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Upon beta release, our game has met all necessary requirements for this assignment. Currently,
  * our game supports all the rules of play that we agreed to implement which includes the
- * actions, and hand ranking procedure. Likewise, the user interface's functionality is working
+ * actions, and hand ranking procedure. Likewise, the user interface functionality is working
  * masterfully in that all the functionality of all buttons has been implemented and the GUI
  * updates accordingly for each player respectively. The "smart" and "dumb" computer AI has been
  * carefully crafted in order to visually and practically notice the change in play style.
@@ -27,8 +27,20 @@ import java.util.ArrayList;
  * big and small blinds. Not to mention, we were also able to display the "help", "settings", and
  * "exit" buttons.
  *
- * We are currently still having issues with the following bugs.
+ * The "exit" button gives the user a choice of whether to exit the game or stay in the game. The
+ * "settings" button currently only supports the user's choice whether to play in Spanish or
+ * English and the given state of the game will remain the same. The "help" button however, has
+ * not yet been implemented.
  *
+ * We have also added a new button that displays the various types of hand ranks for the user's
+ * reference in learning which hands are better than others. As of the beta release, this
+ * addition is functional.
+ *
+ * We are currently still having issues with the following bugs.
+ * When it is a given player's turn, the toast will display indicating that player that it is
+ * there turn. However, there is a bug that displays the toast twice.
+ * The spanish implementation is not finished yet as in the actions are translated yet when
+ * playing the game.
  *
  *
  * @author Gabe Marcial

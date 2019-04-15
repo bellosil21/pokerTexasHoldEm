@@ -176,6 +176,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     public void setAsGui(GameMainActivity activity) {
 
         myActivity = activity;
+        //the boolean variable is used to determine the proper activity layout
         if(isSpanish) {
             activity.setContentView(R.layout.activity_main_spanish);
         }
@@ -201,7 +202,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.player3Action = activity.findViewById(R.id.player3Move);
         this.player4Action = activity.findViewById(R.id.player4Move);
 
-        //MY BUTTON TEXTVIEW THINGS
+        // settings the round description variables
         this.roundStandings = activity.findViewById(R.id.roundResults);
         this.roundStandings.setText("");
         this.blinds = activity.findViewById(R.id.blinds);
@@ -212,8 +213,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipBetSeekbar.setOnSeekBarChangeListener(this);
         this.chipBetText = activity.findViewById(R.id.betInsertText);
 
-        // Setting references to the variables needed for the buttons in the
-        // GUI
+        // Setting references to the variables needed for the buttons in the GUI
         this.foldButton = activity.findViewById(R.id.foldButton);
         this.sitOutButton = activity.findViewById(R.id.sitoutButton);
         this.betButton = activity.findViewById(R.id.betButton);
@@ -270,8 +270,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.player3Status = activity.findViewById(R.id.player3Status);
         this.player4Status = activity.findViewById(R.id.player4Status);
 
-        // Setting a reference to the TextView informing players of the
-        // current round
+        // Setting a reference to the TextView informing players of the current round
         this.roundNum = activity.findViewById(R.id.roundNum);
     }
 
@@ -321,7 +320,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
         } else if (info instanceof PokerEndOfRound) {
             //tell the player of the new round standings
-
             int[] winnings = ((PokerEndOfRound) info).getWinnings();
 
             String toDisplay;
@@ -362,7 +360,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             roundStandings.setText(toDisplayBuilder);
         } else if (info instanceof PokerIncreasingBlinds) {
             // tell the player of the new blinds
-
             int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
             int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
             StringBuilder toDisplay = new StringBuilder();
@@ -513,11 +510,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         int activePlayerID = state.getTurnTracker().
                 getActivePlayerID();
 
-        // if the active player is not actually a player (ID < 0), then set
-        // the turnTracker TextView to loading
-
-        // if the active player from the turn tracker is >= 0, set the
-        // turnTracker TextView to the name of the player
+        /*
+         * if the active player is not actually a player (ID < 0), then set
+         * the turnTracker TextView to loading
+         * if the active player from the turn tracker is >= 0, set the
+         * turnTracker TextView to the name of the player
+         */
 
         if (activePlayerID < 0) {
             if(isSpanish){
@@ -547,7 +545,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                                     "your turn.",
                             Toast.LENGTH_SHORT).show();
                 }
-                flash(0x66FFFF66, 50);
+                //flash(0x66FFFF66, 50); sorry this is annoying
             }
         }
 
@@ -634,14 +632,17 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         StringBuilder toDisplay = new StringBuilder();
         if(isSpanish){
             toDisplay.append("Ciega Grande: $");
+            toDisplay.append(bigBlind);
             toDisplay.append("\nCiega Pequena: $");
+            toDisplay.append(smallBlind);
         }
         else{
             toDisplay.append("Big Blind: $");
+            toDisplay.append(bigBlind);
             toDisplay.append("\nSmall Blind: $");
+            toDisplay.append(smallBlind);
         }
-        toDisplay.append(bigBlind);
-        toDisplay.append(smallBlind);
+
         blinds.setText(toDisplay);
     }
 
@@ -994,7 +995,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             else if(bet == 420) {
                 int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), "Pass the boof",
+                Toast.makeText(myActivity.getApplicationContext(), ";)",
                         duration).show();
             }
             else if(bet == 69){
@@ -1044,8 +1045,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             game.sendAction(new PokerSitOut(this));
         } else if(v.equals(helpButton)) {
-            // TODO: implement some sort of guide on the hand rankings and
-            // instructions
+            // TODO: implement some sort of guide on the hand rankings and instructions
         } else if(v.equals(settings)) {
             MessageBox.popUpChoice("Select Language", "English", "Espanol",
                     new DialogInterface.OnClickListener() {
@@ -1062,7 +1062,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         }
                     },
                     myActivity);
-            updateGui();
         } else if(v.equals(exitGame)){
             if(isSpanish){
                 MessageBox.popUpChoice("Quieres salir del juego?", "Si", "No",
@@ -1077,6 +1076,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     /**
      * Helper method for OnClick method above.
+     * When this is called, the activity will change between Spanish and English version
+     * depending on what the isSpanish variable is set to.
      */
     private void changeActivity(){
         if(isSpanish){
@@ -1088,6 +1089,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             setAsGui(this.myActivity);
         }
         updateGui();
+        /**
+         * External Citation
+         *  Date:     14 April 2019
+         *  Problem:  Needed a reference to properly translate Poker terms into Spanish.
+         *  Resource: https://spanish.stackexchange.com/questions/15960/poker-terms-in-spanish
+         *  Solution: Used the terms suggested in this forum.
+         */
     }
 
     /**
