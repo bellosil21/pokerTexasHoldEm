@@ -343,6 +343,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
             if (state.getTurnTracker().isPhaseOver()) {
 
                 //have enough time so players can see everyone's actions
+                sendAllUpdatedState();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {

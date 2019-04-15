@@ -546,10 +546,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         if (activePlayerID < 0) {
             if(isSpanish){
-                turnTracker.setText("Cargando neuva ronda...");
+                turnTracker.setText("Cargando...");
             }
             else{
-                turnTracker.setText("Loading new round...");
+                turnTracker.setText("Loading...");
             }
         } else {
             if(isSpanish){
