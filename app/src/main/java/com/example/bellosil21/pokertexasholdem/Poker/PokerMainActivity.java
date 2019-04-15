@@ -87,7 +87,7 @@ public class PokerMainActivity extends GameMainActivity {
             }
         });
 
-        //create a game configuration 'class' for our game.
+        // create a game configuration 'class' for our game.
         GameConfig defaultConfig = new GameConfig(playerTypes, 2, 4,
                 "Texas Holdem", PORT_NUMBER);
 

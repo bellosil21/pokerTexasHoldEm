@@ -932,6 +932,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param action the player's last action
      */
     private void updateAction(TextView tv, GameInfo action) {
+        //TODO: Include this with spanish implementation
         if (action == null) {
             tv.setText("");
         } else {
