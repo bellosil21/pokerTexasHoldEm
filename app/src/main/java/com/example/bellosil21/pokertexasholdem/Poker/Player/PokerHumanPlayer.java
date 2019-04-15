@@ -1,7 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,10 +38,8 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
-import com.example.bellosil21.pokertexasholdem.Poker.PokerMainActivity;
 import com.example.bellosil21.pokertexasholdem.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -575,7 +572,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                                     "your turn.",
                             Toast.LENGTH_SHORT).show();
                 }
-                //flash(0x66FFFF66, 50); sorry this is annoying
             }
         }
 

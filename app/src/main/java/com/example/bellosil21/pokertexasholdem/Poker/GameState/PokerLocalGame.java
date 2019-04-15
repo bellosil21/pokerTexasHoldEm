@@ -21,7 +21,6 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFu
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -209,7 +208,6 @@ public class PokerLocalGame extends LocalGame implements Serializable {
             // if the turn was valid, set up the state for the next player
             if (nextTurn) {
                 endTurnCleanUp();
-                sendAllUpdatedState();
                 return true;
             }
         }

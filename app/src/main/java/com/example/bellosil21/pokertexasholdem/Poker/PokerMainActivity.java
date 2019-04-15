@@ -36,12 +36,13 @@ import java.util.ArrayList;
  * reference in learning which hands are better than others. As of the beta release, this
  * addition is functional.
  *
- * We are currently still having issues with the following bugs.
- * When it is a given player's turn, the toast will display indicating that player that it is
- * there turn. However, there is a bug that displays the toast twice.
+ * We are currently still having issues with the following bugs. On game
+ * start, there is a chance that the GUI and game will not load properly.
+ * This chance is less when the user waits longer in the config screen before
+ * starting.
  * The spanish implementation is not finished yet as in the actions are translated yet when
  * playing the game.
- *
+
  *
  * @author Gabe Marcial
  * @author Jordan Ho
