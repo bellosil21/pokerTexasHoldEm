@@ -1,7 +1,5 @@
 package com.example.bellosil21.pokertexasholdem.Poker;
 
-import android.view.OrientationEventListener;
-
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.LocalGame;
@@ -15,6 +13,56 @@ import com.example.bellosil21.pokertexasholdem.Poker.Player.PokerSmartComputerPl
 
 import java.util.ArrayList;
 
+/**
+ * 14 April 2019
+ * Beta Release Notes
+ *
+ * =======================
+ * Required Functionality:
+ *
+ * - All game rules according to our requirements have been implemented.
+ * - A dumb and start AI are implemented. The dumb AI only calls, while the
+ * smart AI calls, raises, and folds depending on how many chips they have
+ * left and how many chips are in the pot.
+ * - Network play is implemented.
+ * - The game can play with a minimum of 2 players and a maximum of 4.
+ * - We are unaware of any bugs in this version.
+ *
+ * ==============================================
+ * Functionality Different from Our Requirements:
+ *
+ * - Call/Check and Fold/SitOut buttons have been separated. We thought it
+ * would be more helpful to a user to separate these.
+ * - Exiting prompts an option dialog to confirm the user to quit. If they
+ * quit, it exits the app completely since we do not have a main menu at this
+ * time.
+ * - To simplify the GUI, the show and hide cards buttons were merged to the
+ * same button as a toggle. This button shows and hides both cards instead of
+ * being able to show and hide a card individually.
+ * - We did not implement a timer that asks if the player is still there
+ * after some time and pauses the game. We did not see this as a priority in
+ * our work, and we did not have adequate time to implement it since the hand
+ * ranking and betting algorithms took longer than expected to implement.
+ * - Our "How to Play" section is not as descriptive as in the requirements.
+ * It is now simpler.
+ *
+ * =========================
+ * Additional Functionality:
+ *
+ * - The GUI displays the current standings after a round (the player's net
+ * chip gains).
+ * - The GUI displays the player's last actions during a betting phase.
+ * - The hands of non-folded players are revealed at the end of a round.
+ * - The GUI shows the current blind amounts.
+ * - Notifications are displayed for the player's current turn and invalid
+ * actions, and when the blinds are increased and a player is out of funds.
+ * - The screen flashes yellow when it is the player's current turn.
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class PokerMainActivity extends GameMainActivity {
 
     public static final int PORT_NUMBER = 4763;
