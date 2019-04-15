@@ -63,6 +63,15 @@
         android:layout_weight="50"
         android:background="#268b3a">
 
+        <ImageButton
+            android:id="@+id/handRankButton"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_above="@id/logo"
+            android:background="@android:drawable/screen_background_light_transparent"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/hand_rank_icon" />
+
         <TextView
             android:id="@+id/turnText"
             android:layout_width="wrap_content"
