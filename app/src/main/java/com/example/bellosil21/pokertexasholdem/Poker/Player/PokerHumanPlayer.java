@@ -839,10 +839,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             // make sure the TextEdit contains an integer and the player has
             // enough to bet the amount
-            int playerID = state.getTurnTracker().getActivePlayerID();
-            int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+
+            int allPlayerMoney = state.getBetController().getPlayerChips(playerNum);
 
             int bet;
+
             chipSound.start();
             try{
                 bet = Integer.parseInt(chipBetText.getText().toString());
