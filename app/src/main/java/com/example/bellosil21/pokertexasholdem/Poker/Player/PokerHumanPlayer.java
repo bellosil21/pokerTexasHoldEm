@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -126,6 +127,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView player3Status;
     private ImageView player4Status;
 
+    // sounds for different actions
+    private MediaPlayer chipSound;
+
+
     // TextView for Round Number
     private TextView roundNum;
 
@@ -245,6 +250,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
+
+        this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),
+                R.raw.chipmp);
 
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
@@ -831,10 +839,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             // make sure the TextEdit contains an integer and the player has
             // enough to bet the amount
-            int playerID = state.getTurnTracker().getActivePlayerID();
-            int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+
+            int allPlayerMoney = state.getBetController().getPlayerChips(playerNum);
 
             int bet;
+
+            chipSound.start();
             try{
                 bet = Integer.parseInt(chipBetText.getText().toString());
             }
