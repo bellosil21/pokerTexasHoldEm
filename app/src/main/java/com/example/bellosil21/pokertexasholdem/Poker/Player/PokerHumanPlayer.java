@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,28 +13,34 @@ import android.widget.Toast;
 
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
-import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
 import com.example.bellosil21.pokertexasholdem.Game.util.MessageBox;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.IllegalMoveInfo;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.NotYourTurnInfo;
-import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerAllInInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCallInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerRaiseBetInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+import com.example.bellosil21.pokertexasholdem.Poker.PokerMainActivity;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -45,7 +52,7 @@ import java.util.ArrayList;
  * @author Gabe Marcial
  */
 public class PokerHumanPlayer extends GameHumanPlayer implements
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener, DialogInterface.OnClickListener {
 
 
     // Instance variables for player's chips TextViews
@@ -264,6 +271,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
 
+        this.helpButton.setOnClickListener(this);
+        this.settings.setOnClickListener(this);
+        this.exitGame.setOnClickListener(this);
+
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
         this.player2Status = activity.findViewById(R.id.player2Status);
@@ -298,8 +309,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             updateGui();
-        } else if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+        } else if (info instanceof IllegalMoveInfo) {
+                flash(0xFFFF0000, 50);
+                Toast.makeText(myActivity.getApplicationContext(), "Invalid " +
+                                "move.",
+                        Toast.LENGTH_SHORT).show();
+        } else if (info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
+            Toast.makeText(myActivity.getApplicationContext(), "It is not" +
+                            " your turn.",
+                    Toast.LENGTH_SHORT).show();
         } else if (info instanceof PokerEndOfRound) {
             //tell the player of the new round standings
 
@@ -380,95 +399,41 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * Method updates the player's view on the game
      */
     private void updateGui() {
-        TextView player1TV = null;
-        TextView player2TV = null;
-        TextView player3TV = null;
-        TextView player4TV = null;
-        TextView player1Nm = null;
-        TextView player2Nm = null;
-        TextView player3Nm = null;
-        TextView player4Nm = null;
-
-        // Sets the TextViews to change as their are the player
-        switch (this.playerNum) {
-            case 0:
-                player1TV = player1Chips;
-                player1Nm = player1Name;
-                player2TV = player2Chips;
-                player2Nm = player2Name;
-                player3TV = player3Chips;
-                player3Nm = player3Name;
-                player4TV = player4Chips;
-                player4Nm = player4Name;
-                break;
-            case 1:
-                player1TV = player2Chips;
-                player1Nm = player2Name;
-                player2TV = player3Chips;
-                player2Nm = player3Name;
-                player3TV = player4Chips;
-                player3Nm = player4Name;
-                player4TV = player1Chips;
-                player4Nm = player1Name;
-                break;
-            case 2:
-                player1TV = player3Chips;
-                player1Nm = player3Name;
-                player2TV = player4Chips;
-                player2Nm = player4Name;
-                player3TV = player1Chips;
-                player3Nm = player1Name;
-                player4TV = player2Chips;
-                player4Nm = player2Name;
-                break;
-            case 3:
-                player1TV = player4Chips;
-                player1Nm = player4Name;
-                player2TV = player1Chips;
-                player2Nm = player1Name;
-                player3TV = player2Chips;
-                player3Nm = player2Name;
-                player4TV = player3Chips;
-                player4Nm = player3Name;
-                break;
-        }
-
-        // Changing all the player's names
+       // Changing all the player's names
         int playerCount = this.playerNum;
-        player1Nm.setText(this.allPlayerNames[(playerCount) % state.getNumPlayers()]);
-        player2Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+        player1Name.setText(this.allPlayerNames[(playerCount) % state.getNumPlayers()]);
+        player2Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         if (state.getNumPlayers() > 2) {
-            player3Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+            player3Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
         if (state.getNumPlayers() > 3) {
-            player4Nm.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
+            player4Name.setText(this.allPlayerNames[(++playerCount) % state.getNumPlayers()]);
         }
 
         // Changes all the chip count to how much each player has
         playerCount = this.playerNum;
-        player1TV.setText("$ " + state.getChips((playerCount) % state.getNumPlayers()));
-        player2TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+        player1Chips.setText("$ " + state.getChips((playerCount) % state.getNumPlayers()));
+        player2Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         if (state.getNumPlayers() > 2) {
-            player3TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+            player3Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
         if (state.getNumPlayers() > 3) {
-            player4TV.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
+            player4Chips.setText("$ " + state.getChips((++playerCount) % state.getNumPlayers()));
         }
 
         playerCount = this.playerNum;
-        //TODO: CLEAN UP
-        //ArrayList<GameAction> lastActions = state.getLastActions();
-        //updateAction(player1Action, lastActions.get(playerCount));
-        //updateAction(player2Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //if (state.getNumPlayers() > 2) {
-        //    updateAction(player3Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //}
-        //if (state.getNumPlayers() > 3) {
-        //    updateAction(player4Action,
-        //        lastActions.get((++playerCount) % state.getNumPlayers()));
-        //}
+        ArrayList<GameInfo> lastActions = state.getLastActions();
+        updateAction(player1Action, lastActions.get(playerCount));
+        updateAction(player2Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        if (state.getNumPlayers() > 2) {
+            updateAction(player3Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        }
+        if (state.getNumPlayers() > 3) {
+            updateAction(player4Action,
+                lastActions.get((++playerCount) % state.getNumPlayers()));
+        }
 
 
         // Sets the current total pot amount
@@ -477,6 +442,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // Updates the Community Card fields to all existing community cards
         setCommCards(state.getCommunityCards());
 
+        // sets image resources for player icons, chip stacks, etc.
         player1.setImageResource(R.drawable.player);
         player2.setImageResource(R.drawable.player);
         player3.setImageResource(R.drawable.player);
@@ -484,9 +450,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipStack.setImageResource(R.drawable.chip_stack);
         bettingStack.setImageResource(R.drawable.chip_stack);
         logo.setImageResource(R.drawable.logo);
+        helpButton.setImageResource(android.R.drawable.ic_menu_help);
+        settings.setImageResource(android.R.drawable.ic_menu_manage);
+        exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         handRankInfo.setImageResource(R.drawable.hand_rank_icon);
 
-        //helpButton.setImageResource(R.drawable.ic_menu_help);
         // Updates the player's hole cards
         playerCount = playerNum;
         ArrayList<Hand> hands = state.getHands();
@@ -516,10 +484,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // turnTracker TextView to the name of the player
 
         if (activePlayerID < 0) {
-            turnTracker.setText("Loading...");
+            turnTracker.setText("Loading new round...");
         } else {
             turnTracker.setText(allPlayerNames[state.getTurnTracker().
                     getActivePlayerID()] + "'s Turn");
+
+            // tell the player if it is their turn
+            if (activePlayerID == playerNum) {
+                Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                "your turn.",
+                        Toast.LENGTH_SHORT).show();
+                flash(0x66FFFF66, 50);
+            }
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
@@ -527,9 +503,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         callButton.setText("Call(" + callAmount + ")");
 
         if (state.getHands().get(playerNum).isShowCards()) {
-            showHideCardsButton.setText(SHOW_CARDS);
-        } else {
             showHideCardsButton.setText(HIDE_CARDS);
+        } else {
+            showHideCardsButton.setText(SHOW_CARDS);
         }
 
         chipBetSeekbar.setMax(
@@ -846,34 +822,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param tv the text view of the player to update
      * @param action the player's last action
      */
-    private void updateAction(TextView tv, GameAction action) {
+    private void updateAction(TextView tv, GameInfo action) {
         if (action == null) {
             tv.setText("");
-        }
-
-        int nextMaxBet = state.getBetController().getMaxBet();
-        if (action instanceof PokerAllIn) {
-            tv.setText("All In");
-        }
-
-        // if they call when the max bet is zero, name it a check action for
-        // clarity of the human player
-        else if (action instanceof PokerCall) {
-            if (nextMaxBet == 0) {
-                tv.setText("Check");
-            } else {
+        } else {
+            if (action instanceof PokerAllInInfo) {
+                tv.setText("All In");
+            } else if (action instanceof PokerCallInfo) {
                 tv.setText("Call");
+            } else if (action instanceof PokerCheckInfo) {
+                tv.setText("Check");
+            } else if (action instanceof PokerFoldInfo) {
+                tv.setText("Fold");
+            } else if (action instanceof PokerRaiseBetInfo) {
+                tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
             }
-        }
-        else if (action instanceof PokerCheck) {
-            tv.setText("Check");
-        }
-        else if (action instanceof PokerFold) {
-            tv.setText("Fold");
-        }
-        else if (action instanceof PokerRaiseBet) {
-            int netRaise = ((PokerRaiseBet) action).netRaise();
-            tv.setText("Raised by " + netRaise);
         }
     }
 
@@ -933,10 +896,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             // make sure the TextEdit contains an integer and the player has
             // enough to bet the amount
-            int playerID = state.getTurnTracker().getActivePlayerID();
-            int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+
+            int allPlayerMoney = state.getBetController().getPlayerChips(playerNum);
 
             int bet;
+
             try{
                 bet = Integer.parseInt(chipBetText.getText().toString());
             }
@@ -1001,6 +965,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 sitOutButton.setText(SIT_IN);
             }
             game.sendAction(new PokerSitOut(this));
+        } else if(v.equals(helpButton)) {
+            // TODO: implement some sort of guide on the hand rankings and
+            // instructions
+        } else if(v.equals(settings)) {
+            // TODO: potential language change and other
+        } else if(v.equals(exitGame)){
+            MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
+                    this, null, myActivity);
         }
     }
 
@@ -1074,5 +1046,25 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         // not used
+    }
+
+    /**
+     * The onClickListener for the exit button. When pressed, send a quit
+     * action and leave the app
+     */
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        // this listener is for the positive action of the quit dialog
+        game.sendAction(new PokerQuit(this));
+        myActivity.finish();
+        System.exit(0);
+
+        /**
+         * External Citation
+         *  Date:     14 April 2019
+         *  Problem:  Did not know how to quit the app.
+         *  Resource: https://stackoverflow.com/questions/6330200/how-to-quit-android-application-programmatically
+         *  Solution: Implemented the solution in the resource.
+         */
     }
 }

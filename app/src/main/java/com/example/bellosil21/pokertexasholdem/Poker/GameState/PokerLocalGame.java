@@ -9,15 +9,19 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerAllIn;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCall;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerCheck;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerFold;
+import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -33,7 +37,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
     private PokerGameState state;
 
-    private static final int STARTING_CHIPS = 100000;
+    private static final int STARTING_CHIPS = 10000;
     private static final int STARTING_SMALL_BLIND = 100;
     private static final int STARTING_BIG_BLIND = 200;
     private static final int SLEEP_TIME_POST_ROUND = 5000;
@@ -54,7 +58,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      * @param p the player to send info to
      */
     @Override
-    protected void sendUpdatedStateTo(GamePlayer p) {
+    protected synchronized void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
             Log.i("PokerLocalGame.java", "GamePlayer object is null");
             return;
@@ -64,8 +68,10 @@ public class PokerLocalGame extends LocalGame implements Serializable {
             return;
         }
 
-        PokerGameState stateForPlayer = new PokerGameState(state,
-                this.getPlayerIdx(p));
+        PokerGameState stateForPlayer;
+
+        stateForPlayer = new PokerGameState(state,
+                    this.getPlayerIdx(p));
 
         p.sendInfo(stateForPlayer);
     }
@@ -78,7 +84,6 @@ public class PokerLocalGame extends LocalGame implements Serializable {
     @Override
     protected boolean canMove(int playerIdx) {
         int activePlayer = state.getTurnTracker().getActivePlayerID();
-        boolean canMove;
         return (activePlayer == playerIdx);
     }
 
@@ -88,7 +93,12 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      */
     @Override
     protected String checkIfGameOver() {
-        int check = state.getTurnTracker().checkIfGameOver();
+        int check;
+
+        synchronized (state) {
+           check = state.getTurnTracker().checkIfGameOver();
+        }
+
         if (check < 0) {
             return null;
         }
@@ -114,59 +124,94 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         boolean isValid = false; // by default, we return false
         boolean nextTurn = false; // by default, we return false
 
-        /*Game Actions*/
-        // ALL IN
-        if (action instanceof PokerAllIn) {
-            allIn(playerID);
-            nextTurn = true;
-        }
-
-        // CALL
-        else if (action instanceof PokerCall) {
-            call(playerID);
-            nextTurn = true;
-        }
-
-        // CHECK
-        else if (action instanceof PokerCheck) {
-            nextTurn = check(playerID);
-        }
-
-        // FOLD
-        else if (action instanceof PokerFold) {
-            state.getTurnTracker().fold();
-            nextTurn = true;
-        }
-
-        // RAISE BET
-        else if (action instanceof PokerRaiseBet) {
-            int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
-            nextTurn = raiseBet(playerID, raiseAmount);
-        }
-
-        // SHOW HIDE CARDS
-        else if (action instanceof PokerShowHideCards) {
-            boolean isShown = ((PokerShowHideCards) action).isShown();
-            showHideCards(playerID, isShown);
-            isValid = true;
-        }
-
-        // SIT OUT/IN
-        else if (action instanceof PokerSitOut) {
-            isValid = state.getTurnTracker().toggleSitting(playerID);
-
-            // if the player is currently sitting out and it is their turn,
-            // fold their hand
-            if (state.getTurnTracker().isActivePlayerSittingOut()) {
-                makeMove(new PokerFold(players[playerID]));
+        synchronized (state) {
+            /*Game Actions*/
+            // ALL IN
+            if (action instanceof PokerAllIn) {
+                allIn(playerID);
+                nextTurn = true;
+                state.updateLastAction(playerID,
+                        ((PokerAllIn) action).getGameInfo(playerID));
             }
-        }
 
-        if (nextTurn) {
-            //TODO: CLEAN UP
-            //state.updateLastAction(playerID, action);
-            endTurnCleanUp();
-            return true;
+            // CALL
+            else if (action instanceof PokerCall) {
+                call(playerID);
+                nextTurn = true;
+
+                // if the player called a max bet of zero, make their last action
+                // appear as a check
+                if (state.getBetController().getMaxBet() == 0) {
+                    state.updateLastAction(playerID,
+                            new PokerCheckInfo(playerID));
+                } else {
+                    state.updateLastAction(playerID,
+                            ((PokerCall) action).getGameInfo(playerID));
+                }
+            }
+
+            // CHECK
+            else if (action instanceof PokerCheck) {
+                nextTurn = check(playerID);
+                if (nextTurn) {
+                    state.updateLastAction(playerID,
+                            ((PokerCheck) action).getGameInfo(playerID));
+                }
+            }
+
+            // FOLD
+            else if (action instanceof PokerFold) {
+                state.getTurnTracker().fold();
+                nextTurn = true;
+                state.updateLastAction(playerID,
+                        ((PokerFold) action).getGameInfo(playerID));
+            }
+
+            // RAISE BET
+            else if (action instanceof PokerRaiseBet) {
+                int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
+                nextTurn = raiseBet(playerID, raiseAmount);
+                if (nextTurn) {
+                    state.updateLastAction(playerID,
+                            ((PokerRaiseBet) action).getGameInfo(playerID));
+                }
+            }
+
+            // SHOW HIDE CARDS
+            else if (action instanceof PokerShowHideCards) {
+                boolean isShown = ((PokerShowHideCards) action).isShown();
+                showHideCards(playerID, isShown);
+                isValid = true;
+            }
+
+            // SIT OUT/IN
+            else if (action instanceof PokerSitOut) {
+                isValid = state.getTurnTracker().toggleSitting(playerID);
+
+                // if the player is currently sitting out and it is their turn,
+                // fold their hand
+                if (state.getTurnTracker().isActivePlayerSittingOut()) {
+                    makeMove(new PokerFold(players[playerID]));
+                }
+            }
+
+            // QUIT
+            else if (action instanceof PokerQuit) {
+                isValid = state.getTurnTracker().remove(playerID);
+
+                // if the player is currently removed and it is their turn,
+                // fold their hand
+                if (state.getTurnTracker().isActivePlayerSittingOut()) {
+                    makeMove(new PokerFold(players[playerID]));
+                }
+            }
+
+            // if the turn was valid, set up the state for the next player
+            if (nextTurn) {
+                endTurnCleanUp();
+                sendAllUpdatedState();
+                return true;
+            }
         }
 
         return isValid;
@@ -297,16 +342,29 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         } else {
 
             // go to the next phase if it is over
-            while (state.getTurnTracker().isPhaseOver()) {
-                nextPhase();
+            if (state.getTurnTracker().isPhaseOver()) {
+
+                //have enough time so players can see everyone's actions
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    // do nothing
+                }
+
+                while (state.getTurnTracker ().isPhaseOver()) {
+                    nextPhase();
+                }
+                //reset the game actions for the new phase
+                for (int i = 0; i < state.getLastActions().size(); i++) {
+                    state.updateLastAction(i, null);
+                }
             }
         }
 
         // if next player is sitting out, fold them and clean up the turn.
         if (state.getTurnTracker().isActivePlayerSittingOut()) {
             int playerID = state.getTurnTracker().getActivePlayerID();
-            //state.updateLastAction(playerID, new PokerFold
-            // (players[playerID]));
+            state.updateLastAction(playerID, new PokerFoldInfo(playerID));
             state.getTurnTracker().fold();
             endTurnCleanUp();
         }
@@ -455,9 +513,9 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         }
 
         //reset the game actions for the new round
-        //for (int i = 0; i < state.getLastActions().size(); i++) {
-        //    state.updateLastAction(i, null);
-        //}
+        for (int i = 0; i < state.getLastActions().size(); i++) {
+            state.updateLastAction(i, null);
+        }
 
         startRound();
     }

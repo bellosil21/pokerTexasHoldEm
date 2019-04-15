@@ -2,6 +2,8 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerRaiseBetInfo;
+
 import java.io.Serializable;
 
 /**
@@ -17,7 +19,6 @@ public class PokerRaiseBet extends GameAction implements Serializable {
     // Instance variable for amount player wishes to raise
     private int raiseAmount;
     private int callAmount;
-
 
     /**
      * constructor for RaiseBet
@@ -43,4 +44,9 @@ public class PokerRaiseBet extends GameAction implements Serializable {
     public int netRaise() {
         return  raiseAmount - callAmount;
     }
+
+    public PokerRaiseBetInfo getGameInfo(int playerID) {
+        return new PokerRaiseBetInfo(playerID, netRaise());
+    }
+
 }

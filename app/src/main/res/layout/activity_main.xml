@@ -25,7 +25,8 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15" />
+            android:layout_weight="15"
+            />
 
         <ImageButton
             android:id="@+id/helpButton"
@@ -538,11 +539,20 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/sitoutButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SIT OUT"
+                    android:textStyle="italic"/>
+
+                <Button
                     android:id="@+id/showHideCardsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="SHOW CARDS" />
+                    android:text="SHOW CARDS"
+                    android:textStyle="italic" />
 
                 <Button
                     android:id="@+id/betButton"
@@ -550,13 +560,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="RAISE/BET" />
-
-                <Button
-                    android:id="@+id/sitoutButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SIT OUT" />
 
             </LinearLayout>
 

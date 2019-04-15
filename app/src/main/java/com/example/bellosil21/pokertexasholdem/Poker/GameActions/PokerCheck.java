@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
  * @author Gabe Marcial
  */
 public class PokerCheck extends GameAction implements Serializable {
+
     /**
      * constructor for Check
      *
@@ -22,4 +24,9 @@ public class PokerCheck extends GameAction implements Serializable {
     public PokerCheck(GamePlayer player) {
         super(player);
     }
+
+    public PokerCheckInfo getGameInfo(int playerID) {
+        return new PokerCheckInfo(playerID);
+    }
+
 }

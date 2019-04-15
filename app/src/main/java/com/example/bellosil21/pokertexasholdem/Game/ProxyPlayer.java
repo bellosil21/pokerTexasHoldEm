@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @author Steven R. Vegdahl
  * @version July 2013
  */
-public class ProxyPlayer implements GamePlayer {
+public class ProxyPlayer implements GamePlayer{
     
     // the game object
     private Game game;
