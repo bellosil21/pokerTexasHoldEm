@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 
 import java.io.Serializable;
 
@@ -14,6 +15,8 @@ import java.io.Serializable;
  * @author Gabe Marcial
  */
 public class PokerFold extends GameAction implements Serializable {
+
+
     /**
      * constructor for Fold
      *
@@ -23,8 +26,8 @@ public class PokerFold extends GameAction implements Serializable {
         super(player);
     }
 
-    @Override
-    public String toString() {
-        return "Fold";
+    public PokerFoldInfo getGameInfo(int playerID) {
+        return new PokerFoldInfo(playerID);
     }
+
 }

@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    External Citation
-    Date: February 1, 2019
-    Problem: Had trouble laying out images with symmetry
-    Resource: https://developer.android.com/guide/topics/ui/layout/relative
-    Solution: Used Relative Layout to create found in listed site
-
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,8 +16,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
-            />
+            android:layout_weight="15" />
 
         <ImageButton
             android:id="@+id/helpButton"
@@ -64,15 +54,6 @@
         android:layout_weight="50"
         android:background="#268b3a">
 
-        <ImageButton
-            android:id="@+id/handRankButton"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_above="@id/logo"
-            android:background="@android:drawable/screen_background_light_transparent"
-            android:scaleType="fitStart"
-            app:srcCompat="@drawable/hand_rank_icon" />
-
         <TextView
             android:id="@+id/turnText"
             android:layout_width="wrap_content"
@@ -108,7 +89,7 @@
             android:id="@+id/player2"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/player2Status"
             android:layout_toLeftOf="@id/player2Status"
             android:background="@android:color/holo_purple"
             app:srcCompat="@drawable/player" />
@@ -128,26 +109,24 @@
             android:id="@+id/player2Card1"
             android:layout_width="60dp"
             android:layout_height="110dp"
-            android:layout_below="@id/player2"
-            android:layout_alignLeft="@id/player2"
-            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/player2Card2"
+            android:layout_alignTop="@id/player2Card2"
             app:srcCompat="@drawable/card_b" />
 
         <ImageView
             android:id="@+id/player2Card2"
             android:layout_width="60dp"
             android:layout_height="110dp"
-            android:layout_below="@id/player2"
-            android:layout_centerInParent="true"
+            android:layout_alignTop="@id/player2Name"
             android:layout_marginHorizontal="5dp"
-            android:layout_toRightOf="@id/player2Card1"
+            android:layout_toLeftOf="@id/player2"
             app:srcCompat="@drawable/card_b" />
 
         <TextView
             android:id="@+id/player2LM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/player2Card1"
+            android:layout_below="@id/player2"
             android:layout_alignLeft="@id/player2"
             android:text="Last Move:"
             android:textColor="@android:color/white"
@@ -158,7 +137,7 @@
             android:id="@+id/player2Move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/player2Card1"
+            android:layout_below="@id/player2"
             android:layout_marginHorizontal="10dp"
             android:layout_toRightOf="@id/player2LM"
             android:text="Fold"
@@ -251,8 +230,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="150dp"
-            android:layout_toRightOf="@id/river"
+            android:layout_below="@id/player4Name"
             android:background="@android:color/holo_orange_light"
             app:srcCompat="@drawable/player" />
 
@@ -272,8 +250,9 @@
             android:id="@+id/player4Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/player4"
             android:layout_alignLeft="@id/player4"
+            android:layout_below="@id/chipStack"
+            android:layout_marginTop="75dp"
             android:text="Player 4"
             android:textColor="@android:color/white"
             android:textSize="20dp"
@@ -283,26 +262,24 @@
             android:id="@+id/player4Card1"
             android:layout_width="60dp"
             android:layout_height="110dp"
-            android:layout_below="@id/player4"
-            android:layout_alignLeft="@id/player4"
-            android:layout_centerInParent="true"
+            android:layout_alignTop="@id/player4Name"
+            android:layout_toLeftOf="@id/player2Card2"
             app:srcCompat="@drawable/card_b" />
 
         <ImageView
             android:id="@+id/player4Card2"
             android:layout_width="60dp"
             android:layout_height="110dp"
-            android:layout_below="@id/player4"
-            android:layout_centerInParent="true"
             android:layout_marginHorizontal="5dp"
-            android:layout_toRightOf="@id/player4Card1"
+            android:layout_alignTop="@id/player4Name"
+            android:layout_toLeftOf="@id/player4"
             app:srcCompat="@drawable/card_b" />
 
         <TextView
             android:id="@+id/player4LM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/player4Card1"
+            android:layout_below="@id/player4"
             android:layout_alignLeft="@id/player4"
             android:text="Last Move:"
             android:textColor="@android:color/white"
@@ -313,7 +290,7 @@
             android:id="@+id/player4Move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/player4Card1"
+            android:layout_below="@id/player4"
             android:layout_marginHorizontal="10dp"
             android:layout_toRightOf="@id/player4LM"
             android:text="Bet $100"
@@ -429,9 +406,9 @@
             android:id="@+id/player2Status"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignBottom="@id/player2"
-            android:layout_marginRight="110dp"
-            android:layout_toLeftOf="@+id/flop3"
+            android:layout_above="@id/player3Status"
+            android:layout_alignLeft="@id/player3Status"
+            android:layout_marginBottom="150dp"
             app:srcCompat="@drawable/big_blind" />
 
         <ImageView
@@ -539,20 +516,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/sitoutButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SIT OUT"
-                    android:textStyle="italic"/>
-
-                <Button
                     android:id="@+id/showHideCardsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="SHOW CARDS"
-                    android:textStyle="italic" />
+                    android:text="SHOW CARDS" />
 
                 <Button
                     android:id="@+id/betButton"
@@ -560,6 +528,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="RAISE/BET" />
+
+                <Button
+                    android:id="@+id/sitoutButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SIT OUT" />
 
             </LinearLayout>
 

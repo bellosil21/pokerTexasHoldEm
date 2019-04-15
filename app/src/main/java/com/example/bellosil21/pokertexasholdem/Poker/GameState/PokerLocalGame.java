@@ -13,12 +13,15 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -55,7 +58,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      * @param p the player to send info to
      */
     @Override
-    protected void sendUpdatedStateTo(GamePlayer p) {
+    protected synchronized void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
             Log.i("PokerLocalGame.java", "GamePlayer object is null");
             return;
@@ -67,10 +70,8 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
         PokerGameState stateForPlayer;
 
-        synchronized (state) {
-             stateForPlayer = new PokerGameState(state,
+        stateForPlayer = new PokerGameState(state,
                     this.getPlayerIdx(p));
-        }
 
         p.sendInfo(stateForPlayer);
     }
@@ -129,29 +130,51 @@ public class PokerLocalGame extends LocalGame implements Serializable {
             if (action instanceof PokerAllIn) {
                 allIn(playerID);
                 nextTurn = true;
+                state.updateLastAction(playerID,
+                        ((PokerAllIn) action).getGameInfo(playerID));
             }
 
             // CALL
             else if (action instanceof PokerCall) {
                 call(playerID);
                 nextTurn = true;
+
+                // if the player called a max bet of zero, make their last action
+                // appear as a check
+                if (state.getBetController().getMaxBet() == 0) {
+                    state.updateLastAction(playerID,
+                            new PokerCheckInfo(playerID));
+                } else {
+                    state.updateLastAction(playerID,
+                            ((PokerCall) action).getGameInfo(playerID));
+                }
             }
 
             // CHECK
             else if (action instanceof PokerCheck) {
                 nextTurn = check(playerID);
+                if (nextTurn) {
+                    state.updateLastAction(playerID,
+                            ((PokerCheck) action).getGameInfo(playerID));
+                }
             }
 
             // FOLD
             else if (action instanceof PokerFold) {
                 state.getTurnTracker().fold();
                 nextTurn = true;
+                state.updateLastAction(playerID,
+                        ((PokerFold) action).getGameInfo(playerID));
             }
 
             // RAISE BET
             else if (action instanceof PokerRaiseBet) {
                 int raiseAmount = ((PokerRaiseBet) action).getRaiseAmount();
                 nextTurn = raiseBet(playerID, raiseAmount);
+                if (nextTurn) {
+                    state.updateLastAction(playerID,
+                            ((PokerRaiseBet) action).getGameInfo(playerID));
+                }
             }
 
             // SHOW HIDE CARDS
@@ -185,14 +208,6 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
             // if the turn was valid, set up the state for the next player
             if (nextTurn) {
-                // if the player called a max bet of zero, make their last action
-                // appear as a check
-                if (action instanceof PokerCheck && state.getBetController().getMaxBet() == 0) {
-                    PokerCheck checkAction = new PokerCheck(action.getPlayer());
-                    state.updateLastAction(playerID, checkAction.toString());
-                } else {
-                    state.updateLastAction(playerID, action.toString());
-                }
                 endTurnCleanUp();
                 sendAllUpdatedState();
                 return true;
@@ -328,6 +343,14 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
             // go to the next phase if it is over
             if (state.getTurnTracker().isPhaseOver()) {
+
+                //have enough time so players can see everyone's actions
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    // do nothing
+                }
+
                 while (state.getTurnTracker ().isPhaseOver()) {
                     nextPhase();
                 }
@@ -341,8 +364,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
         // if next player is sitting out, fold them and clean up the turn.
         if (state.getTurnTracker().isActivePlayerSittingOut()) {
             int playerID = state.getTurnTracker().getActivePlayerID();
-            PokerFold action = new PokerFold(players[playerID]);
-            state.updateLastAction(playerID, action.toString());
+            state.updateLastAction(playerID, new PokerFoldInfo(playerID));
             state.getTurnTracker().fold();
             endTurnCleanUp();
         }

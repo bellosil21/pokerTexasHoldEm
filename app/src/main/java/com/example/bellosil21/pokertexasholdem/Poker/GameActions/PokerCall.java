@@ -2,6 +2,7 @@ package com.example.bellosil21.pokertexasholdem.Poker.GameActions;
 
 import com.example.bellosil21.pokertexasholdem.Game.actionMsg.GameAction;
 import com.example.bellosil21.pokertexasholdem.Game.GamePlayer;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCallInfo;
 
 import java.io.Serializable;
 
@@ -23,8 +24,8 @@ public class PokerCall extends GameAction implements Serializable {
         super(player);
     }
 
-    @Override
-    public String toString() {
-        return "Call";
+    public PokerCallInfo getGameInfo(int playerID) {
+        return new PokerCallInfo(playerID);
     }
+
 }

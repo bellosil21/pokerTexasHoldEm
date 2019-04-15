@@ -26,16 +26,23 @@ import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerQuit;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerRaiseBet;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerShowHideCards;
 import com.example.bellosil21.pokertexasholdem.Poker.GameActions.PokerSitOut;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerAllInInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCallInfo;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerCheckInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerEndOfRound;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerFoldInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerIncreasingBlinds;
 import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerPlayerOutOfFunds;
+import com.example.bellosil21.pokertexasholdem.Poker.GameInfo.PokerRaiseBetInfo;
 import com.example.bellosil21.pokertexasholdem.Poker.GameState.PokerGameState;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.BlankCard;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.CardSlot;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
+import com.example.bellosil21.pokertexasholdem.Poker.PokerMainActivity;
 import com.example.bellosil21.pokertexasholdem.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -93,6 +100,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private Button callButton;
     private Button checkButton;
     private Button showHideCardsButton;
+    private ImageButton handRankInfo;
 
     // ImagesViews for the Cards
     private ImageView playerHole1;
@@ -132,6 +140,25 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     private GameMainActivity myActivity;
     protected PokerGameState state;
+
+    // Button references from the Hand Ranking listings GUI
+    private int page = 1;
+    private Button nextButton;
+    private Button exitButtonRight;
+    private Button exitButtonLeft;
+    private Button previousButton;
+
+    // ImageViews for the Hand Ranking listings
+    private ImageView rFlush;
+    private ImageView sFlush;
+    private ImageView fourOfKind;
+    private ImageView fullHouse;
+    private ImageView flush;
+    private ImageView straight;
+    private ImageView threeOfKind;
+    private ImageView twoPairs;
+    private ImageView pair;
+    private ImageView hCard;
 
     // Boolean for dealing with language change
     private boolean isSpanish = false; //because getTopView needs it
@@ -220,6 +247,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.checkButton = activity.findViewById(R.id.checkButton);
         this.showHideCardsButton = activity.findViewById(R.id.showHideCardsButton);
         this.callButton = activity.findViewById(R.id.callButton);
+        this.handRankInfo = activity.findViewById(R.id.handRankButton);
 
         // Setting listeners to all the buttons
         this.showHideCardsButton.setOnClickListener(this);
@@ -228,6 +256,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.betButton.setOnClickListener(this);
         this.checkButton.setOnClickListener(this);
         this.callButton.setOnClickListener(this);
+        this.handRankInfo.setOnClickListener(this);
 
         // Setting references to the ImageViews for the Cards;
         this.firstFlop = activity.findViewById(R.id.flop3);
@@ -456,7 +485,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         }
 
         playerCount = this.playerNum;
-        ArrayList<String> lastActions = state.getLastActions();
+        ArrayList<GameInfo> lastActions = state.getLastActions();
         updateAction(player1Action, lastActions.get(playerCount));
         updateAction(player2Action,
                 lastActions.get((++playerCount) % state.getNumPlayers()));
@@ -487,6 +516,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         helpButton.setImageResource(android.R.drawable.ic_menu_help);
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        handRankInfo.setImageResource(R.drawable.hand_rank_icon);
 
         // Updates the player's hole cards
         playerCount = playerNum;
@@ -901,11 +931,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param tv the text view of the player to update
      * @param action the player's last action
      */
-    private void updateAction(TextView tv, String action) {
+    private void updateAction(TextView tv, GameInfo action) {
         if (action == null) {
             tv.setText("");
         } else {
-            tv.setText(action);
+            if (action instanceof PokerAllInInfo) {
+                tv.setText("All In");
+            } else if (action instanceof PokerCallInfo) {
+                tv.setText("Call");
+            } else if (action instanceof PokerCheckInfo) {
+                tv.setText("Check");
+            } else if (action instanceof PokerFoldInfo) {
+                tv.setText("Fold");
+            } else if (action instanceof PokerRaiseBetInfo) {
+                tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+            }
         }
     }
 
@@ -932,9 +972,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         if (v == foldButton) {
             game.sendAction(new PokerFold(this));
+        } else if (v.equals(handRankInfo)){
+            myActivity.setContentView(R.layout.hand_rank_listings);
+            updateHandGui();
         } else if (v.equals(callButton)) {
             game.sendAction(new PokerCall(this));
-        } else if (v.equals(checkButton)) {
+        } else if (v.equals(exitButtonRight) || v.equals(exitButtonLeft)){
+            // Exits the current GUI and returns to the Game GUI
+            myActivity.setContentView(R.layout.activity_main);
+            setAsGui(myActivity);
+            updateGui();
+        }
+        else if (v.equals(nextButton)){
+            // Changes the Poker Hand Ranking listings to page 2
+            if (page == 1){
+                page = 2;
+                myActivity.setContentView(R.layout.hand_rank_listings_2);
+                updateHandPage2Gui();
+            }
+        }
+        else if (v.equals(previousButton)){
+            // Changes the Poker Hand Ranking listings to page 1
+            if (page == 2){
+                page = 1;
+                myActivity.setContentView(R.layout.hand_rank_listings);
+                updateHandGui();
+            }
+        }
+        else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
         } else if (v.equals(betButton)) {
 
@@ -944,6 +1009,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
 
             int bet;
+
             try{
                 bet = Integer.parseInt(chipBetText.getText().toString());
             }
@@ -1096,6 +1162,54 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
          *  Resource: https://spanish.stackexchange.com/questions/15960/poker-terms-in-spanish
          *  Solution: Used the terms suggested in this forum.
          */
+    }
+
+    /**
+     * Sets up GUI needed for showing the Poker Hand Ranking listings
+     */
+    private void updateHandGui() {
+        // Setting references and listeners to the buttons
+        nextButton = myActivity.findViewById(R.id.nextButton);
+        exitButtonLeft = myActivity.findViewById(R.id.exitButtonLeft);
+        page = 1;
+        nextButton.setOnClickListener(this);
+        exitButtonLeft.setOnClickListener(this);
+
+        // Gets the references to the images and sets each image accordingly
+        this.rFlush = myActivity.findViewById(R.id.rFlush);
+        this.sFlush = myActivity.findViewById(R.id.sFlush);
+        this.fourOfKind = myActivity.findViewById(R.id.fourOKind);
+        this.fullHouse = myActivity.findViewById(R.id.fullHouse);
+        this.flush = myActivity.findViewById(R.id.flush);
+        this.straight = myActivity.findViewById(R.id.straight);
+        this.rFlush.setImageResource(R.drawable.r_flush);
+        this.sFlush.setImageResource(R.drawable.s_flush);
+        this.fourOfKind.setImageResource(R.drawable.four_of_kind);
+        this.fullHouse.setImageResource(R.drawable.full_house);
+        this.flush.setImageResource(R.drawable.flush);
+        this.straight.setImageResource(R.drawable.straight);
+    }
+
+    /**
+     * Sets up GUI needed for the second page in showing the Poker Hand
+     * Ranking listings
+     */
+    private void updateHandPage2Gui(){
+        // Setting references and listeners to the buttons
+        previousButton = myActivity.findViewById(R.id.previousButton);
+        exitButtonRight = myActivity.findViewById(R.id.exitButton);
+        previousButton.setOnClickListener(this);
+        exitButtonRight.setOnClickListener(this);
+
+        // Gets the references to the images and sets each image accordingly
+        this.threeOfKind = myActivity.findViewById(R.id.threeOKind);
+        this.twoPairs = myActivity.findViewById(R.id.twoPairs);
+        this.pair = myActivity.findViewById(R.id.pair);
+        this.hCard = myActivity.findViewById(R.id.hCard);
+        this.threeOfKind.setImageResource(R.drawable.three_of_kind);
+        this.twoPairs.setImageResource(R.drawable.two_pair);
+        this.pair.setImageResource(R.drawable.pair);
+        this.hCard.setImageResource(R.drawable.high_card);
     }
 
     /**
