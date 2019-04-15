@@ -55,7 +55,7 @@ public class PokerLocalGame extends LocalGame implements Serializable {
      * @param p the player to send info to
      */
     @Override
-    protected void sendUpdatedStateTo(GamePlayer p) {
+    protected synchronized void sendUpdatedStateTo(GamePlayer p) {
         if(p == null){
             Log.i("PokerLocalGame.java", "GamePlayer object is null");
             return;
@@ -67,10 +67,8 @@ public class PokerLocalGame extends LocalGame implements Serializable {
 
         PokerGameState stateForPlayer;
 
-        synchronized (state) {
              stateForPlayer = new PokerGameState(state,
                     this.getPlayerIdx(p));
-        }
 
         p.sendInfo(stateForPlayer);
     }
