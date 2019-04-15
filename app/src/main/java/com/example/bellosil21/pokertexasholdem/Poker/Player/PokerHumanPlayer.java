@@ -282,11 +282,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.logo = activity.findViewById(R.id.logo);
 
         // Setting references to the ImageButtons
-        this.helpButton = activity.findViewById(R.id.helpButton);
+        //this.helpButton = activity.findViewById(R.id.helpButton);
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
 
-        this.helpButton.setOnClickListener(this);
+        //this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
 
@@ -510,7 +510,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipStack.setImageResource(R.drawable.chip_stack);
         bettingStack.setImageResource(R.drawable.chip_stack);
         logo.setImageResource(R.drawable.logo);
-        helpButton.setImageResource(android.R.drawable.ic_menu_help);
+        //helpButton.setImageResource(android.R.drawable.ic_menu_help);
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         handRankInfo.setImageResource(R.drawable.hand_rank_icon);
