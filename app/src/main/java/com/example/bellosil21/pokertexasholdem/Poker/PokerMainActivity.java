@@ -34,14 +34,17 @@ import java.util.ArrayList;
  *
  * We have also added a new button that displays the various types of hand ranks for the user's
  * reference in learning which hands are better than others. For reference, this button is
- * located in the most left side of the GUI above the "Texas Holdem" logo. As of the beta release,
+ * located in the most left side of the GUI above the "Texas Hold'em" logo. As of the beta release,
  * this addition is functional.
  *
  * We are currently still having issues with the following bugs. On game
  * start, there is a chance that the GUI and game will not load properly. This is less likely to
  * happen when the user waits longer in the config screen before starting.
  * The spanish implementation is not finished yet as in the actions are not translated yet when
- * playing the game.
+ * playing the game. Lastly, we are currently working on implementing an even smarter AI than the
+ * one in this version. However, its currently unstable as it does not always send an action to
+ * the game state. As of this version, we have decided to keep the initial smart AI that meets
+ * the standard requirements.
 
  *
  * @author Gabe Marcial
