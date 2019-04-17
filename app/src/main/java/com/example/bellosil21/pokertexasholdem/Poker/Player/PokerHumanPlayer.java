@@ -988,6 +988,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 myActivity.setContentView(R.layout.hand_rank_listings_2);
                 updateHandPage2Gui();
             }
+        } else if (v.equals(helpButton)){
+            myActivity.setContentView(R.layout.game_info);
+            setHelperGUI();
         } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
@@ -996,16 +999,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 updateHandGui();
             }
         } else if (v.equals(nextInfoButton)){
-            if (page == 2){
-                page = 1;
-                myActivity.setContentView(R.layout.game_info_page2);
-                setHelperGUI();
-            }
-        } else if (v.equals(previousInfoButton)){
             if (page == 1){
                 page = 2;
-                myActivity.setContentView(R.layout.game_info);
+                myActivity.setContentView(R.layout.game_info_page2);
                 setHelperGUIpg2();
+            }
+        } else if (v.equals(previousInfoButton)){
+            if (page == 2){
+                page = 1;
+                myActivity.setContentView(R.layout.game_info);
+                setHelperGUI();
             }
         } else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
@@ -1226,6 +1229,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         page = 1;
         nextInfoButton.setOnClickListener(this);
         exitButtonLeft.setOnClickListener(this);
+        TextView gameInfo = myActivity.findViewById(R.id.intentionOfGame);
+        gameInfo.setText("Poker Texas Hold’em is a poker game where " +
+                "players compete against each other with the goal of " +
+                "obtaining " + "“the pot” or collection of money assembled " +
+                "by participants on " + "the table. The pot builds as players " +
+                "raise bets against one " + "another depending on their " +
+                "confidence with their hand of " + "cards.\n");
+
+        TextView description = myActivity.findViewById(R.id.procedure);
+        description.setText("Each player is dealt two cards, which are known " +
+                "as “hole” cards, once the initial buy ins are set. Next, " +
+                "players have the chance to place bets which forces " +
+                "others to: match the bet (call), leave the round (fold)," +
+                " or bet an additional amount (raise). Then, three “community”" +
+                " cards are placed onto the board where players have another " +
+                "chance to bet. Afterwards, another community card is placed" +
+                " onto the board in which players can bet again. Finally," +
+                " the last community card is shown and players have a final" +
+                " chance to bet. When the final round is over the remaining" +
+                " players show their hands and compare to see who has the" +
+                " highest ranking hand. The highest hand can be determined " +
+                "by the “hole” cards or “community” cards. The player with " +
+                "the highest hand receives the pot of money and is declared" +
+                " the winner of the round. In the case of multiple winners," +
+                " the pot would be divided evenly among the number of winners" +
+                " there are that round. If the pot has an odd number of chips," +
+                " the extra chip will be given to the player leftmost of " +
+                "the dealer." );
     }
 
     public void setHelperGUIpg2(){
