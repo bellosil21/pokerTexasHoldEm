@@ -1210,7 +1210,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     }
 
     public void setHelperGUI(){
-        ;
+        nextButton = myActivity.findViewById(R.id.nextButton);
+        exitButtonLeft = myActivity.findViewById(R.id.exitButtonLeft);
+        page = 1;
+        nextButton.setOnClickListener(this);
+        exitButtonLeft.setOnClickListener(this);
+    }
+
+    public void setHelperGUIpg2(){
+        previousButton = myActivity.findViewById(R.id.previousButton);
+        exitButtonRight = myActivity.findViewById(R.id.exitButton);
+        previousButton.setOnClickListener(this);
+        exitButtonRight.setOnClickListener(this);
     }
 
     /**
