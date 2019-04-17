@@ -268,7 +268,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
-        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.roundstart);
+        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
         this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
         this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
         /**
