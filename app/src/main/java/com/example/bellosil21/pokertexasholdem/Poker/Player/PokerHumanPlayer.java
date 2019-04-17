@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -132,6 +133,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView player3Status;
     private ImageView player4Status;
 
+    // sounds for different actions
+    private MediaPlayer chipSound;
+    private MediaPlayer roundSound;
+
     // TextView for Round Number
     private TextView roundNum;
 
@@ -255,6 +260,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.callButton.setOnClickListener(this);
         this.handRankInfo.setOnClickListener(this);
 
+        // Setting listeners to all the sounds
+        this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
+        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.roundstart);
+        /**
+         * External Citation
+         *  Date: 14 April 2019
+         *  Problem: Did not how to implement mp3 sounds into buttons
+         *  Resource: https://www.youtube.com/watch?v=9oj4f8721LM
+         *  Solution: Used the MediaPlayer class to create sounds and play them when buttons are
+         *  pressed.
+         */
+
         // Setting references to the ImageViews for the Cards;
         this.firstFlop = activity.findViewById(R.id.flop3);
         this.secondFlop = activity.findViewById(R.id.flop2);
@@ -323,6 +340,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             updateGui();
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum){
+                roundSound.start();
+            }
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
                 if(isSpanish){
@@ -1005,6 +1025,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int playerID = state.getTurnTracker().getActivePlayerID();
             int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
 
+            chipSound.start();
             int bet;
 
             try{
