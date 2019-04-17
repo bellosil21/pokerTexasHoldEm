@@ -1,6 +1,7 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -81,9 +82,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     // Round Standings
     private TextView roundStandings;
 
-    // Shows the current blinds
-    private TextView blinds;
-
     // Player's Editable TextView to make bet
     private EditText chipBetText;
 
@@ -125,6 +123,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageButton helpButton;
     private ImageButton settings;
     private ImageButton exitGame;
+    private ImageButton standings;
 
     // ImageViews for the blind positions for each player
     private ImageView player1Status;
@@ -132,11 +131,20 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView player3Status;
     private ImageView player4Status;
 
+    // sounds for different actions
+    private MediaPlayer chipSound;
+    private MediaPlayer roundSound;
+    private MediaPlayer e1;
+    private MediaPlayer e2;
+
     // TextView for Round Number
     private TextView roundNum;
 
     private GameMainActivity myActivity;
     protected PokerGameState state;
+
+    // Store the last end of round
+    private PokerEndOfRound lastEndOfRound;
 
     // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
@@ -161,6 +169,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Boolean for dealing with language change
     private boolean isSpanish = false; //because getTopView needs it
+
+    // Boolean for standings
+    private boolean showStandings = false;
 
     /** constants **/
     private static final String SHOW_CARDS = "SHOW CARDS";
@@ -230,8 +241,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // settings the round description variables
         this.roundStandings = activity.findViewById(R.id.roundResults);
-        this.roundStandings.setText("");
-        this.blinds = activity.findViewById(R.id.blinds);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
@@ -256,6 +265,22 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.checkButton.setOnClickListener(this);
         this.callButton.setOnClickListener(this);
         this.handRankInfo.setOnClickListener(this);
+
+        //aids
+
+        // Setting listeners to all the sounds
+        this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
+        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
+        this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
+        this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
+        /**
+         * External Citation
+         *  Date: 14 April 2019
+         *  Problem: Did not how to implement mp3 sounds into buttons
+         *  Resource: https://www.youtube.com/watch?v=9oj4f8721LM
+         *  Solution: Used the MediaPlayer class to create sounds and play them when buttons are
+         *  pressed.
+         */
 
         // Setting references to the ImageViews for the Cards;
         this.firstFlop = activity.findViewById(R.id.flop3);
@@ -287,10 +312,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.helpButton = activity.findViewById(R.id.helpButton);
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
+        this.standings = activity.findViewById(R.id.standingsButton);
 
         this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
+        this.standings.setOnClickListener(this);
 
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
@@ -325,6 +352,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             updateGui();
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum){
+                roundSound.start();
+            }
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
                 if(isSpanish){
@@ -332,7 +362,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                    Toast.makeText(myActivity.getApplicationContext(),
+                            "Illegal move.",
                             Toast.LENGTH_SHORT).show();
                 }
         } else if (info instanceof NotYourTurnInfo) {
@@ -347,45 +378,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         Toast.LENGTH_SHORT).show();
             }
         } else if (info instanceof PokerEndOfRound) {
+            lastEndOfRound = (PokerEndOfRound)info;
             //tell the player of the new round standings
-            int[] winnings = ((PokerEndOfRound) info).getWinnings();
-
-            String toDisplay;
-            if(isSpanish){
-                toDisplay = "Ronda " + state.getRoundNumber() + " " +
-                        "Posiciones:";
+            if (showStandings) {
+                setRoundStandings();
             }
-            else{
-                toDisplay = "Round " + state.getRoundNumber() + " " +
-                        "Standings:";
-            }
-
-            /**
-             * External Citation
-             *  Date:     6 April 2019
-             *  Problem:  Android Studio was staying to use a StringBuilder
-             *  instead of concatenation.
-             *  Resource: https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html
-             *  Solution: Read the javadoc to see how it was used.
-             */
-            StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
-
-            for (int i = 0; i < allPlayerNames.length; i++) {
-                toDisplayBuilder.append("\n\t");
-                toDisplayBuilder.append(allPlayerNames[i]);
-                toDisplayBuilder.append(":\n\t\t");
-                toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
-                toDisplayBuilder.append(" (");
-
-                // add a plus sign for positive numbers
-                if (winnings[i] >= 0) {
-                    toDisplayBuilder.append("+");
-                }
-
-                toDisplayBuilder.append(winnings[i]) ;
-                toDisplayBuilder.append(")");
-            }
-            roundStandings.setText(toDisplayBuilder);
         } else if (info instanceof PokerIncreasingBlinds) {
             // tell the player of the new blinds
             int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
@@ -516,6 +513,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         handRankInfo.setImageResource(R.drawable.hand_rank_icon);
+        standings.setImageResource(android.R.drawable.ic_menu_info_details  );
 
         // Updates the player's hole cards
         playerCount = playerNum;
@@ -607,11 +605,17 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         setBlinds();
 
+        // set round number
         if(isSpanish){
             roundNum.setText("Ronda: " + state.getRoundNumber());
         }
         else{
             roundNum.setText("Round: " + state.getRoundNumber());
+        }
+
+        // update round standings if we should show it
+        if (showStandings && lastEndOfRound != null) {
+            setRoundStandings();
         }
     }
 
@@ -670,8 +674,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             toDisplay.append("\nSmall Blind: $");
             toDisplay.append(smallBlind);
         }
-
-        blinds.setText(toDisplay);
     }
 
     /**
@@ -935,15 +937,35 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             tv.setText("");
         } else {
             if (action instanceof PokerAllInInfo) {
-                tv.setText("All In");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("All In");
+                }
             } else if (action instanceof PokerCallInfo) {
-                tv.setText("Call");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Call");
+                }
             } else if (action instanceof PokerCheckInfo) {
-                tv.setText("Check");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Check");
+                }
             } else if (action instanceof PokerFoldInfo) {
-                tv.setText("Fold");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Fold");
+                }
             } else if (action instanceof PokerRaiseBetInfo) {
-                tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+                }
             }
         }
     }
@@ -1016,8 +1038,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
             // make sure the TextEdit contains an integer and the player has
             // enough to bet the amount
-            int playerID = state.getTurnTracker().getActivePlayerID();
-            int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
+            int allPlayerMoney = state.getBetController().getPlayerChips(playerNum);
+
 
             int bet;
 
@@ -1033,6 +1055,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
+            }
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum) {
+                if(bet == 420){
+                    e1.start();
+                }
+                chipSound.start();
             }
 
             /**
@@ -1147,6 +1175,27 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             else{
                 MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
                         this, null, myActivity);
+            }
+        } else if (v.equals(standings)) {
+            // if we want to show the standings, let the player now they will
+            // display at the end of next round.
+            // otherwise, remove the standings text
+            showStandings = !showStandings;
+            if (!showStandings) {
+                roundStandings.setText("");
+            } else {
+                setRoundStandings();
+                //tell the player if there are no standings to be displayed
+                if (lastEndOfRound == null) {
+                    if (isSpanish) {
+                        //TODO: implement spanish
+                    } else {
+                        MessageBox.popUpMessage("Standings will be" +
+                                " " +
+                                "displayed after" +
+                                " the first round.", myActivity);
+                    }
+                }
             }
         }
     }
@@ -1264,6 +1313,53 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         exitButtonRight = myActivity.findViewById(R.id.exitButton);
         previousInfoButton.setOnClickListener(this);
         exitButtonRight.setOnClickListener(this);
+    }
+
+    /**
+     * Display the standings to the gui
+     */
+    private void setRoundStandings() {
+        if (lastEndOfRound == null) {
+            return;
+        }
+        int[] winnings = lastEndOfRound.getWinnings();
+
+        String toDisplay;
+        if(isSpanish){
+            toDisplay = "Ronda " + state.getRoundNumber() + " " +
+                    "Posiciones:";
+        }
+        else{
+            toDisplay = "Round " + state.getRoundNumber() + " " +
+                    "Standings:";
+        }
+
+        /**
+         * External Citation
+         *  Date:     6 April 2019
+         *  Problem:  Android Studio was staying to use a StringBuilder
+         *  instead of concatenation.
+         *  Resource: https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html
+         *  Solution: Read the javadoc to see how it was used.
+         */
+        StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
+
+        for (int i = 0; i < allPlayerNames.length; i++) {
+            toDisplayBuilder.append("\n\t");
+            toDisplayBuilder.append(allPlayerNames[i]);
+            toDisplayBuilder.append(":\n\t\t");
+            toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
+            toDisplayBuilder.append(" (");
+
+            // add a plus sign for positive numbers
+            if (winnings[i] >= 0) {
+                toDisplayBuilder.append("+");
+            }
+
+            toDisplayBuilder.append(winnings[i]) ;
+            toDisplayBuilder.append(")");
+        }
+        roundStandings.setText(toDisplayBuilder);
     }
 
     /**
