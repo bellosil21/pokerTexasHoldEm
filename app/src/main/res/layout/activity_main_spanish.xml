@@ -21,6 +21,15 @@
             />
 
         <ImageButton
+            android:id="@+id/standingsButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray"
+            android:tint="#565555"
+            app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+        <ImageButton
             android:id="@+id/helpButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -79,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/turnText"
-            android:text="Ronda Posiciones: "
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="15dp"
             app:fontFamily="@font/anton" />
@@ -141,7 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/player2Card1"
             android:layout_alignLeft="@id/player2"
-            android:text="Ultimo Jugada:"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
@@ -209,7 +218,7 @@
             android:layout_above="@id/flop1"
             android:layout_alignLeft="@id/player3"
             android:layout_marginBottom="30dp"
-            android:text="Ultimo Jugada:"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
@@ -296,7 +305,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/player4Card1"
             android:layout_alignLeft="@id/player4"
-            android:text="Ultimo Jugada:"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="20dp"
             app:fontFamily="@font/anton" />
@@ -445,19 +454,6 @@
             android:textColor="@color/white"
             android:textSize="30dp" />
 
-        <TextView
-            android:id="@+id/blinds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/roundNum"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="right"
-            android:text="Ciega Grande: \nCiega Pequena: "
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            app:fontFamily="@font/anton" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -533,7 +529,7 @@
                 <Button
                     android:id="@+id/sitoutButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="SENTAR"
                     android:textStyle="italic"/>
@@ -541,7 +537,7 @@
                 <Button
                     android:id="@+id/showHideCardsButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="MOSTRAR CARTAS"
                     android:textStyle="italic" />
@@ -549,7 +545,7 @@
                 <Button
                     android:id="@+id/betButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="AUMENTAR" />
 
@@ -641,7 +637,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
-                    android:text="Ultimo jugada:"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="20dp"
                     app:fontFamily="@font/anton" />
@@ -669,21 +665,21 @@
                 <Button
                     android:id="@+id/foldButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Retirarse" />
 
                 <Button
                     android:id="@+id/callButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Igualar" />
 
                 <Button
                     android:id="@+id/checkButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Comprobar" />
             </LinearLayout>
