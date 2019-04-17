@@ -260,6 +260,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.callButton.setOnClickListener(this);
         this.handRankInfo.setOnClickListener(this);
 
+        //aids
+
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
         this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.roundstart);
