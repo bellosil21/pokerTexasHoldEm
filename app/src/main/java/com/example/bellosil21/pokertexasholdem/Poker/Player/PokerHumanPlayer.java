@@ -136,6 +136,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer roundSound;
     private MediaPlayer e1;
     private MediaPlayer e2;
+    private MediaPlayer e6;
+    private MediaPlayer dud;
+    private MediaPlayer raiseblinds;
+    private MediaPlayer showcardssound;
+
 
     // TextView for Round Number
     private TextView roundNum;
@@ -272,6 +277,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
         this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
         this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
+        this.e6 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e6);
+        this.dud = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.dud);
+        this.raiseblinds = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.raiseblinds);
+        this.showcardssound = MediaPlayer.create(myActivity.getApplicationContext(),
+                R.raw.showcardssound);
         /**
          * External Citation
          *  Date: 14 April 2019
@@ -356,6 +366,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
+                dud.start();
                 if(isSpanish){
                     Toast.makeText(myActivity.getApplicationContext(), "Movimineto Invalido.",
                             Toast.LENGTH_SHORT).show();
@@ -366,6 +377,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
         } else if (info instanceof NotYourTurnInfo) {
             flash(0xFFFF0000, 50);
+            dud.start();
             if(isSpanish){
                 Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
                         Toast.LENGTH_SHORT).show();
@@ -386,6 +398,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
             int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
             StringBuilder toDisplay = new StringBuilder();
+            raiseblinds.start();
 
             if(isSpanish){
                 toDisplay.append("Las ciegas estan aumentando!\n\n");
@@ -405,6 +418,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         } else if (info instanceof PokerPlayerOutOfFunds) {
             // tell this player a player is out of funds
+            e2.start();
             ArrayList<Integer> outOfFundPlayers =
                     ((PokerPlayerOutOfFunds) info).getPlayerIDs();
 
@@ -1066,7 +1080,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 if(bet == 420){
                     e1.start();
                 }
-                chipSound.start();
+                else if(bet == 666){
+                    e6.start();
+                } else{
+                    chipSound.start();
+                }
+
             }
 
             /**
@@ -1123,6 +1142,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 if (showHideCardsButton.getText().equals(MOSTRAR_CARTAS)) {
                     showHideCardsButton.setText(ESCONDE_CARTAS);
                     game.sendAction(new PokerShowHideCards(this, true));
+                    showcardssound.start();
                 } else {
                     showHideCardsButton.setText(MOSTRAR_CARTAS);
                     game.sendAction(new PokerShowHideCards(this, false ));
@@ -1132,6 +1152,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
                     showHideCardsButton.setText(HIDE_CARDS);
                     game.sendAction(new PokerShowHideCards(this, true));
+                    showcardssound.start();
                 } else {
                     showHideCardsButton.setText(SHOW_CARDS);
                     game.sendAction(new PokerShowHideCards(this, false ));
