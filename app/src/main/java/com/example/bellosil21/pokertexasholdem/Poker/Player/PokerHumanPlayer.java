@@ -136,6 +136,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     // sounds for different actions
     private MediaPlayer chipSound;
     private MediaPlayer roundSound;
+    private MediaPlayer e1;
+    private MediaPlayer e2;
 
     // TextView for Round Number
     private TextView roundNum;
@@ -266,7 +268,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
-        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.roundstart);
+        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.roundstart);
+        this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
+        this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
         /**
          * External Citation
          *  Date: 14 April 2019
@@ -1038,7 +1042,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int playerID = state.getTurnTracker().getActivePlayerID();
             int allPlayerMoney = state.getBetController().getPlayerChips(playerID);
 
-            chipSound.start();
+
             int bet;
 
             try{
@@ -1053,6 +1057,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
+            }
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum) {
+                if(bet == 420){
+                    e1.start();
+                }
+                chipSound.start();
             }
 
             /**
