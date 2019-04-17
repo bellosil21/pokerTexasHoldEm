@@ -330,7 +330,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                    Toast.makeText(myActivity.getApplicationContext(), "Invalid move.",
                             Toast.LENGTH_SHORT).show();
                 }
         } else if (info instanceof NotYourTurnInfo) {
@@ -931,7 +931,20 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         //TODO: Include this with spanish implementation
         if (action == null) {
             tv.setText("");
-        } else {
+        } else if(isSpanish) {
+            if (action instanceof PokerAllInInfo) {
+                tv.setText("Apostarlo todo");
+            } else if (action instanceof PokerCallInfo) {
+                tv.setText("Igualar");
+            } else if (action instanceof PokerCheckInfo) {
+                tv.setText("Comprobar");
+            } else if (action instanceof PokerFoldInfo) {
+                tv.setText("Retirarse");
+            } else if (action instanceof PokerRaiseBetInfo) {
+                tv.setText("Levantado por " + ((PokerRaiseBetInfo) action).getNetRaise());
+            }
+        }
+        else{
             if (action instanceof PokerAllInInfo) {
                 tv.setText("All In");
             } else if (action instanceof PokerCallInfo) {
