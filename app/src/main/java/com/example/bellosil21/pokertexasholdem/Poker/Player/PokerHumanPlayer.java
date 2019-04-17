@@ -82,9 +82,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     // Round Standings
     private TextView roundStandings;
 
-    // Shows the current blinds
-    private TextView blinds;
-
     // Player's Editable TextView to make bet
     private EditText chipBetText;
 
@@ -126,6 +123,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageButton helpButton;
     private ImageButton settings;
     private ImageButton exitGame;
+    private ImageButton standings;
 
     // ImageViews for the blind positions for each player
     private ImageView player1Status;
@@ -150,6 +148,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private GameMainActivity myActivity;
     protected PokerGameState state;
 
+    // Store the last end of round
+    private PokerEndOfRound lastEndOfRound;
+
     // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
     private Button nextButton;
@@ -173,6 +174,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Boolean for dealing with language change
     private boolean isSpanish = false; //because getTopView needs it
+
+    // Boolean for standings
+    private boolean showStandings = false;
 
     /** constants **/
     private static final String SHOW_CARDS = "SHOW CARDS";
@@ -242,8 +246,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // settings the round description variables
         this.roundStandings = activity.findViewById(R.id.roundResults);
-        this.roundStandings.setText("");
-        this.blinds = activity.findViewById(R.id.blinds);
 
         // Setting all editable views for betting and setting a listener for
         // the SeekBar
@@ -320,10 +322,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.helpButton = activity.findViewById(R.id.helpButton);
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
+        this.standings = activity.findViewById(R.id.standingsButton);
 
         this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
+        this.standings.setOnClickListener(this);
 
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
@@ -369,7 +373,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                    Toast.makeText(myActivity.getApplicationContext(),
+                            "Illegal move.",
                             Toast.LENGTH_SHORT).show();
                 }
         } else if (info instanceof NotYourTurnInfo) {
@@ -385,45 +390,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         Toast.LENGTH_SHORT).show();
             }
         } else if (info instanceof PokerEndOfRound) {
+            lastEndOfRound = (PokerEndOfRound)info;
             //tell the player of the new round standings
-            int[] winnings = ((PokerEndOfRound) info).getWinnings();
-
-            String toDisplay;
-            if(isSpanish){
-                toDisplay = "Ronda " + state.getRoundNumber() + " " +
-                        "Posiciones:";
+            if (showStandings) {
+                setRoundStandings();
             }
-            else{
-                toDisplay = "Round " + state.getRoundNumber() + " " +
-                        "Standings:";
-            }
-
-            /**
-             * External Citation
-             *  Date:     6 April 2019
-             *  Problem:  Android Studio was staying to use a StringBuilder
-             *  instead of concatenation.
-             *  Resource: https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html
-             *  Solution: Read the javadoc to see how it was used.
-             */
-            StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
-
-            for (int i = 0; i < allPlayerNames.length; i++) {
-                toDisplayBuilder.append("\n\t");
-                toDisplayBuilder.append(allPlayerNames[i]);
-                toDisplayBuilder.append(":\n\t\t");
-                toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
-                toDisplayBuilder.append(" (");
-
-                // add a plus sign for positive numbers
-                if (winnings[i] >= 0) {
-                    toDisplayBuilder.append("+");
-                }
-
-                toDisplayBuilder.append(winnings[i]) ;
-                toDisplayBuilder.append(")");
-            }
-            roundStandings.setText(toDisplayBuilder);
         } else if (info instanceof PokerIncreasingBlinds) {
             // tell the player of the new blinds
             int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
@@ -556,6 +527,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         handRankInfo.setImageResource(R.drawable.hand_rank_icon);
+        standings.setImageResource(android.R.drawable.ic_menu_info_details  );
 
         // Updates the player's hole cards
         playerCount = playerNum;
@@ -647,11 +619,17 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         setBlinds();
 
+        // set round number
         if(isSpanish){
             roundNum.setText("Ronda: " + state.getRoundNumber());
         }
         else{
             roundNum.setText("Round: " + state.getRoundNumber());
+        }
+
+        // update round standings if we should show it
+        if (showStandings && lastEndOfRound != null) {
+            setRoundStandings();
         }
     }
 
@@ -710,8 +688,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             toDisplay.append("\nSmall Blind: $");
             toDisplay.append(smallBlind);
         }
-
-        blinds.setText(toDisplay);
     }
 
     /**
@@ -975,15 +951,35 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             tv.setText("");
         } else {
             if (action instanceof PokerAllInInfo) {
-                tv.setText("All In");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("All In");
+                }
             } else if (action instanceof PokerCallInfo) {
-                tv.setText("Call");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Call");
+                }
             } else if (action instanceof PokerCheckInfo) {
-                tv.setText("Check");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Check");
+                }
             } else if (action instanceof PokerFoldInfo) {
-                tv.setText("Fold");
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Fold");
+                }
             } else if (action instanceof PokerRaiseBetInfo) {
-                tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+                if (isSpanish) {
+
+                } else {
+                    tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+                }
             }
         }
     }
@@ -1028,6 +1024,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 myActivity.setContentView(R.layout.hand_rank_listings_2);
                 updateHandPage2Gui();
             }
+        } else if (v.equals(helpButton)){
+            myActivity.setContentView(R.layout.game_info);
+            setHelperGUI();
         } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
@@ -1036,16 +1035,16 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 updateHandGui();
             }
         } else if (v.equals(nextInfoButton)){
-            if (page == 2){
-                page = 1;
-                myActivity.setContentView(R.layout.game_info_page2);
-                setHelperGUI();
-            }
-        } else if (v.equals(previousInfoButton)){
             if (page == 1){
                 page = 2;
-                myActivity.setContentView(R.layout.game_info);
+                myActivity.setContentView(R.layout.game_info_page2);
                 setHelperGUIpg2();
+            }
+        } else if (v.equals(previousInfoButton)){
+            if (page == 2){
+                page = 1;
+                myActivity.setContentView(R.layout.game_info);
+                setHelperGUI();
             }
         } else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
@@ -1198,6 +1197,27 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 MessageBox.popUpChoice("Do you want to exit the game?", "Yes", "No",
                         this, null, myActivity);
             }
+        } else if (v.equals(standings)) {
+            // if we want to show the standings, let the player now they will
+            // display at the end of next round.
+            // otherwise, remove the standings text
+            showStandings = !showStandings;
+            if (!showStandings) {
+                roundStandings.setText("");
+            } else {
+                setRoundStandings();
+                //tell the player if there are no standings to be displayed
+                if (lastEndOfRound == null) {
+                    if (isSpanish) {
+                        //TODO: implement spanish
+                    } else {
+                        MessageBox.popUpMessage("Standings will be" +
+                                " " +
+                                "displayed after" +
+                                " the first round.", myActivity);
+                    }
+                }
+            }
         }
     }
 
@@ -1279,6 +1299,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         page = 1;
         nextInfoButton.setOnClickListener(this);
         exitButtonLeft.setOnClickListener(this);
+        TextView gameInfo = myActivity.findViewById(R.id.intentionOfGame);
+        gameInfo.setText("Poker Texas Hold’em is a poker game where " +
+                "players compete against each other with the goal of " +
+                "obtaining " + "“the pot” or collection of money assembled " +
+                "by participants on " + "the table. The pot builds as players " +
+                "raise bets against one " + "another depending on their " +
+                "confidence with their hand of " + "cards.\n");
+
+        TextView description = myActivity.findViewById(R.id.procedure);
+        description.setText("Each player is dealt two cards, which are known " +
+                "as “hole” cards, once the initial buy ins are set. Next, " +
+                "players have the chance to place bets which forces " +
+                "others to: match the bet (call), leave the round (fold)," +
+                " or bet an additional amount (raise). Then, three “community”" +
+                " cards are placed onto the board where players have another " +
+                "chance to bet. Afterwards, another community card is placed" +
+                " onto the board in which players can bet again. Finally," +
+                " the last community card is shown and players have a final" +
+                " chance to bet. When the final round is over the remaining" +
+                " players show their hands and compare to see who has the" +
+                " highest ranking hand. The highest hand can be determined " +
+                "by the “hole” cards or “community” cards. The player with " +
+                "the highest hand receives the pot of money and is declared" +
+                " the winner of the round. In the case of multiple winners," +
+                " the pot would be divided evenly among the number of winners" +
+                " there are that round. If the pot has an odd number of chips," +
+                " the extra chip will be given to the player leftmost of " +
+                "the dealer." );
     }
 
     public void setHelperGUIpg2(){
@@ -1286,6 +1334,53 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         exitButtonRight = myActivity.findViewById(R.id.exitButton);
         previousInfoButton.setOnClickListener(this);
         exitButtonRight.setOnClickListener(this);
+    }
+
+    /**
+     * Display the standings to the gui
+     */
+    private void setRoundStandings() {
+        if (lastEndOfRound == null) {
+            return;
+        }
+        int[] winnings = lastEndOfRound.getWinnings();
+
+        String toDisplay;
+        if(isSpanish){
+            toDisplay = "Ronda " + state.getRoundNumber() + " " +
+                    "Posiciones:";
+        }
+        else{
+            toDisplay = "Round " + state.getRoundNumber() + " " +
+                    "Standings:";
+        }
+
+        /**
+         * External Citation
+         *  Date:     6 April 2019
+         *  Problem:  Android Studio was staying to use a StringBuilder
+         *  instead of concatenation.
+         *  Resource: https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html
+         *  Solution: Read the javadoc to see how it was used.
+         */
+        StringBuilder toDisplayBuilder = new StringBuilder(toDisplay);
+
+        for (int i = 0; i < allPlayerNames.length; i++) {
+            toDisplayBuilder.append("\n\t");
+            toDisplayBuilder.append(allPlayerNames[i]);
+            toDisplayBuilder.append(":\n\t\t");
+            toDisplayBuilder.append(state.getBetController().getPlayerChips(i));
+            toDisplayBuilder.append(" (");
+
+            // add a plus sign for positive numbers
+            if (winnings[i] >= 0) {
+                toDisplayBuilder.append("+");
+            }
+
+            toDisplayBuilder.append(winnings[i]) ;
+            toDisplayBuilder.append(")");
+        }
+        roundStandings.setText(toDisplayBuilder);
     }
 
     /**

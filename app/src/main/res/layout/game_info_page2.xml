@@ -28,7 +28,6 @@
         android:layout_weight="35"
         android:background="@android:drawable/screen_background_dark_transparent"
         android:orientation="vertical"/>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
