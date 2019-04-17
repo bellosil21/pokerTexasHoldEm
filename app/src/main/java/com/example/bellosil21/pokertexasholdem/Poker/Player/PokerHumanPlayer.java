@@ -143,12 +143,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private GameMainActivity myActivity;
     protected PokerGameState state;
 
-    // Button references from the Hand Ranking listings GUI
+    // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
     private Button nextButton;
     private Button exitButtonRight;
     private Button exitButtonLeft;
     private Button previousButton;
+    private Button previousInfoButton;
+    private Button nextInfoButton;
 
     // ImageViews for the Hand Ranking listings
     private ImageView rFlush;
@@ -301,11 +303,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.logo = activity.findViewById(R.id.logo);
 
         // Setting references to the ImageButtons
-        //this.helpButton = activity.findViewById(R.id.helpButton);
+        this.helpButton = activity.findViewById(R.id.helpButton);
         this.settings = activity.findViewById(R.id.settings);
         this.exitGame = activity.findViewById(R.id.exitGame);
 
-        //this.helpButton.setOnClickListener(this);
+        this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
 
@@ -532,7 +534,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         chipStack.setImageResource(R.drawable.chip_stack);
         bettingStack.setImageResource(R.drawable.chip_stack);
         logo.setImageResource(R.drawable.logo);
-        //helpButton.setImageResource(android.R.drawable.ic_menu_help);
+        helpButton.setImageResource(android.R.drawable.ic_menu_help);
         settings.setImageResource(android.R.drawable.ic_menu_manage);
         exitGame.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         handRankInfo.setImageResource(R.drawable.hand_rank_icon);
@@ -1001,24 +1003,33 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             myActivity.setContentView(R.layout.activity_main);
             setAsGui(myActivity);
             updateGui();
-        }
-        else if (v.equals(nextButton)){
+        } else if (v.equals(nextButton)){
             // Changes the Poker Hand Ranking listings to page 2
             if (page == 1){
                 page = 2;
                 myActivity.setContentView(R.layout.hand_rank_listings_2);
                 updateHandPage2Gui();
             }
-        }
-        else if (v.equals(previousButton)){
+        } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
                 page = 1;
                 myActivity.setContentView(R.layout.hand_rank_listings);
                 updateHandGui();
             }
-        }
-        else if (v.equals(checkButton)) {
+        } else if (v.equals(nextInfoButton)){
+            if (page == 2){
+                page = 1;
+                myActivity.setContentView(R.layout.game_info_page2);
+                setHelperGUI();
+            }
+        } else if (v.equals(previousInfoButton)){
+            if (page == 1){
+                page = 2;
+                myActivity.setContentView(R.layout.game_info);
+                setHelperGUIpg2();
+            }
+        } else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
         } else if (v.equals(betButton)) {
 
@@ -1230,6 +1241,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.twoPairs.setImageResource(R.drawable.two_pair);
         this.pair.setImageResource(R.drawable.pair);
         this.hCard.setImageResource(R.drawable.high_card);
+    }
+
+    public void setHelperGUI(){
+        nextInfoButton = myActivity.findViewById(R.id.nextButton);
+        exitButtonLeft = myActivity.findViewById(R.id.exitButton);
+        page = 1;
+        nextInfoButton.setOnClickListener(this);
+        exitButtonLeft.setOnClickListener(this);
+    }
+
+    public void setHelperGUIpg2(){
+        previousInfoButton = myActivity.findViewById(R.id.previousButton);
+        exitButtonRight = myActivity.findViewById(R.id.exitButton);
+        previousInfoButton.setOnClickListener(this);
+        exitButtonRight.setOnClickListener(this);
     }
 
     /**
