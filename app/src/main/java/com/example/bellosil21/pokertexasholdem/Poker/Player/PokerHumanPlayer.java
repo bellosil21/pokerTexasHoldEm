@@ -985,7 +985,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         if (v == foldButton) {
             game.sendAction(new PokerFold(this));
         } else if (v.equals(handRankInfo)){
-            myActivity.setContentView(R.layout.hand_rank_listings);
+            if(isSpanish){
+                myActivity.setContentView(R.layout.hand_rank_listings_spanish);
+            }
+            else{
+                myActivity.setContentView(R.layout.hand_rank_listings);
+            }
             updateHandGui();
         } else if (v.equals(callButton)) {
             game.sendAction(new PokerCall(this));
@@ -998,14 +1003,24 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             // Changes the Poker Hand Ranking listings to page 2
             if (page == 1){
                 page = 2;
-                myActivity.setContentView(R.layout.hand_rank_listings_2);
+                if(isSpanish){
+                    myActivity.setContentView(R.layout.hand_rank_listings_2_spanish);
+                }
+                else{
+                    myActivity.setContentView(R.layout.hand_rank_listings_2);
+                }
                 updateHandPage2Gui();
             }
         } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
                 page = 1;
-                myActivity.setContentView(R.layout.hand_rank_listings);
+                if(isSpanish){
+                    myActivity.setContentView(R.layout.hand_rank_listings_spanish);
+                }
+                else{
+                    myActivity.setContentView(R.layout.hand_rank_listings);
+                }
                 updateHandGui();
             }
         } else if (v.equals(nextInfoButton)){
