@@ -138,12 +138,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private GameMainActivity myActivity;
     protected PokerGameState state;
 
-    // Button references from the Hand Ranking listings GUI
+    // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
     private Button nextButton;
     private Button exitButtonRight;
     private Button exitButtonLeft;
     private Button previousButton;
+    private Button previousInfoButton;
+    private Button nextInfoButton;
 
     // ImageViews for the Hand Ranking listings
     private ImageView rFlush;
@@ -992,24 +994,33 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             myActivity.setContentView(R.layout.activity_main);
             setAsGui(myActivity);
             updateGui();
-        }
-        else if (v.equals(nextButton)){
+        } else if (v.equals(nextButton)){
             // Changes the Poker Hand Ranking listings to page 2
             if (page == 1){
                 page = 2;
                 myActivity.setContentView(R.layout.hand_rank_listings_2);
                 updateHandPage2Gui();
             }
-        }
-        else if (v.equals(previousButton)){
+        } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
                 page = 1;
                 myActivity.setContentView(R.layout.hand_rank_listings);
                 updateHandGui();
             }
-        }
-        else if (v.equals(checkButton)) {
+        } else if (v.equals(nextInfoButton)){
+            if (page == 2){
+                page = 1;
+                myActivity.setContentView(R.layout.game_info_page2);
+                setHelperGUI();
+            }
+        } else if (v.equals(previousInfoButton)){
+            if (page == 1){
+                page = 2;
+                myActivity.setContentView(R.layout.game_info);
+                setHelperGUIpg2();
+            }
+        } else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
         } else if (v.equals(betButton)) {
 
@@ -1223,7 +1234,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     }
 
     public void setHelperGUI(){
-        ;
+        nextInfoButton = myActivity.findViewById(R.id.nextButton);
+        exitButtonLeft = myActivity.findViewById(R.id.exitButton);
+        page = 1;
+        nextInfoButton.setOnClickListener(this);
+        exitButtonLeft.setOnClickListener(this);
+    }
+
+    public void setHelperGUIpg2(){
+        previousInfoButton = myActivity.findViewById(R.id.previousButton);
+        exitButtonRight = myActivity.findViewById(R.id.exitButton);
+        previousInfoButton.setOnClickListener(this);
+        exitButtonRight.setOnClickListener(this);
     }
 
     /**
