@@ -187,8 +187,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     /** Constants in spanish **/
     private static final String MOSTRAR_CARTAS = "MOSTRAR CARTAS";
     private static final String ESCONDE_CARTAS = "ESCONDE CARTAS";
-    private static final String SENTAR_AFUERA = "SENTAR_AFUERA";
-    private static final String SENTARSE_EN = "SENTARSE EN";
+    private static final String FUERA_DEL_JUEGO = "FUERA DEL JUEGO";
+    private static final String DENTRO_DEL_JUEGO = "DENTRO DEL JUEGO";
 
     /**
      * Constructor
@@ -1162,10 +1162,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else if (v.equals(sitOutButton)) {
             // toggle the display and send the action
             if(isSpanish){
-                if (sitOutButton.getText().equals(SENTARSE_EN)) {
-                    sitOutButton.setText(SENTAR_AFUERA);
+                if (sitOutButton.getText().equals(DENTRO_DEL_JUEGO)) {
+                    sitOutButton.setText(FUERA_DEL_JUEGO);
                 } else {
-                    sitOutButton.setText(SENTARSE_EN);
+                    sitOutButton.setText(DENTRO_DEL_JUEGO);
                 }
             }
             else{
@@ -1179,7 +1179,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else if(v.equals(helpButton)) {
             // TODO: implement some sort of guide on the hand rankings and instructions
         } else if(v.equals(settings)) {
-            MessageBox.popUpChoice("Select Language", "English", "Espanol",
+            MessageBox.popUpChoice("Select Language", "English", "Español",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -1373,6 +1373,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         for (int i = 0; i < allPlayerNames.length; i++) {
             toDisplayBuilder.append("\n\t");
+
             toDisplayBuilder.append(allPlayerNames[i]);
             toDisplayBuilder.append(":\n\t\t");
             toDisplayBuilder.append(state.getBetController().getPlayerChips(i));

@@ -498,7 +498,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:text="Cantidad"
+                    android:text="Cantidad de Apostar"
                     android:textColor="@android:color/holo_orange_light"
                     android:textColorHighlight="@android:color/darker_gray"
                     android:textColorHint="@android:color/holo_orange_light"
@@ -531,8 +531,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="SENTAR"
-                    android:textStyle="italic"/>
+                    android:text="FUERA DEL JUEGO"
+                    android:textStyle="italic" />
 
                 <Button
                     android:id="@+id/showHideCardsButton"
@@ -681,7 +681,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Comprobar" />
+                    android:text="PASAR" />
             </LinearLayout>
 
         </LinearLayout>
