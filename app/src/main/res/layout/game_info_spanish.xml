@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/info_backdrop">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:drawable/screen_background_dark_transparent"
+            android:text="Salida"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="35"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/infoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Como Jugar"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            app:fontFamily="@font/anton" />
+
+        <TextView
+            android:id="@+id/intentionOfGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:fontFamily="@font/anton"
+            tools:text="TextView"></TextView>
+
+        <TextView
+            android:id="@+id/procedure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:fontFamily="@font/anton"
+            tools:text="Each player is dealt two cards, which are known as “hole” cards, once the initial buy ins are set. Next, players have the chance to place bets which forces others to: match the bet (call), leave the round (fold), or bet an additional amount (raise). Then, three “community” cards are placed onto the board where players have another chance to bet. Afterwards, another community card is placed onto the board in which players can bet again. Finally, the last community card is shown and players have a final chance to bet. When the final round is over the remaining players show their hands and compare to see who has the highest ranking hand. The highest hand can be determined by the “hole” cards or “community” cards. The player with the highest hand receives the pot of money and is declared the winner of the round. In the case of multiple winners, the pot would be divided evenly among the number of winners there are that round. If the pot has an odd number of chips, the extra chip will be given to the player leftmost of the dealer. " />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:drawable/screen_background_dark_transparent"
+            android:text="Siguiente"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+</LinearLayout>

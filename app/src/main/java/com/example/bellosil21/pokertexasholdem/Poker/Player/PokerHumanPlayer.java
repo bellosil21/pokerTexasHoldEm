@@ -1026,8 +1026,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 updateHandPage2Gui();
             }
         } else if (v.equals(helpButton)){
-            myActivity.setContentView(R.layout.game_info);
-            setHelperGUI();
+            if(isSpanish){
+                myActivity.setContentView(R.layout.game_info_spanish);
+                setHelperGUISpanish();
+            }
+            else{
+                myActivity.setContentView(R.layout.game_info);
+                setHelperGUI();
+            }
         } else if (v.equals(previousButton)){
             // Changes the Poker Hand Ranking listings to page 1
             if (page == 2){
@@ -1049,8 +1055,14 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else if (v.equals(previousInfoButton)){
             if (page == 2){
                 page = 1;
-                myActivity.setContentView(R.layout.game_info);
-                setHelperGUI();
+              if(isSpanish){
+                  myActivity.setContentView(R.layout.game_info_spanish);
+                  setHelperGUISpanish();
+              }
+              else{
+                  myActivity.setContentView(R.layout.game_info);
+                  setHelperGUI();
+              }
             }
         } else if (v.equals(checkButton)) {
             game.sendAction(new PokerCheck(this));
@@ -1309,13 +1321,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         gameInfo.setText("Poker Texas Hold’em is a poker game where " +
                 "players compete against each other with the goal of " +
                 "obtaining " + "“the pot” or collection of money assembled " +
-                "by participants on " + "the table. The pot builds as players " +
+                "by participants on " + "the table. The pot increases as players " +
                 "raise bets against one " + "another depending on their " +
-                "confidence with their hand of " + "cards.\n");
+                "confidence with their cards.\n");
 
         TextView description = myActivity.findViewById(R.id.procedure);
         description.setText("Each player is dealt two cards, which are known " +
-                "as “hole” cards, once the initial buy ins are set. Next, " +
+                "as “hole” cards once the initial buy ins are set. Next, " +
                 "players have the chance to place bets which forces " +
                 "others to: match the bet (call), leave the round (fold)," +
                 " or bet an additional amount (raise). Then, three “community”" +
@@ -1333,6 +1345,34 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 " there are that round. If the pot has an odd number of chips," +
                 " the extra chip will be given to the player leftmost of " +
                 "the dealer." );
+    }
+
+    public void setHelperGUISpanish(){
+        nextInfoButton = myActivity.findViewById(R.id.nextButton);
+        exitButtonLeft = myActivity.findViewById(R.id.exitButton);
+        page = 1;
+        nextInfoButton.setOnClickListener(this);
+        exitButtonLeft.setOnClickListener(this);
+        TextView gameInfo = myActivity.findViewById(R.id.intentionOfGame);
+        gameInfo.setText("Poker Texas Hold'em es un juego donde los jugadores compiten con el " +
+                "objetivo de obtener el bote o el dinero reunido por los participantes en la " +
+                "mesa. El bote aumenta a medida que los jugadores hacen apuesstas uno contra otro" +
+                " depnendiendo de su confianza con sus cartas.\n");
+
+        TextView description = myActivity.findViewById(R.id.procedure);
+        description.setText("A cada jugador se le repartan dos cartas que se conocen como 'hole " +
+                "cards' ya cuando las ciegas estan apueastas. Por lo general, el ganador de cada " +
+                "mano de poker es el jugador que tiene la mano de valor mas alta. Esto se toma" +
+                "caso cuando todos muestran las cartas al final de la mano en curso. Esto " +
+                "normalmente esto se conoce como confrontación final. O gana el jugador que " +
+                "realiza la última apuesta no igualada por nadie más y gana así sin necesidad de " +
+                "llegar a la confrontación. Los juegos de poker incluye apuestas obligatorias. En" +
+                " este juego se conocen como la ciega grande y la ciega pequeña. Estas apuestas " +
+                "suponen el punto es para actuar como el primer incentivo que los jugadores " +
+                "tienen para ganar la mano. El juego continua con rondas de apuesta y aumentando " +
+                "el tamaño del bote. Al final el jugador con la mano mas mejor gana el bote de " +
+                "dinero y la siguiente ronda empieza. Mira la sección de 'Clasificación De Manos'" +
+                " por mas información.");
     }
 
     public void setHelperGUIpg2(){

@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Clasificacion De Manos"
+            android:text="Clasificación De Manos"
             android:textColor="@color/white"
             android:textSize="60sp"
             app:fontFamily="@font/anton" />
