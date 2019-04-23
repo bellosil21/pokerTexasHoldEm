@@ -140,7 +140,10 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer dud;
     private MediaPlayer raiseblinds;
     private MediaPlayer showcardssound;
+    private MediaPlayer carddealingsound;
+    private MediaPlayer checksound;
 
+    private ArrayList<GameInfo> notifyPlayers;
 
     // TextView for Round Number
     private TextView roundNum;
@@ -150,6 +153,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Store the last end of round
     private PokerEndOfRound lastEndOfRound;
+
+    // boolean for the start round sound
+    private boolean playedStartRoundSound = true;
 
     // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
@@ -282,6 +288,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.raiseblinds = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.raiseblinds);
         this.showcardssound = MediaPlayer.create(myActivity.getApplicationContext(),
                 R.raw.showcardssound);
+        this.carddealingsound = MediaPlayer.create(myActivity.getApplicationContext(),
+                R.raw.cardsdealing);
+        this.checksound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.checksound);
         /**
          * External Citation
          *  Date: 14 April 2019
@@ -328,6 +337,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.exitGame.setOnClickListener(this);
         this.standings.setOnClickListener(this);
 
+        this.notifyPlayers = new ArrayList<GameInfo>();
+
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
         this.player2Status = activity.findViewById(R.id.player2Status);
@@ -361,8 +372,13 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             updateGui();
-            if(state.getTurnTracker().getActivePlayerID() == this.playerNum){
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum &&
+                    state.getNumPhase() != 0){
                 roundSound.start();
+            }
+            else if(state.getNumPhase() == 0 && playedStartRoundSound){
+                carddealingsound.start();
+                playedStartRoundSound = false;
             }
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
@@ -389,6 +405,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
         } else if (info instanceof PokerEndOfRound) {
             lastEndOfRound = (PokerEndOfRound)info;
+            playedStartRoundSound = false;
             //tell the player of the new round standings
             if (showStandings) {
                 setRoundStandings();
@@ -944,7 +961,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param action the player's last action
      */
     private void updateAction(TextView tv, GameInfo action) {
-        //TODO: Include this with spanish implementation
         if (action == null) {
             tv.setText("");
         } else if(isSpanish) {
@@ -971,6 +987,31 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 tv.setText("Fold");
             } else if (action instanceof PokerRaiseBetInfo) {
                 tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
+            }
+        }
+        if (action instanceof PokerAllInInfo) {
+        } else if (action instanceof PokerCallInfo) {
+        } else if (action instanceof PokerCheckInfo) {
+            int playerID = ((PokerCheckInfo) action).getPlayerID();
+            if(!(notifyPlayers.get(playerID) instanceof PokerCheckInfo)){
+
+                notifyPlayers.set(playerID, action);
+                checksound.start();
+            }
+        } else if (action instanceof PokerFoldInfo) {
+        } else if (action instanceof PokerRaiseBetInfo) {
+            int playerID = ((PokerRaiseBetInfo) action).getPlayerID();
+            if(!(notifyPlayers.get(playerID) instanceof PokerRaiseBetInfo)){
+                int bet = action.get
+                notifyPlayers.set(playerID, action);
+                if(bet == 420){
+                    e1.start();
+                }
+                else if(bet == 666){
+                    e6.start();
+                } else{
+                    chipSound.start();
+                }
             }
         }
     }
@@ -1087,17 +1128,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
-            }
-            if(state.getTurnTracker().getActivePlayerID() == this.playerNum) {
-                if(bet == 420){
-                    e1.start();
-                }
-                else if(bet == 666){
-                    e6.start();
-                } else{
-                    chipSound.start();
-                }
-
             }
 
             /**
