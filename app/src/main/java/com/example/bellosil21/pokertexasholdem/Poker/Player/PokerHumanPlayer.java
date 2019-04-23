@@ -143,7 +143,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer carddealingsound;
     private MediaPlayer checksound;
 
-    private ArrayList<GameInfo> notifyPlayers;
 
     // TextView for Round Number
     private TextView roundNum;
@@ -180,6 +179,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Boolean for dealing with language change
     private boolean isSpanish = false; //because getTopView needs it
+    private boolean isMyTurn = true;
 
     // Boolean for standings
     private boolean showStandings = false;
@@ -337,8 +337,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.exitGame.setOnClickListener(this);
         this.standings.setOnClickListener(this);
 
-        this.notifyPlayers = new ArrayList<GameInfo>();
-
         // Setting references to each player's small/big blind image locations
         this.player1Status = activity.findViewById(R.id.player1Status);
         this.player2Status = activity.findViewById(R.id.player2Status);
@@ -371,15 +369,31 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
             state = (PokerGameState) info;
-            updateGui();
-            if(state.getTurnTracker().getActivePlayerID() == this.playerNum &&
-                    state.getNumPhase() != 0){
+
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
                 roundSound.start();
+                // tell the player if it is their turn
+                    if(isSpanish){
+                        Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
+                                Toast.LENGTH_SHORT).show();
+                        this.isMyTurn = false;
+                    }
+                    else{
+                        Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                        "your turn.",
+                                Toast.LENGTH_SHORT).show();
+                        this.isMyTurn = false;
+                    }
             }
-            else if(state.getNumPhase() == 0 && playedStartRoundSound){
-                carddealingsound.start();
-                playedStartRoundSound = false;
+            /*
+            This simply can't be an else because it will allow the original statement above to
+            run since isMyTurn is true. We need to specify that its not our turn in order to
+            prepare this variable for the next time its our turn.
+             */
+            else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
+                this.isMyTurn = true; //just to get it ready for the next time its actually my turn.
             }
+            updateGui();
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
                 dud.start();
@@ -405,7 +419,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
         } else if (info instanceof PokerEndOfRound) {
             lastEndOfRound = (PokerEndOfRound)info;
-            playedStartRoundSound = false;
             //tell the player of the new round standings
             if (showStandings) {
                 setRoundStandings();
@@ -590,18 +603,22 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         getActivePlayerID()] + "'s Turn");
             }
 
+            /*
             // tell the player if it is their turn
             if (activePlayerID == playerNum) {
-                if(isSpanish){
+                if(isSpanish && isMyTurn){
                     Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
                             Toast.LENGTH_SHORT).show();
+                    //isMyTurn = false;
                 }
-                else{
+                else if(isMyTurn){
                     Toast.makeText(myActivity.getApplicationContext(), "It is " +
                                     "your turn.",
                             Toast.LENGTH_SHORT).show();
+                    //isMyTurn = false;
                 }
             }
+            */
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
@@ -989,31 +1006,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 tv.setText("Raised by " + ((PokerRaiseBetInfo) action).getNetRaise());
             }
         }
-        if (action instanceof PokerAllInInfo) {
-        } else if (action instanceof PokerCallInfo) {
-        } else if (action instanceof PokerCheckInfo) {
-            int playerID = ((PokerCheckInfo) action).getPlayerID();
-            if(!(notifyPlayers.get(playerID) instanceof PokerCheckInfo)){
-
-                notifyPlayers.set(playerID, action);
-                checksound.start();
-            }
-        } else if (action instanceof PokerFoldInfo) {
-        } else if (action instanceof PokerRaiseBetInfo) {
-            int playerID = ((PokerRaiseBetInfo) action).getPlayerID();
-            if(!(notifyPlayers.get(playerID) instanceof PokerRaiseBetInfo)){
-                int bet = action.get
-                notifyPlayers.set(playerID, action);
-                if(bet == 420){
-                    e1.start();
-                }
-                else if(bet == 666){
-                    e6.start();
-                } else{
-                    chipSound.start();
-                }
-            }
-        }
     }
 
     /**
@@ -1128,6 +1120,17 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
+            }
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum) {
+                if(bet == 420){
+                    e1.start();
+                }
+                else if(bet == 666){
+                    e6.start();
+                } else{
+                    chipSound.start();
+                }
+
             }
 
             /**
