@@ -140,6 +140,8 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer dud;
     private MediaPlayer raiseblinds;
     private MediaPlayer showcardssound;
+    private MediaPlayer carddealingsound;
+    private MediaPlayer checksound;
 
 
     // TextView for Round Number
@@ -150,6 +152,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Store the last end of round
     private PokerEndOfRound lastEndOfRound;
+
+    // boolean for the start round sound
+    private boolean playedStartRoundSound = true;
 
     // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
@@ -174,6 +179,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Boolean for dealing with language change
     private boolean isSpanish = false; //because getTopView needs it
+    private boolean isMyTurn = true;
 
     // Boolean for standings
     private boolean showStandings = false;
@@ -282,6 +288,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.raiseblinds = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.raiseblinds);
         this.showcardssound = MediaPlayer.create(myActivity.getApplicationContext(),
                 R.raw.showcardssound);
+        this.carddealingsound = MediaPlayer.create(myActivity.getApplicationContext(),
+                R.raw.cardsdealing);
+        this.checksound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.checksound);
         /**
          * External Citation
          *  Date: 14 April 2019
@@ -360,10 +369,31 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
             state = (PokerGameState) info;
-            updateGui();
-            if(state.getTurnTracker().getActivePlayerID() == this.playerNum){
+
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
                 roundSound.start();
+                // tell the player if it is their turn
+                    if(isSpanish){
+                        Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
+                                Toast.LENGTH_SHORT).show();
+                        this.isMyTurn = false;
+                    }
+                    else{
+                        Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                        "your turn.",
+                                Toast.LENGTH_SHORT).show();
+                        this.isMyTurn = false;
+                    }
             }
+            /*
+            This simply can't be an else because it will allow the original statement above to
+            run since isMyTurn is true. We need to specify that its not our turn in order to
+            prepare this variable for the next time its our turn.
+             */
+            else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
+                this.isMyTurn = true; //just to get it ready for the next time its actually my turn.
+            }
+            updateGui();
         } else if (info instanceof IllegalMoveInfo) {
                 flash(0xFFFF0000, 50);
                 dud.start();
@@ -573,18 +603,22 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         getActivePlayerID()] + "'s Turn");
             }
 
+            /*
             // tell the player if it is their turn
             if (activePlayerID == playerNum) {
-                if(isSpanish){
+                if(isSpanish && isMyTurn){
                     Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
                             Toast.LENGTH_SHORT).show();
+                    //isMyTurn = false;
                 }
-                else{
+                else if(isMyTurn){
                     Toast.makeText(myActivity.getApplicationContext(), "It is " +
                                     "your turn.",
                             Toast.LENGTH_SHORT).show();
+                    //isMyTurn = false;
                 }
             }
+            */
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
@@ -944,7 +978,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      * @param action the player's last action
      */
     private void updateAction(TextView tv, GameInfo action) {
-        //TODO: Include this with spanish implementation
         if (action == null) {
             tv.setText("");
         } else if(isSpanish) {
