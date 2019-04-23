@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/info_backdrop">
@@ -27,7 +28,359 @@
         android:layout_height="match_parent"
         android:layout_weight="35"
         android:background="@android:drawable/screen_background_dark_transparent"
-        android:orientation="vertical"/>
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/guiAnnotatedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/gui_info" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/gameStandings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1. Game Standings:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/gameStandingsInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enables and disables the showing of the game standings"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/gameInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2. Game Info:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/gameInfoDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open up the rules of the game and how to play."
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3. Settings:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/settingsDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Opens the settings menu"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/exitGame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4. Exit Game:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/exitGameDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exits the Game"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/handRanking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5. Hand Rankings:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/handRankingDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Opens the listing of hand rankings from highest to lowest"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/bettingSeekBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6. Betting Search:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/bettingSearchDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Use this slider to search for how much you want to bet"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/bettingWrite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7. Betting:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/textV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Use this to type out how much you would like to bet exactly and shows how much you currently want to bet using the Betting Search (6)"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/sitOut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8. Sit Out/Sit In:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/sitOutDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enable/Disable the decision if you would like to stay in the game in the next round"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/showHideCards"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9. Show/Hide Cards:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/showHideCardsDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enable/Disable other players to see your cards"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/raiseBet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10. Raise/Bet:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/raiseBetDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Raises the max bet to the amount you specify shown in the Bet Amount (7)"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/fold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11. Fold:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/foldDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Admit defeat this round and stop your hand from making any more bets this round"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12. Call:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/callDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Matches your current bet with the bet amount of the highest Better"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="13. Check:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/checkDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="If you don't need to call any amount, skips your betting goes to the next player's turn"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/bigBlind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14. Big Blind:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/bigBlindDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Indicates that this player must place the highest mandatory bet in the beginning of the round"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/smallBlind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15. Small Blind:"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/smallBlindDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shows that the indicated player must place a mandatory bet half of big blind's bet in the beginning of the round"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/playerMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="16. Player's Money"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+                <TextView
+                    android:id="@+id/playerMoneyDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shows how much money you currently have"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/anton" />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

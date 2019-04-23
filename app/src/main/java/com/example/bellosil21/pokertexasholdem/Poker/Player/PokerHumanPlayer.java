@@ -1380,6 +1380,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         exitButtonRight = myActivity.findViewById(R.id.exitButton);
         previousInfoButton.setOnClickListener(this);
         exitButtonRight.setOnClickListener(this);
+
+        ImageView gameInfo = myActivity.findViewById(R.id.guiAnnotatedLayout);
+        gameInfo.setImageResource(R.drawable.gui_info);
     }
 
     /**
