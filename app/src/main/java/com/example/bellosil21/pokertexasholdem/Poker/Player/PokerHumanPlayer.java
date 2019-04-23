@@ -177,12 +177,15 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private ImageView pair;
     private ImageView hCard;
 
-    // Boolean for dealing with language change
-    private boolean isSpanish = false; //because getTopView needs it
+    // Boolean variables for actions.
+    private boolean isSpanish = false;
     private boolean isMyTurn = true;
-
-    // Boolean for standings
+    private boolean betSubmitted = false;
+    private boolean isCheckMoveValid = false;
     private boolean showStandings = false;
+
+    //Variable to store the last bet of this given player.
+    private int lastBet;
 
     /** constants **/
     private static final String SHOW_CARDS = "SHOW CARDS";
@@ -369,10 +372,44 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
             state = (PokerGameState) info;
+            /*
+            So basically, we check to see if the bet raised was valid on the onclick method, and
+            if was, than betSubmitted is set to true meaning that it was a valid move and we can
+            now play the sounds appropriately.
+             */
+            if(betSubmitted){
+                if(lastBet == 420){
+                    e1.start();
+                }
+                else if(lastBet == 666){
+                    e6.start();
+                }
+                else if(lastBet == 69){
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast.makeText(myActivity.getApplicationContext(), "Nice.",
+                            duration).show();
+                }
+                else{
+                    chipSound.start();
+                }
+                lastBet = 0;
+                betSubmitted = false;
+            }
 
+            /*
+            We check to see if the 'check' move was valid before playing the sound.
+             */
+            if(isCheckMoveValid){
+                checksound.start();
+                isCheckMoveValid = false;
+            }
+
+            /*
+            * This is to play the sound of the start of a turn, and also making sure that the
+            * toast indicating that its 'my' turn isn't displayed repeatedly.
+             */
             if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
                 roundSound.start();
-                // tell the player if it is their turn
                     if(isSpanish){
                         Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
                                 Toast.LENGTH_SHORT).show();
@@ -386,26 +423,30 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                     }
             }
             /*
-            This simply can't be an else because it will allow the original statement above to
-            run since isMyTurn is true. We need to specify that its not our turn in order to
-            prepare this variable for the next time its our turn.
+             * This simply can't be an else because it will allow the original statement above to
+             * run since isMyTurn is true. We need to specify that its not our turn in order to
+             * prepare this variable for the next time its our turn.
              */
             else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
                 this.isMyTurn = true; //just to get it ready for the next time its actually my turn.
             }
             updateGui();
         } else if (info instanceof IllegalMoveInfo) {
-                flash(0xFFFF0000, 50);
-                dud.start();
-                if(isSpanish){
-                    Toast.makeText(myActivity.getApplicationContext(), "Movimineto Invalido.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(myActivity.getApplicationContext(), "Invalid move.",
-                            Toast.LENGTH_SHORT).show();
-                }
+            betSubmitted = false;
+            isCheckMoveValid = false;
+            flash(0xFFFF0000, 50);
+            dud.start();
+            if(isSpanish){
+                Toast.makeText(myActivity.getApplicationContext(), "Movimineto Invalido.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(myActivity.getApplicationContext(), "Invalid move.",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else if (info instanceof NotYourTurnInfo) {
+            isCheckMoveValid = false;
+            betSubmitted = false;
             flash(0xFFFF0000, 50);
             dud.start();
             if(isSpanish){
@@ -603,22 +644,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         getActivePlayerID()] + "'s Turn");
             }
 
-            /*
-            // tell the player if it is their turn
-            if (activePlayerID == playerNum) {
-                if(isSpanish && isMyTurn){
-                    Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
-                            Toast.LENGTH_SHORT).show();
-                    //isMyTurn = false;
-                }
-                else if(isMyTurn){
-                    Toast.makeText(myActivity.getApplicationContext(), "It is " +
-                                    "your turn.",
-                            Toast.LENGTH_SHORT).show();
-                    //isMyTurn = false;
-                }
-            }
-            */
         }
 
         int callAmount = state.getBetController().getCallAmount(playerNum);
@@ -1098,14 +1123,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
               }
             }
         } else if (v.equals(checkButton)) {
+            isCheckMoveValid = true;
             game.sendAction(new PokerCheck(this));
         } else if (v.equals(betButton)) {
-
             // make sure the TextEdit contains an integer and the player has
             // enough to bet the amount
             int allPlayerMoney = state.getBetController().getPlayerChips(playerNum);
-
-
             int bet;
 
             try{
@@ -1121,17 +1144,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 Log.i("bet variable", "Bet variable was not in proper format.");
                 return;
             }
-            if(state.getTurnTracker().getActivePlayerID() == this.playerNum) {
-                if(bet == 420){
-                    e1.start();
-                }
-                else if(bet == 666){
-                    e6.start();
-                } else{
-                    chipSound.start();
-                }
 
-            }
 
             /**
              External Citation
@@ -1168,6 +1181,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                     MessageBox.popUpMessage("Cant bet a negative amount!", this.myActivity);
                 }
             }
+
+            /*
+            * cant have this code here because it assumes that the bet action was legal, but
+            * thats only verified in the recieve info method, which is saved by the betSubmitted
+            * variable.
             else if(bet == 420) {
                 int duration = Toast.LENGTH_SHORT;
                 Toast.makeText(myActivity.getApplicationContext(), ";)",
@@ -1178,7 +1196,11 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 Toast.makeText(myActivity.getApplicationContext(), "Nice.",
                         duration).show();
             }
+            */
+
             int callAmount = state.getBetController().getCallAmount(playerNum);
+            betSubmitted = true;
+            lastBet = bet;
             game.sendAction(new PokerRaiseBet(this, bet, callAmount));
 
         } else if (v.equals(showHideCardsButton)) {
