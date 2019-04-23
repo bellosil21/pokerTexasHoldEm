@@ -17,7 +17,7 @@ public class HankRankerTest {
     @Test
     public void straightFlush() {
         Hand player = new Hand();
-        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
+        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.HEART, Card.Rank.KING));
 
         ArrayList<Card> community = new ArrayList<>();
@@ -25,7 +25,7 @@ public class HankRankerTest {
         community.add(new Card(Card.Suit.HEART, Card.Rank.JACK));
         community.add(new Card(Card.Suit.HEART, Card.Rank.TEN));
         community.add(new Card(Card.Suit.HEART, Card.Rank.NINE));
-        community.add(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.HEART, Card.Rank.ACE));
 
         HandRanker hr = new HandRanker(player, community);
 
