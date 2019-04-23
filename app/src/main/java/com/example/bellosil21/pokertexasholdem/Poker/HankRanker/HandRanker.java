@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.bellosil21.pokertexasholdem.Poker.Hand.Card.Rank.NUM_OF_RANKS;
+
 
 /**
  * Contains the methods to calculate the best five card poker hand given 5 community
@@ -49,7 +51,7 @@ public class HandRanker implements Serializable {
             cardSet.add(card);
         }
 
-        rankOccurrences = new int[Card.Rank.NUM_OF_RANKS];
+        rankOccurrences = new int[NUM_OF_RANKS];
     }
 
 
@@ -313,13 +315,23 @@ public class HandRanker implements Serializable {
      */
     private CardCollection findStraight() {
         int toCheck = -1; // marker for the highest rank of the straight
+        boolean wrap = false;
 
         // start at the highest index and only go to index FIVE_CARD_HAND - 1
         // since the index just left of it will never create a run of 5 cards
-        for (int i = rankOccurrences.length - 1; i >= FIVE_CARD_HAND - 1; i--) {
+        for (int i = rankOccurrences.length - 1; i >= FIVE_CARD_HAND - 2; i--) {
+            int lowestIndex;
+            if (i - 4 < 0){
+                lowestIndex = rankOccurrences.length - 1;
+                wrap = true;
+            }
+            else{
+                lowestIndex = i - 4;
+            }
+
             if (rankOccurrences[i] > 0 && rankOccurrences[i - 1] > 0 &&
                     rankOccurrences[i - 2] > 0 && rankOccurrences[i - 3] > 0&&
-                    rankOccurrences[i - 4] > 0) {
+                    rankOccurrences[lowestIndex] > 0) {
                 toCheck = i;
                 break;
             }
@@ -338,7 +350,12 @@ public class HandRanker implements Serializable {
         int ind = 0; // tracks how many cards are in the toReturn array once it is 5, we found
         // all the cards
         for (Card card : cardSet) {
-            if (toCheck == card.getRank().getValue()) {
+
+            if (wrap && card.getRank().getValue() == Card.Rank.ACE.getValue()){
+                toReturn[ind] = new Card(card);
+                ind++;
+            }
+            else if (toCheck == card.getRank().getValue()) {
                 toReturn[ind] = new Card(card);
 
                 ind++;

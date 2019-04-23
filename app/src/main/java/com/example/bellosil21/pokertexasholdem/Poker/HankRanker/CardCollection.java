@@ -21,8 +21,7 @@ public class CardCollection implements Serializable {
     /**
      * Constructor for a CardCollection object
      *
-     * @param cards - array of cards containing the player's cards and
-     *              community cards
+     * @param cards - array of cards containing the best hand for the player
      * @param handRank - the highest hand rank the player has with all cards
      *                 in the cards array accounted for
      */
@@ -48,13 +47,23 @@ public class CardCollection implements Serializable {
      * @return the rank of the highest card in the collection
      */
     public Card.Rank getHighestRank() {
+        boolean hasFive = false;
         Card.Rank highestRank = cards[0].getRank();
 
         // Compares each card and saves the highest ranking card in the list
         for (int i = 1; i < cards.length; i++) {
-            if (cards[0].getRank().getValue() > highestRank.getValue()) {
+            if (cards[i].getRank().getValue() > highestRank.getValue()) {
                 highestRank = cards[i].getRank();
             }
+            if (cards[i].getRank() == Card.Rank.FIVE){
+                hasFive = true;
+            }
+        }
+
+        if (hasFive && highestRank.getValue() == Card.Rank.ACE.getValue()
+                &&(handRank.equals(HandRank.STRAIGHT) ||
+                (handRank.equals(HandRank.STRAIGHT_FLUSH)))){
+            highestRank = Card.Rank.FIVE;
         }
 
         // Returns the highest card's rank
