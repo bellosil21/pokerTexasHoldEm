@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -143,7 +144,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer carddealingsound;
     private MediaPlayer checksound;
 
-
     // TextView for Round Number
     private TextView roundNum;
 
@@ -152,9 +152,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // Store the last end of round
     private PokerEndOfRound lastEndOfRound;
-
-    // boolean for the start round sound
-    private boolean playedStartRoundSound = true;
 
     // Button references from the Hand Ranking listings GUI and game info GUI
     private int page = 1;
@@ -227,7 +224,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     public void setAsGui(GameMainActivity activity) {
 
         myActivity = activity;
-        //the boolean variable is used to determine the proper activity layout
+        // the boolean variable is used to determine the proper activity layout
         if(isSpanish) {
             activity.setContentView(R.layout.activity_main_spanish);
         }
@@ -256,8 +253,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         // settings the round description variables
         this.roundStandings = activity.findViewById(R.id.roundResults);
 
-        // Setting all editable views for betting and setting a listener for
-        // the SeekBar
+        // Setting all editable views for betting and setting a listener for the SeekBar
         this.chipBetSeekbar = activity.findViewById(R.id.bettingSearch);
         chipBetSeekbar.setOnSeekBarChangeListener(this);
         this.chipBetText = activity.findViewById(R.id.betInsertText);
@@ -280,7 +276,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.callButton.setOnClickListener(this);
         this.handRankInfo.setOnClickListener(this);
 
-
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
         this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
@@ -302,6 +297,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
          *  Solution: Used the MediaPlayer class to create sounds and play them when buttons are
          *  pressed.
          */
+
 
         // Setting references to the ImageViews for the Cards;
         this.firstFlop = activity.findViewById(R.id.flop3);
@@ -335,6 +331,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.exitGame = activity.findViewById(R.id.exitGame);
         this.standings = activity.findViewById(R.id.standingsButton);
 
+        // Setting references for menu buttons
         this.helpButton.setOnClickListener(this);
         this.settings.setOnClickListener(this);
         this.exitGame.setOnClickListener(this);
@@ -363,7 +360,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         if (info == null) {
             return;
         }
-
         if (info instanceof PokerGameState) {
             // we do not want to update if it is the same state
             if (state != null){
@@ -373,9 +369,9 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             state = (PokerGameState) info;
             /*
-            So basically, we check to see if the bet raised was valid on the onclick method, and
-            if was, than betSubmitted is set to true meaning that it was a valid move and we can
-            now play the sounds appropriately.
+             * So basically, we check to see if the bet raised was valid on the onclick method, and
+             * if was, than betSubmitted is set to true meaning that it was a valid move and we can
+             * now play the sounds appropriately.
              */
             if(betSubmitted){
                 if(lastBet == 420){
@@ -390,25 +386,24 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                             duration).show();
                 }
                 else{
+                    // plays the chip sound when a legal bet is placed
                     chipSound.start();
                 }
                 lastBet = 0;
                 betSubmitted = false;
             }
-
-            /*
-            We check to see if the 'check' move was valid before playing the sound.
-             */
+            // We check to see if the 'check' move was valid before playing the sound.
             if(isCheckMoveValid){
+                // sound to notify the player that they have legally checked
                 checksound.start();
                 isCheckMoveValid = false;
             }
-
             /*
-            * This is to play the sound of the start of a turn, and also making sure that the
-            * toast indicating that its 'my' turn isn't displayed repeatedly.
+             * This is to play the sound of the start of a turn, and also making sure that the
+             * toast indicating that its 'my' turn isn't displayed repeatedly.
              */
             if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
+                // plays a sound to notify the user that it is their turn
                 roundSound.start();
                     if(isSpanish){
                         Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
@@ -428,7 +423,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
              * prepare this variable for the next time its our turn.
              */
             else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
-                this.isMyTurn = true; //just to get it ready for the next time its actually my turn.
+                this.isMyTurn = true; //just to get it ready for the next time its actually my turn
             }
             updateGui();
         } else if (info instanceof IllegalMoveInfo) {
@@ -460,7 +455,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
         } else if (info instanceof PokerEndOfRound) {
             lastEndOfRound = (PokerEndOfRound)info;
-            //tell the player of the new round standings
+            // tell the player of the new round standings
             if (showStandings) {
                 setRoundStandings();
             }
@@ -469,6 +464,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
             int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
             StringBuilder toDisplay = new StringBuilder();
+            // sound to notify the players that the blinds have been raised
             raiseblinds.start();
 
             if(isSpanish){
@@ -485,7 +481,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 toDisplay.append("\nNew Small Blind: $");
                 toDisplay.append(smallBlind);
             }
-
             MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         } else if (info instanceof PokerPlayerOutOfFunds) {
             // tell this player a player is out of funds
@@ -703,6 +698,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         int playerSB = state.getTurnTracker().getSmallBlindID();
         int playerBB = state.getTurnTracker().getBigBlindID();
 
+        // rotating the blind images
         if (playerSB == playerNum) {
             player1Status.setImageResource(R.drawable.small_blind);
         }
@@ -993,7 +989,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else {
             return;
         }
-
     }
 
     /**
@@ -1166,7 +1161,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                             a NumberFormatException. With this information, we used a try/catch
                             that would prevent the program from crashing.
              */
-
             if (bet > allPlayerMoney) {
                 if(isSpanish){
                     MessageBox.popUpMessage("Entrada demasiado grande!!", this.myActivity);
@@ -1187,21 +1181,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
 
-            /*
-            * cant have this code here because it assumes that the bet action was legal, but
-            * thats only verified in the recieve info method, which is saved by the betSubmitted
-            * variable.
-            else if(bet == 420) {
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), ";)",
-                        duration).show();
-            }
-            else if(bet == 69){
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
-                        duration).show();
-            }
-            */
 
             int callAmount = state.getBetController().getCallAmount(playerNum);
             betSubmitted = true;
@@ -1214,6 +1193,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 if (showHideCardsButton.getText().equals(MOSTRAR_CARTAS)) {
                     showHideCardsButton.setText(ESCONDE_CARTAS);
                     game.sendAction(new PokerShowHideCards(this, true));
+
                     showcardssound.start();
                 } else {
                     showHideCardsButton.setText(MOSTRAR_CARTAS);
@@ -1224,6 +1204,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 if (showHideCardsButton.getText().equals(SHOW_CARDS)) {
                     showHideCardsButton.setText(HIDE_CARDS);
                     game.sendAction(new PokerShowHideCards(this, true));
+                    // sound to notify the players that they have shown their cards
                     showcardssound.start();
                 } else {
                     showHideCardsButton.setText(SHOW_CARDS);
@@ -1249,7 +1230,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
             }
             game.sendAction(new PokerSitOut(this));
         } else if(v.equals(helpButton)) {
-            // TODO: implement some sort of guide on the hand rankings and instructions
+            // implements the language change in the settings button
         } else if(v.equals(settings)) {
             MessageBox.popUpChoice("Select Language", "English", "Español",
                     new DialogInterface.OnClickListener() {
@@ -1287,7 +1268,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 //tell the player if there are no standings to be displayed
                 if (lastEndOfRound == null) {
                     if (isSpanish) {
-                        //TODO: implement spanish
                     } else {
                         MessageBox.popUpMessage("Standings will be" +
                                 " " +
