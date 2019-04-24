@@ -6,6 +6,14 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests the Card methods
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class CardTest {
 
     @Test

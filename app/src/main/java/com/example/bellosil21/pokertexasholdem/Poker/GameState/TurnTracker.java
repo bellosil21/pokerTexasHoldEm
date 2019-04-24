@@ -324,7 +324,7 @@ public class TurnTracker implements Serializable {
     /**
      * Checks if the game is over.
      *
-     * @return -1 if the difference between the number of player and the size
+     * @return -1 if the difference between the number of players and the size
      * of removedPlayers is greater than 1; otherwise, return the playerID of
      * the only player remaining.
      */

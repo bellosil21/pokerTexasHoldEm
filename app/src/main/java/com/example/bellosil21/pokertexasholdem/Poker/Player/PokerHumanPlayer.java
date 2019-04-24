@@ -13,7 +13,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
@@ -141,7 +140,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer dud;
     private MediaPlayer raiseblinds;
     private MediaPlayer showcardssound;
-    private MediaPlayer carddealingsound;
     private MediaPlayer checksound;
 
     // TextView for Round Number
@@ -286,8 +284,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.raiseblinds = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.raiseblinds);
         this.showcardssound = MediaPlayer.create(myActivity.getApplicationContext(),
                 R.raw.showcardssound);
-        this.carddealingsound = MediaPlayer.create(myActivity.getApplicationContext(),
-                R.raw.cardsdealing);
         this.checksound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.checksound);
         /**
          * External Citation
@@ -1101,6 +1097,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 updateHandGui();
             }
         } else if (v.equals(nextInfoButton)){
+            // Changes to the next page for the Info Page
             if (page == 1){
                 page = 2;
                 if(isSpanish){
@@ -1112,6 +1109,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 setHelperGUIpg2();
             }
         } else if (v.equals(previousInfoButton)){
+            // Changes to the previous page for the Info Page
             if (page == 2){
                 page = 1;
               if(isSpanish){
@@ -1245,8 +1243,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
             game.sendAction(new PokerSitOut(this));
-        } else if(v.equals(helpButton)) {
-            // implements the language change in the settings button
         } else if(v.equals(settings)) {
             MessageBox.popUpChoice("Select Language", "English", "Español",
                     new DialogInterface.OnClickListener() {
@@ -1367,12 +1363,19 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.hCard.setImageResource(R.drawable.high_card);
     }
 
+    /**
+     * Sets up the first page of the helper screen to inform users of how to
+     * play the game
+     */
     public void setHelperGUI(){
+        // Sets references to the element in the help GUI
         nextInfoButton = myActivity.findViewById(R.id.nextButton);
         exitButtonLeft = myActivity.findViewById(R.id.exitButton);
         page = 1;
         nextInfoButton.setOnClickListener(this);
         exitButtonLeft.setOnClickListener(this);
+
+        // Sets the texts for the rules of the game
         TextView gameInfo = myActivity.findViewById(R.id.intentionOfGame);
         gameInfo.setText("Poker Texas Hold’em is a poker game where " +
                 "players compete against each other with the goal of " +
@@ -1403,12 +1406,18 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 "the dealer." );
     }
 
+    /**
+     * Sets up the helper GUI to help the user play the game in Spanish
+     */
     public void setHelperGUISpanish(){
+        // Sets references to the element in the help GUI in Spanish
         nextInfoButton = myActivity.findViewById(R.id.nextButton);
         exitButtonLeft = myActivity.findViewById(R.id.exitButton);
         page = 1;
         nextInfoButton.setOnClickListener(this);
         exitButtonLeft.setOnClickListener(this);
+
+        // Sets the texts for the rules of the game in Spanish
         TextView gameInfo = myActivity.findViewById(R.id.intentionOfGame);
         gameInfo.setText("Poker Texas Hold'em es un juego donde los jugadores compiten con el " +
                 "objetivo de obtener el bote o el dinero reunido por los participantes en la " +
@@ -1431,14 +1440,25 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 " por mas información.");
     }
 
+    /**
+     * Sets up the second page of the helper GUI showing the an annotated
+     * image of how to use the GUI
+     */
     public void setHelperGUIpg2(){
         previousInfoButton = myActivity.findViewById(R.id.previousButton);
         exitButtonRight = myActivity.findViewById(R.id.exitButton);
         previousInfoButton.setOnClickListener(this);
         exitButtonRight.setOnClickListener(this);
 
+        // Sets the ImageView to show how the player an annotated version of
+        // the GUI
         ImageView gameInfo = myActivity.findViewById(R.id.guiAnnotatedLayout);
-        gameInfo.setImageResource(R.drawable.gui_info);
+        if (isSpanish){
+            gameInfo.setImageResource(R.drawable.gui_info_pg2_spanish);
+        }
+        else{
+            gameInfo.setImageResource(R.drawable.gui_info);
+        }
     }
 
     /**

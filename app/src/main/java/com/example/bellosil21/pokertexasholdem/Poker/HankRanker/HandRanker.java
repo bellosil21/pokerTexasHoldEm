@@ -4,6 +4,7 @@ import com.example.bellosil21.pokertexasholdem.Poker.Hand.Card;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.Hand;
 import com.example.bellosil21.pokertexasholdem.Poker.Hand.SortCardByRank;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,29 +82,46 @@ public class HandRanker implements Serializable {
 
         // test to see if we have the best 5 card poker hand, then test the next best, and
         // then the next best, and so on, until we return the worst (high card)
-        CardCollection toReturn = findStraightFlush();
-        if (toReturn != null) { return toReturn; }
+            CardCollection toReturn = findStraightFlush();
+        if (cardSet.size() >= FIVE_CARD_HAND) {
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findStraightFlush();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findStraightFlush();
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findFourOfAKind();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findFourOfAKind();
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findFullHouse();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findFullHouse();
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findFlush();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findFlush();
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findStraight();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findStraight();
+            if (toReturn != null) {
+                return toReturn;
+            }
+            toReturn = findThreeOfAKind();
+            if (toReturn != null) {
+                return toReturn;
+            }
 
-        toReturn = findThreeOfAKind();
-        if (toReturn != null) { return toReturn; }
-
-        toReturn = findTwoPair();
-        if (toReturn != null) { return toReturn; }
+            toReturn = findTwoPair();
+            if (toReturn != null) {
+                return toReturn;
+            }
+        }
 
         toReturn = findOnePair();
         if (toReturn != null) { return toReturn; }
