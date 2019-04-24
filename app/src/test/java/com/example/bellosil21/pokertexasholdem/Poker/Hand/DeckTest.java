@@ -62,6 +62,6 @@ public class DeckTest {
         for (int rank = 0; rank < 13; rank++){
             assertEquals(4, rankOcc[rank]);
         }
-        
+
     }
 }
