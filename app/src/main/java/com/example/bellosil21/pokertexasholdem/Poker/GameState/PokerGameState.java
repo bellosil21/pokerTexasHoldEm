@@ -322,6 +322,4 @@ public class PokerGameState extends GameState {
     public void setNumPhase(int numPhase) {
         this.numPhase = numPhase;
     }
-
-    public Hand getPlayerHand(int playerIndex){return hands.get(playerIndex);}
 }

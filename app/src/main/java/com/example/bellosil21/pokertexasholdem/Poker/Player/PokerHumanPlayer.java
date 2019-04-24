@@ -1,5 +1,6 @@
 package com.example.bellosil21.pokertexasholdem.Poker.Player;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -132,7 +133,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // sounds for different actions
     private MediaPlayer chipSound;
-    private MediaPlayer roundSound;
+    private MediaPlayer ding;
     private MediaPlayer e1;
     private MediaPlayer e2;
     private MediaPlayer e6;
@@ -221,7 +222,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     public void setAsGui(GameMainActivity activity) {
 
         myActivity = activity;
-        // the boolean variable is used to determine the proper activity layout
+        //the boolean variable is used to determine the proper activity layout
         if(isSpanish) {
             activity.setContentView(R.layout.activity_main_spanish);
         }
@@ -275,7 +276,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
-        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
+        this.ding = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
         this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
         this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
         this.e6 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e6);
@@ -351,11 +352,77 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
      */
     @Override
     public void receiveInfo(GameInfo info) {
+
         if (info == null) {
             return;
         }
         if (info instanceof PokerGameState) {
-            receiveInfoGameState((PokerGameState)info);
+            // we do not want to update if it is the same state
+            if (state != null){
+                if (state.equals(info)) {
+                    return;
+                }
+            }
+            state = (PokerGameState) info;
+            /*
+             * So basically, we check to see if the bet raised was valid on the onclick method, and
+             * if was, than betSubmitted is set to true meaning that it was a valid move and we can
+             * now play the sounds appropriately.
+             */
+            if(betSubmitted){
+                if(lastBet == 420){
+                    e1.start();
+                }
+                else if(lastBet == 666){
+                    e6.start();
+                }
+                else if(lastBet == 69){
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast.makeText(myActivity.getApplicationContext(), "Nice.",
+                            duration).show();
+                }
+                else{
+                    // plays the chip sound when a legal bet is placed
+                    chipSound.start();
+                }
+                lastBet = 0;
+                betSubmitted = false;
+            }
+            // We check to see if the 'check' move was valid before playing the sound.
+            if(isCheckMoveValid){
+                // sound to notify the player that they have legally checked
+                checksound.start();
+                isCheckMoveValid = false;
+            }
+
+
+            /*
+             * This is to play the sound of the start of a turn, and also making sure that the
+             * toast indicating that its 'my' turn isn't displayed repeatedly.
+             */
+            if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
+                ding.start();
+                if (isSpanish) {
+                    Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
+                            Toast.LENGTH_SHORT).show();
+                    this.isMyTurn = false;
+                } else {
+                    Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                    "your turn.",
+                            Toast.LENGTH_SHORT).show();
+                    this.isMyTurn = false;
+                }
+
+            }
+            /*
+             * This simply can't be an else because it will allow the original statement above to
+             * run since isMyTurn is true. We need to specify that its not our turn in order to
+             * prepare this variable for the next time its our turn.
+             */
+            else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
+                this.isMyTurn = true; //just to get it ready for the next time its actually my turn
+            }
+            updateGui();
         } else if (info instanceof IllegalMoveInfo) {
             betSubmitted = false;
             isCheckMoveValid = false;
@@ -370,7 +437,19 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                         Toast.LENGTH_SHORT).show();
             }
         } else if (info instanceof NotYourTurnInfo) {
-            receiveInfoNotYourTurn();
+            isCheckMoveValid = false;
+            betSubmitted = false;
+            flash(0xFFFF0000, 50);
+            dud.start();
+            if(isSpanish){
+                Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(myActivity.getApplicationContext(), "It is not" +
+                                " your turn.",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else if (info instanceof PokerEndOfRound) {
             lastEndOfRound = (PokerEndOfRound)info;
             // tell the player of the new round standings
@@ -378,182 +457,76 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 setRoundStandings();
             }
         } else if (info instanceof PokerIncreasingBlinds) {
-            receiveInfoIncreasingBlinds((PokerIncreasingBlinds)info);
+            // tell the player of the new blinds
+            int smallBlind = ((PokerIncreasingBlinds) info).getNewSmallBlind();
+            int bigBlind = ((PokerIncreasingBlinds) info).getNewBigBlind();
+            StringBuilder toDisplay = new StringBuilder();
+            // sound to notify the players that the blinds have been raised
+            raiseblinds.start();
+
+            if(isSpanish){
+                toDisplay.append("Las ciegas estan aumentando!\n\n");
+                toDisplay.append("Nueva Ciega Grande: $");
+                toDisplay.append(bigBlind);
+                toDisplay.append("\nNueva Ciega pequena: $");
+                toDisplay.append(smallBlind);
+            }
+            else{
+                toDisplay.append("The blinds are increasing!\n\n");
+                toDisplay.append("New Big Blind: $");
+                toDisplay.append(bigBlind);
+                toDisplay.append("\nNew Small Blind: $");
+                toDisplay.append(smallBlind);
+            }
+            MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         } else if (info instanceof PokerPlayerOutOfFunds) {
-            receiveInfoPlayerOutOfFunds((PokerPlayerOutOfFunds)info);
-        }
-    }
+            // tell this player a player is out of funds
+            e2.start();
+            ArrayList<Integer> outOfFundPlayers =
+                    ((PokerPlayerOutOfFunds) info).getPlayerIDs();
 
-    /**
-     * receiveInfo helper for PokerGameState
-     * @param info the PokerGameState
-     */
-    private void receiveInfoGameState(PokerGameState info) {
-        // we do not want to update if it is the same state
-        if (state != null){
-            if (state.equals(info)) {
-                return;
-            }
-        }
-        state = info;
-        /*
-         * So basically, we check to see if the bet raised was valid on the onclick method, and
-         * if was, than betSubmitted is set to true meaning that it was a valid move and we can
-         * now play the sounds appropriately.
-         */
-        if(betSubmitted){
-            if(lastBet == 420){
-                e1.start();
-            }
-            else if(lastBet == 666){
-                e6.start();
-            }
-            else if(lastBet == 69){
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
-                        duration).show();
-            }
-            else{
-                // plays the chip sound when a legal bet is placed
-                chipSound.start();
-            }
-            lastBet = 0;
-            betSubmitted = false;
-        }
-        // We check to see if the 'check' move was valid before playing the sound.
-        if(isCheckMoveValid){
-            // sound to notify the player that they have legally checked
-            checksound.start();
-            isCheckMoveValid = false;
-        }
-        /*
-         * This is to play the sound of the start of a turn, and also making sure that the
-         * toast indicating that its 'my' turn isn't displayed repeatedly.
-         */
-        if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
-            // plays a sound to notify the user that it is their turn
-            roundSound.start();
-            if(isSpanish){
-                Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
-                        Toast.LENGTH_SHORT).show();
-                this.isMyTurn = false;
-            }
-            else{
-                Toast.makeText(myActivity.getApplicationContext(), "It is " +
-                                "your turn.",
-                        Toast.LENGTH_SHORT).show();
-                this.isMyTurn = false;
-            }
-        }
-        /*
-         * This simply can't be an else because it will allow the original statement above to
-         * run since isMyTurn is true. We need to specify that its not our turn in order to
-         * prepare this variable for the next time its our turn.
-         */
-        else if(state.getTurnTracker().getActivePlayerID() != this.playerNum){
-            this.isMyTurn = true; //just to get it ready for the next time its actually my turn
-        }
-        updateGui();
-    }
+            StringBuilder toDisplay = new StringBuilder();
 
-    /**
-     * receiveInfo helper for NotYourTurn info
-     */
-    private void receiveInfoNotYourTurn() {
-        isCheckMoveValid = false;
-        betSubmitted = false;
-        flash(0xFFFF0000, 50);
-        dud.start();
-        if(isSpanish){
-            Toast.makeText(myActivity.getApplicationContext(), "No es to turno.",
-                    Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(myActivity.getApplicationContext(), "It is not" +
-                            " your turn.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * receiveInfo helper for increasing blinds
-     * @param info PokerIncreasingBlinds info
-     */
-    private void receiveInfoIncreasingBlinds(PokerIncreasingBlinds info) {
-        // tell the player of the new blinds
-        int smallBlind = info.getNewSmallBlind();
-        int bigBlind = info.getNewBigBlind();
-        StringBuilder toDisplay = new StringBuilder();
-        // sound to notify the players that the blinds have been raised
-        raiseblinds.start();
-
-        if(isSpanish){
-            toDisplay.append("Las ciegas estan aumentando!\n\n");
-            toDisplay.append("Nueva Ciega Grande: $");
-            toDisplay.append(bigBlind);
-            toDisplay.append("\nNueva Ciega pequena: $");
-            toDisplay.append(smallBlind);
-        }
-        else{
-            toDisplay.append("The blinds are increasing!\n\n");
-            toDisplay.append("New Big Blind: $");
-            toDisplay.append(bigBlind);
-            toDisplay.append("\nNew Small Blind: $");
-            toDisplay.append(smallBlind);
-        }
-        MessageBox.popUpMessage(toDisplay.toString(), myActivity);
-    }
-
-    /**
-     * receiveInfo helper for PokerPlayerOutOfFunds
-     * @param pof PokerPlayerOutOfFunds info
-     */
-    private void receiveInfoPlayerOutOfFunds(PokerPlayerOutOfFunds pof) {
-        // tell this player a player is out of funds
-        e2.start();
-        ArrayList<Integer> outOfFundPlayers = pof.getPlayerIDs();
-
-        StringBuilder toDisplay = new StringBuilder();
-
-        // build the string to tell the human player
-        if (outOfFundPlayers.size() == 1) {
-            if(isSpanish){
-                toDisplay.append("Jugador ");
-                toDisplay.append(outOfFundPlayers.get(0) + 1);
-                toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
-            }
-            else{
-                toDisplay.append("Player ");
-                toDisplay.append(outOfFundPlayers.get(0) + 1);
-                toDisplay.append(" is out of funds!\nThey are now out of the game.");
-            }
-        } else {
-
-            if(isSpanish){
-                toDisplay.append("Jugador ");
-                for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
-                    toDisplay.append(outOfFundPlayers.get(i) + 1);
-                    toDisplay.append(" y ");
+            // build the string to tell the human player
+            if (outOfFundPlayers.size() == 1) {
+                if(isSpanish){
+                    toDisplay.append("Jugador ");
+                    toDisplay.append(outOfFundPlayers.get(0) + 1);
+                    toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
                 }
-                int lastPlayer =
-                        outOfFundPlayers.get(outOfFundPlayers.size() - 1);
-                toDisplay.append(lastPlayer + 1);
-                toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
-            }
-            else{
-                toDisplay.append("Player ");
-                for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
-                    toDisplay.append(outOfFundPlayers.get(i) + 1);
-                    toDisplay.append(" and ");
+                else{
+                    toDisplay.append("Player ");
+                    toDisplay.append(outOfFundPlayers.get(0) + 1);
+                    toDisplay.append(" is out of funds!\nThey are now out of the game.");
                 }
-                int lastPlayer =
-                        outOfFundPlayers.get(outOfFundPlayers.size() - 1);
-                toDisplay.append(lastPlayer + 1);
-                toDisplay.append(" are out of funds!\nThey are now out of the game" +
-                        ".");
+            } else {
+
+               if(isSpanish){
+                   toDisplay.append("Jugador ");
+                   for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
+                       toDisplay.append(outOfFundPlayers.get(i) + 1);
+                       toDisplay.append(" y ");
+                   }
+                   int lastPlayer =
+                           outOfFundPlayers.get(outOfFundPlayers.size() - 1);
+                   toDisplay.append(lastPlayer + 1);
+                   toDisplay.append(" no tiene fondos!\nAhora estan fuera del juego.");
+               }
+               else{
+                   toDisplay.append("Player ");
+                   for (int i = 0; i < outOfFundPlayers.size() - 1; i++) {
+                       toDisplay.append(outOfFundPlayers.get(i) + 1);
+                       toDisplay.append(" and ");
+                   }
+                   int lastPlayer =
+                           outOfFundPlayers.get(outOfFundPlayers.size() - 1);
+                   toDisplay.append(lastPlayer + 1);
+                   toDisplay.append(" are out of funds!\nThey are now out of the game" +
+                           ".");
+               }
             }
+            MessageBox.popUpMessage(toDisplay.toString(), myActivity);
         }
-        MessageBox.popUpMessage(toDisplay.toString(), myActivity);
     }
 
     /**
@@ -1207,6 +1180,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
 
+            /*
+            * cant have this code here because it assumes that the bet action was legal, but
+            * thats only verified in the recieve info method, which is saved by the betSubmitted
+            * variable.
+            else if(bet == 420) {
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), ";)",
+                        duration).show();
+            }
+            else if(bet == 69){
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
+                        duration).show();
+            }
+            */
 
             int callAmount = state.getBetController().getCallAmount(playerNum);
             betSubmitted = true;
