@@ -618,7 +618,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
          * if the active player from the turn tracker is >= 0, set the
          * turnTracker TextView to the name of the player
          */
-
         if (activePlayerID < 0) {
             if(isSpanish){
                 turnTracker.setText("Cargando...");
@@ -1179,22 +1178,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                     MessageBox.popUpMessage("Cant bet a negative amount!", this.myActivity);
                 }
             }
-
-            /*
-            * cant have this code here because it assumes that the bet action was legal, but
-            * thats only verified in the recieve info method, which is saved by the betSubmitted
-            * variable.
-            else if(bet == 420) {
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), ";)",
-                        duration).show();
-            }
-            else if(bet == 69){
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
-                        duration).show();
-            }
-            */
 
             int callAmount = state.getBetController().getCallAmount(playerNum);
             betSubmitted = true;
