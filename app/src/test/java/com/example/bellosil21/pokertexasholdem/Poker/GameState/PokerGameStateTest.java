@@ -6,6 +6,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests the PokerGameState
+ *
+ * @author Patrick Bellosillo
+ * @author Jordan Ho
+ * @author Kevin Hoser
+ * @author Gabe Marcial
+ */
 public class PokerGameStateTest {
 
     @Test
