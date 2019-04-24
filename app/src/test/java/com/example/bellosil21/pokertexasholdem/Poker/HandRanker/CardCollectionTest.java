@@ -22,8 +22,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class CardCollectionTest {
 
+    /**
+     * Method check to see the functionality of comparing between two hands.
+     * It is expected that the method will determine which type of hand is
+     * higher over the other.
+     */
     @Test
     public void compareTo() {
+        // Creates a new player's hand given a certain set of community cards
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
         player.setHole2(new Card(Card.Suit.HEART, Card.Rank.KING));
@@ -41,6 +47,7 @@ public class CardCollectionTest {
         assertEquals(HandRank.FOUR_OF_A_KIND, fourOfAKing.getHandRank());
         assertEquals(Card.Rank.KING, fourOfAKing.getHighestRank());
 
+        // Creates another player's hand with a new array of community cards
         player = new Hand();
         player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.TWO));
         player.setHole2(new Card(Card.Suit.HEART, Card.Rank.TWO));
@@ -58,6 +65,7 @@ public class CardCollectionTest {
         assertEquals(HandRank.FULL_HOUSE, fullHouse.getHandRank());
         assertEquals(Card.Rank.EIGHT, fullHouse.getHighestRank());
 
+        // Compares two hands and determines which hand is higher
         int compare = fullHouse.compareTo(fourOfAKing);
         assertEquals(-1, compare);
 
