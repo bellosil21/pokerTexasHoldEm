@@ -72,6 +72,7 @@ public class PokerGameStateTest {
         assertEquals(state1.getLastActions(), copyOfState1.getLastActions());
     }
 
+
     @Test
     public void deal() {
         dealHealer(1);
