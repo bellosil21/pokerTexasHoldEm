@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:drawable/screen_background_dark_transparent"
-            android:text="Previous"
+            android:text="Anterior"
             android:textColor="@color/white" />
 
     </LinearLayout>
@@ -51,16 +51,15 @@
                 <TextView
                     android:id="@+id/gameStandings"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1. Game Standings:"
+                    android:layout_height="match_parent"
+                    android:text="1. Posiciones Del Juego:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/gameStandingsInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Enables and disables the display of the round standings."
+                    android:text="Activa y desactiva la visualización de las posiciones de la ronda."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -74,15 +73,14 @@
                     android:id="@+id/gameInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2. Game Info:"
+                    android:text="2. Información Del Juego:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/gameInfoDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Displays the rules of the game and how to play."
+                    android:text="Muestra las reglas del juego y cómo jugar."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -96,15 +94,14 @@
                     android:id="@+id/settings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3. Settings:"
+                    android:text="3. Adjustes:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/settingsDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Displays the settings menu."
+                    android:text="Muestra el menú de configuración."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
             </TableRow>
@@ -117,15 +114,14 @@
                     android:id="@+id/exitGame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4. Exit Game:"
+                    android:text="4. Salir Del Juego:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/exitGameDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Exits the game."
+                    android:text="Sale del juego."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -139,15 +135,14 @@
                     android:id="@+id/handRanking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5. Hand Rankings:"
+                    android:text="5. Clasificación De Manos:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/handRankingDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Displays the list of hand rankings from highest to lowest."
+                    android:text="Muestra la lista de clasificaciones de manos de mayor a menor."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -161,15 +156,14 @@
                     android:id="@+id/bettingSeekBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6. Betting Slider:"
+                    android:text="6. Control De Apuestas:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/bettingSearchDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Use this slider to adjust how much you want to bet."
+                    android:text="Utilice este control deslizante para ajustar cuánto quieres apostar."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -183,15 +177,14 @@
                     android:id="@+id/bettingWrite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7. Betting:"
+                    android:text="7. Apuesta:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/textV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Use this to type an exact bet amount and display it."
+                    android:text="Use esto para escribir una cantidad de apuesta exacta y mostrarla."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -205,15 +198,14 @@
                     android:id="@+id/sitOut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8. Sit Out/Sit In:"
+                    android:text="8. Fuera/Dentro Del Juego:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/sitOutDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Spectate or participate in game."
+                    android:text="Espectate o participa en el juego."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -226,15 +218,14 @@
                     android:id="@+id/showHideCards"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="9. Show/Hide Cards:"
+                    android:text="9. Esconder/Mostrar:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/showHideCardsDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Enable/Disable other players to see your cards."
+                    android:text="Habilita / deshabilita a otros jugadores para ver tus cartas."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -248,15 +239,14 @@
                     android:id="@+id/raiseBet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10. Raise/Bet:"
+                    android:text="10. Subir Apuestas:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/raiseBetDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Raises the max bet to the amount you specify shown in the Bet Amount (7)."
+                    android:text="Eleva la apuesta máxima a la cantidad que especifique que se muestra en la Cantidad de la apuesta (7)."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -270,15 +260,14 @@
                     android:id="@+id/fold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="11. Fold:"
+                    android:text="11. Retirarse:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/foldDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Admit defeat and stops your hand from making any more bets this round."
+                    android:text="Admite la derrota y evita que tu mano haga más apuestas en esta ronda."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -292,15 +281,14 @@
                     android:id="@+id/call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12. Call:"
+                    android:text="12. Igualar:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/callDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Matches your current bet with the bet amount of the highest better."
+                    android:text="Empareja su apuesta actual con la cantidad de la apuesta más alta."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -313,16 +301,15 @@
                 <TextView
                     android:id="@+id/check"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="13. Check:"
+                    android:layout_height="match_parent"
+                    android:text="13. Pasar:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/checkDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="If you don't need to call any amount, skips your turn and goes to the next player's turn."
+                    android:text="Si no necesitas llamar a ninguna cantidad, salta tu turno y pasa al turno del siguiente jugador."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -336,15 +323,14 @@
                     android:id="@+id/bigBlind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="14. Big Blind:"
+                    android:text="14. Ciega Grande:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/bigBlindDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Indicates that this player must place the highest mandatory bet in the beginning of the round."
+                    android:text="Indica que este jugador debe colocar la apuesta obligatoria más alta al comienzo de la ronda."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -358,15 +344,14 @@
                     android:id="@+id/smallBlind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15. Small Blind:"
+                    android:text="15. Ciega Pequeña:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/smallBlindDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Shows that the indicated player must place a mandatory bet half of big blind in the beginning of the round."
+                    android:text="Demuestra que el jugador indicado debe colocar una apuesta obligatoria en la mitad de la ciega grande al comienzo de la ronda."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -380,15 +365,14 @@
                     android:id="@+id/playerMoney"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="16. Player's Money"
+                    android:text="16. Dinero Del Jugaor:"
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
-
                 <TextView
                     android:id="@+id/playerMoneyDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Shows how much money you currently have."
+                    android:text="Muestra cuánto dinero tienes."
                     android:textColor="@color/white"
                     app:fontFamily="@font/anton" />
 
@@ -409,7 +393,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:drawable/screen_background_dark_transparent"
-            android:text="Exit"
+            android:text="Salida"
             android:textColor="@color/white" />
 
     </LinearLayout>
