@@ -78,6 +78,7 @@ public class HankRankerTest {
 
     @Test
     public void fourOfKind() {
+        // Testing for a four of a kind hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -138,6 +139,7 @@ public class HankRankerTest {
 
     @Test
     public void fullHouse() {
+        // Testing for a full house hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -181,6 +183,7 @@ public class HankRankerTest {
 
     @Test
     public void flush() {
+        // Testing for a Flush hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.DIAMONDS, Card.Rank.TWO));
         player.setHole2(new Card(Card.Suit.DIAMONDS, Card.Rank.SIX));
@@ -224,6 +227,7 @@ public class HankRankerTest {
 
     @Test
     public void straightOne() {
+        // Testing for a straight hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.FOUR));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.FIVE));
@@ -244,6 +248,7 @@ public class HankRankerTest {
         assertEquals(Card.Rank.FIVE.getValue(),
                 str.getHighestRank().getValue());
 
+        // Testing for a straight hand with three community cards given
         Hand playerNumTwo = new Hand();
         playerNumTwo.setHole1(new Card(Card.Suit.HEART, Card.Rank.QUEEN));
         playerNumTwo.setHole2(new Card(Card.Suit.SPADES, Card.Rank.FIVE));
@@ -263,11 +268,11 @@ public class HankRankerTest {
                 strTwo.getHandRank().getValue());
         assertEquals(Card.Rank.ACE.getValue(),
                 strTwo.getHighestRank().getValue());
-
     }
 
     @Test
     public void ThreeOfKind() {
+        // Testing for a three of a kind hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -288,7 +293,7 @@ public class HankRankerTest {
         assertEquals(Card.Rank.ACE.getValue(),
                 threeKind.getHighestRank().getValue());
 
-        // Test Case 2
+        // Testing for a three of a kind hand with three community cards given
         player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -310,6 +315,7 @@ public class HankRankerTest {
 
     @Test
     public void twoPair() {
+        // Testing for a two pair hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.DIAMONDS, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.CLUBS, Card.Rank.JACK));
@@ -330,10 +336,13 @@ public class HankRankerTest {
         assertEquals(Card.Rank.JACK.getValue(),
                 twoP.getHighestRank().getValue());
 
+        // Testing for a two pair hand with three community cards given
+
         player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
 
+        // Testing for a two pair hand with no community cards given
         community = new ArrayList<>();
         community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.TEN));
         community.add(new Card(Card.Suit.CLUBS, Card.Rank.ACE));
@@ -351,6 +360,7 @@ public class HankRankerTest {
 
     @Test
     public void pair() {
+        // Testing for a pair hand with five community cards given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.TWO));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -371,6 +381,8 @@ public class HankRankerTest {
         assertEquals(Card.Rank.TWO.getValue(),
                 pr.getHighestRank().getValue());
 
+
+        // Testing for a pair hand with three community cards given
         player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.TWO));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -389,6 +401,7 @@ public class HankRankerTest {
         assertEquals(Card.Rank.TWO.getValue(),
                 pr.getHighestRank().getValue());
 
+        // Testing for a pair hand with no community cards given
         player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
@@ -407,6 +420,8 @@ public class HankRankerTest {
 
     @Test
     public void highCard() {
+        // Testing to find the highest card from the community and a player's
+        // hole cards
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.THREE));
         player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.QUEEN));
