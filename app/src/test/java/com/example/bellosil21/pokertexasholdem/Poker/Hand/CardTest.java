@@ -26,11 +26,5 @@ public class CardTest {
             deck.add(new Card(Card.Suit.SPADES, Card.Rank.ACE));
         }
     }
-    @Test
-    public void getRank() {
-    }
 
-    @Test
-    public void getSuit() {
-    }
 }
