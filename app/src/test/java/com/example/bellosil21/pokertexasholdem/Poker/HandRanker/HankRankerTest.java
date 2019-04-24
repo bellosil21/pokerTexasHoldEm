@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * Tests a HandRanker
+ * Test class to check the methods used in the HandRanker Java class
  *
  * @author Patrick Bellosillo
  * @author Jordan Ho
@@ -23,6 +23,9 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class HankRankerTest {
 
+    /**
+     * Method to test the methods used to identify a straight flush hand
+     */
     @Test
     public void straightFlush() {
 
@@ -84,6 +87,9 @@ public class HankRankerTest {
                 straightFlush.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a four of a kind hand
+     */
     @Test
     public void fourOfKind() {
         // Testing for a four of a kind hand with five community cards given
@@ -145,6 +151,9 @@ public class HankRankerTest {
                 fourKind.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a full house hand
+     */
     @Test
     public void fullHouse() {
         // Testing for a full house hand with five community cards given
@@ -189,6 +198,9 @@ public class HankRankerTest {
                 fHouse.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a flush hand
+     */
     @Test
     public void flush() {
         // Testing for a Flush hand with five community cards given
@@ -233,6 +245,9 @@ public class HankRankerTest {
                 fl.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a straight hand
+     */
     @Test
     public void straightOne() {
         // Testing for a straight hand with five community cards given
@@ -278,6 +293,9 @@ public class HankRankerTest {
                 strTwo.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a three of a kind hand
+     */
     @Test
     public void ThreeOfKind() {
         // Testing for a three of a kind hand with five community cards given
@@ -321,6 +339,9 @@ public class HankRankerTest {
                 threeKind.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a two pair hand
+     */
     @Test
     public void twoPair() {
         // Testing for a two pair hand with five community cards given
@@ -366,6 +387,9 @@ public class HankRankerTest {
                 twoP.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a hand containing a pair
+     */
     @Test
     public void pair() {
         // Testing for a pair hand with five community cards given
@@ -426,6 +450,10 @@ public class HankRankerTest {
                 pr.getHighestRank().getValue());
     }
 
+    /**
+     * Method to test the methods used to identify a hand with only the
+     * highest card
+     */
     @Test
     public void highCard() {
         // Testing to find the highest card from the community and a player's
