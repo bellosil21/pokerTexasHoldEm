@@ -104,7 +104,7 @@ public class PokerMainActivity extends GameMainActivity {
             }
         });
 
-        playerTypes.add(new GamePlayerType("Computer Player (Allin)") {
+        playerTypes.add(new GamePlayerType("Computer Player (All in)") {
             @Override
             public GamePlayer createPlayer(String name) {
                 return new PokerAllInComputer(name);
