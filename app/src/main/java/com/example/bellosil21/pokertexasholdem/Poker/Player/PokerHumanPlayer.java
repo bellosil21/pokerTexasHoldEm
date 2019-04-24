@@ -134,7 +134,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
     // sounds for different actions
     private MediaPlayer chipSound;
-    private MediaPlayer roundSound;
+    private MediaPlayer ding;
     private MediaPlayer e1;
     private MediaPlayer e2;
     private MediaPlayer e6;
@@ -224,7 +224,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     public void setAsGui(GameMainActivity activity) {
 
         myActivity = activity;
-        // the boolean variable is used to determine the proper activity layout
+        //the boolean variable is used to determine the proper activity layout
         if(isSpanish) {
             activity.setContentView(R.layout.activity_main_spanish);
         }
@@ -278,7 +278,7 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
 
         // Setting listeners to all the sounds
         this.chipSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.chipmp);
-        this.roundSound = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
+        this.ding = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.startsound);
         this.e1 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e1);
         this.e2 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e2);
         this.e6 = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.e6);
@@ -398,24 +398,25 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 checksound.start();
                 isCheckMoveValid = false;
             }
+
+
             /*
              * This is to play the sound of the start of a turn, and also making sure that the
              * toast indicating that its 'my' turn isn't displayed repeatedly.
              */
             if(state.getTurnTracker().getActivePlayerID() == this.playerNum && isMyTurn){
-                // plays a sound to notify the user that it is their turn
-                roundSound.start();
-                    if(isSpanish){
-                        Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
-                                Toast.LENGTH_SHORT).show();
-                        this.isMyTurn = false;
-                    }
-                    else{
-                        Toast.makeText(myActivity.getApplicationContext(), "It is " +
-                                        "your turn.",
-                                Toast.LENGTH_SHORT).show();
-                        this.isMyTurn = false;
-                    }
+                ding.start();
+                if (isSpanish) {
+                    Toast.makeText(myActivity.getApplicationContext(), "Es tu turno!",
+                            Toast.LENGTH_SHORT).show();
+                    this.isMyTurn = false;
+                } else {
+                    Toast.makeText(myActivity.getApplicationContext(), "It is " +
+                                    "your turn.",
+                            Toast.LENGTH_SHORT).show();
+                    this.isMyTurn = false;
+                }
+
             }
             /*
              * This simply can't be an else because it will allow the original statement above to
@@ -1181,6 +1182,21 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
 
+            /*
+            * cant have this code here because it assumes that the bet action was legal, but
+            * thats only verified in the recieve info method, which is saved by the betSubmitted
+            * variable.
+            else if(bet == 420) {
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), ";)",
+                        duration).show();
+            }
+            else if(bet == 69){
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(myActivity.getApplicationContext(), "Nice.",
+                        duration).show();
+            }
+            */
 
             int callAmount = state.getBetController().getCallAmount(playerNum);
             betSubmitted = true;
