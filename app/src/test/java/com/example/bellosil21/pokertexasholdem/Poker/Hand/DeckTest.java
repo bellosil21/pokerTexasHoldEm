@@ -16,6 +16,9 @@ import static org.junit.Assert.*;
  */
 public class DeckTest {
 
+    /**
+     * Method to test if all 52 cards in a deck was created successfully
+     */
     @Test
     public void deckTest(){
         Deck deck = new Deck();
@@ -24,6 +27,7 @@ public class DeckTest {
         int[] rankOcc = new int[13];
         int[] suitOcc = new int[4];
 
+        // Counts all the cards in the deck
         for (Card card: deckReturn){
           int x = card.getRank().getValue();
           rankOcc[x]++;
@@ -50,6 +54,7 @@ public class DeckTest {
 
         }
 
+        // Checks if all suits and ranks are within the deck
         for (int suit = 0; suit < 4; suit++){
             assertEquals(13, suitOcc[suit]);
         }
@@ -57,11 +62,5 @@ public class DeckTest {
         for (int rank = 0; rank < 13; rank++){
             assertEquals(4, rankOcc[rank]);
         }
-    }
-
-    @Test
-    public void dealPlayers() {
-        ArrayList<Hand> players = new ArrayList<Hand>();
-
     }
 }

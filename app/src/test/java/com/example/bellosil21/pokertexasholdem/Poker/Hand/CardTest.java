@@ -16,6 +16,9 @@ import static org.junit.Assert.*;
  */
 public class CardTest {
 
+    /**
+     * Tests the CardTest() method tests by adding cards to the deck. 
+     */
     @Test
     public void CardTest(){
         ArrayList<Card> deck = new ArrayList<Card>();
@@ -23,11 +26,5 @@ public class CardTest {
             deck.add(new Card(Card.Suit.SPADES, Card.Rank.ACE));
         }
     }
-    @Test
-    public void getRank() {
-    }
 
-    @Test
-    public void getSuit() {
-    }
 }
