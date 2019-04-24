@@ -72,17 +72,25 @@ public class PokerGameStateTest {
         assertEquals(state1.getLastActions(), copyOfState1.getLastActions());
     }
 
+    /**
+     * Uses helper method to test the functionality of the deal method.
+     */
     @Test
     public void deal() {
         dealHealer(1);
         dealHealer(4);
     }
 
+    /**
+     * Takes in an arbitrary number of player and asserts that the deck is 52 cards. Also asserts
+     * that when cards are dealt, the deck size reflects the cards taken.
+     * @param numPlayers
+     */
     private void dealHealer(int numPlayers) {
         PokerGameState myGameState = new PokerGameState(0, 100, 200, numPlayers);
         Deck myDeck = myGameState.getDeck();
         assertEquals(52, myDeck.getDeck().size()); // a new deck has 52 cards
         myGameState.deal();
-        assertNotEquals(52 - numPlayers * 2, myDeck);
+        assertEquals(52 - (numPlayers * 2), myDeck.getDeck().size());
     }
 }
