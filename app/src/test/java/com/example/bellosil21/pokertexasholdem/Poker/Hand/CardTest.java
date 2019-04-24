@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class CardTest {
 
     /**
-     * Tests the CardTest() method tests by adding cards to the deck. 
+     * Tests the CardTest() method tests by adding cards to the deck.
      */
     @Test
     public void CardTest(){
