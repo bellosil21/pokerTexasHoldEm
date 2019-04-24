@@ -13,7 +13,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.bellosil21.pokertexasholdem.Game.GameHumanPlayer;
 import com.example.bellosil21.pokertexasholdem.Game.GameMainActivity;
 import com.example.bellosil21.pokertexasholdem.Game.infoMsg.GameInfo;
@@ -141,7 +140,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
     private MediaPlayer dud;
     private MediaPlayer raiseblinds;
     private MediaPlayer showcardssound;
-    private MediaPlayer carddealingsound;
     private MediaPlayer checksound;
 
     // TextView for Round Number
@@ -286,8 +284,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         this.raiseblinds = MediaPlayer.create(myActivity.getApplicationContext(),R.raw.raiseblinds);
         this.showcardssound = MediaPlayer.create(myActivity.getApplicationContext(),
                 R.raw.showcardssound);
-        this.carddealingsound = MediaPlayer.create(myActivity.getApplicationContext(),
-                R.raw.cardsdealing);
         this.checksound = MediaPlayer.create(myActivity.getApplicationContext(), R.raw.checksound);
         /**
          * External Citation
