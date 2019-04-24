@@ -17,6 +17,8 @@ public class HankRankerTest {
 
     @Test
     public void straightFlush() {
+
+        // Tests for a Straight Flush when all community cards are given
         Hand player = new Hand();
         player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
         player.setHole2(new Card(Card.Suit.HEART, Card.Rank.KING));
@@ -35,6 +37,43 @@ public class HankRankerTest {
         assertEquals(HandRank.STRAIGHT_FLUSH.getValue(),
                 straightFlush.getHandRank().getValue());
         assertEquals(Card.Rank.ACE.getValue(), straightFlush.getHighestRank().getValue());
+
+        // Tests for a Identifying a Straight Flush case for only three
+        // community cards given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.QUEEN));
+        player.setHole2(new Card(Card.Suit.CLUBS, Card.Rank.JACK));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.NINE));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.TEN));
+
+        hr = new HandRanker(player, community);
+
+        straightFlush = hr.computeHandRank();
+
+        assertEquals(HandRank.STRAIGHT_FLUSH.getValue(),
+                straightFlush.getHandRank().getValue());
+        assertEquals(Card.Rank.QUEEN.getValue(),
+                straightFlush.getHighestRank().getValue());
+
+        // Tests the invalidity of the case where no cards community cards are
+        // given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.QUEEN));
+        player.setHole2(new Card(Card.Suit.CLUBS, Card.Rank.JACK));
+
+        community.clear();
+
+        hr = new HandRanker(player, community);
+
+        straightFlush = hr.computeHandRank();
+
+        assertEquals(HandRank.HIGH_CARD.getValue(),
+                straightFlush.getHandRank().getValue());
+        assertEquals(Card.Rank.QUEEN.getValue(),
+                straightFlush.getHighestRank().getValue());
     }
 
     @Test
@@ -58,6 +97,43 @@ public class HankRankerTest {
                 fourKind.getHandRank().getValue());
         assertEquals(Card.Rank.EIGHT.getValue(),
                 fourKind.getHighestRank().getValue());
+
+        // Tests for a Identifying a Four of a Kind hand case with only three
+        // community cards given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.KING));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.KING));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.KING));
+        community.add(new Card(Card.Suit.HEART, Card.Rank.KING));
+
+        hr = new HandRanker(player, community);
+
+        fourKind = hr.computeHandRank();
+
+        assertEquals(HandRank.FOUR_OF_A_KIND.getValue(),
+                fourKind.getHandRank().getValue());
+        assertEquals(Card.Rank.KING.getValue(),
+                fourKind.getHighestRank().getValue());
+
+        // Tests for a Identifying a Four of a Kind hand case when no
+        // community cards are given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.QUEEN));
+        player.setHole2(new Card(Card.Suit.CLUBS, Card.Rank.JACK));
+
+        community.clear();
+
+        hr = new HandRanker(player, community);
+
+        fourKind = hr.computeHandRank();
+
+        assertNotEquals(HandRank.STRAIGHT_FLUSH.getValue(),
+                fourKind.getHandRank().getValue());
+        assertEquals(Card.Rank.QUEEN.getValue(),
+                fourKind.getHighestRank().getValue());
     }
 
     @Test
@@ -76,6 +152,26 @@ public class HankRankerTest {
         HandRanker hr = new HandRanker(player, community);
 
         CardCollection fHouse = hr.computeHandRank();
+
+        assertEquals(HandRank.FULL_HOUSE.getValue(),
+                fHouse.getHandRank().getValue());
+        assertEquals(Card.Rank.KING.getValue(),
+                fHouse.getHighestRank().getValue());
+
+        // Tests for a Identifying a Full House hand case with only three
+        // community cards given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.KING));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.KING));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
+
+        hr = new HandRanker(player, community);
+
+        fHouse = hr.computeHandRank();
 
         assertEquals(HandRank.FULL_HOUSE.getValue(),
                 fHouse.getHandRank().getValue());
@@ -103,6 +199,26 @@ public class HankRankerTest {
         assertEquals(HandRank.FLUSH.getValue(),
                 fl.getHandRank().getValue());
         assertEquals(Card.Rank.ACE.getValue(),
+                fl.getHighestRank().getValue());
+
+        // Tests for a Identifying a Flush hand case with only three
+        // community cards given
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.CLUBS, Card.Rank.TWO));
+        player.setHole2(new Card(Card.Suit.CLUBS, Card.Rank.SEVEN));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.EIGHT));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.KING));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.JACK));
+
+        hr = new HandRanker(player, community);
+
+        fl = hr.computeHandRank();
+
+        assertEquals(HandRank.FLUSH.getValue(),
+                fl.getHandRank().getValue());
+        assertEquals(Card.Rank.KING.getValue(),
                 fl.getHighestRank().getValue());
     }
 
@@ -171,6 +287,25 @@ public class HankRankerTest {
                 threeKind.getHandRank().getValue());
         assertEquals(Card.Rank.ACE.getValue(),
                 threeKind.getHighestRank().getValue());
+
+        // Test Case 2
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.ACE));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.ACE));
+        community.add(new Card(Card.Suit.SPADES, Card.Rank.TEN));
+
+        hr = new HandRanker(player, community);
+
+        threeKind = hr.computeHandRank();
+
+        assertEquals(HandRank.THREE_OF_A_KIND.getValue(),
+                threeKind.getHandRank().getValue());
+        assertEquals(Card.Rank.ACE.getValue(),
+                threeKind.getHighestRank().getValue());
     }
 
     @Test
@@ -188,12 +323,30 @@ public class HankRankerTest {
 
         HandRanker hr = new HandRanker(player, community);
 
-        CardCollection straightFlush = hr.computeHandRank();
+        CardCollection twoP = hr.computeHandRank();
 
         assertEquals(HandRank.TWO_PAIR.getValue(),
-                straightFlush.getHandRank().getValue());
+                twoP.getHandRank().getValue());
         assertEquals(Card.Rank.JACK.getValue(),
-                straightFlush.getHighestRank().getValue());
+                twoP.getHighestRank().getValue());
+
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.ACE));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.TEN));
+        community.add(new Card(Card.Suit.CLUBS, Card.Rank.ACE));
+        community.add(new Card(Card.Suit.SPADES, Card.Rank.TEN));
+
+        hr = new HandRanker(player, community);
+
+        twoP = hr.computeHandRank();
+
+        assertEquals(HandRank.TWO_PAIR.getValue(),
+                twoP.getHandRank().getValue());
+        assertEquals(Card.Rank.ACE.getValue(),
+                twoP.getHighestRank().getValue());
     }
 
     @Test
@@ -216,6 +369,39 @@ public class HankRankerTest {
         assertEquals(HandRank.PAIR.getValue(),
                 pr.getHandRank().getValue());
         assertEquals(Card.Rank.TWO.getValue(),
+                pr.getHighestRank().getValue());
+
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.TWO));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
+
+        community = new ArrayList<>();
+        community.add(new Card(Card.Suit.DIAMONDS, Card.Rank.ACE));
+        community.add(new Card(Card.Suit.HEART, Card.Rank.TWO));
+        community.add(new Card(Card.Suit.SPADES, Card.Rank.TEN));
+
+        hr = new HandRanker(player, community);
+
+        pr = hr.computeHandRank();
+
+        assertEquals(HandRank.PAIR.getValue(),
+                pr.getHandRank().getValue());
+        assertEquals(Card.Rank.TWO.getValue(),
+                pr.getHighestRank().getValue());
+
+        player = new Hand();
+        player.setHole1(new Card(Card.Suit.HEART, Card.Rank.EIGHT));
+        player.setHole2(new Card(Card.Suit.SPADES, Card.Rank.EIGHT));
+
+        community = new ArrayList<>();
+
+        hr = new HandRanker(player, community);
+
+        pr = hr.computeHandRank();
+
+        assertEquals(HandRank.PAIR.getValue(),
+                pr.getHandRank().getValue());
+        assertEquals(Card.Rank.EIGHT.getValue(),
                 pr.getHighestRank().getValue());
     }
 
