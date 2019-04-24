@@ -1107,7 +1107,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         } else if (v.equals(nextInfoButton)){
             if (page == 1){
                 page = 2;
-                myActivity.setContentView(R.layout.game_info_page2);
+                if(isSpanish){
+                    myActivity.setContentView(R.layout.game_info_page2_spanish);
+                }
+                else{
+                    myActivity.setContentView(R.layout.game_info_page2);
+                }
                 setHelperGUIpg2();
             }
         } else if (v.equals(previousInfoButton)){
