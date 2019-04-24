@@ -1229,8 +1229,6 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
                 }
             }
             game.sendAction(new PokerSitOut(this));
-        } else if(v.equals(helpButton)) {
-            // implements the language change in the settings button
         } else if(v.equals(settings)) {
             MessageBox.popUpChoice("Select Language", "English", "Español",
                     new DialogInterface.OnClickListener() {
@@ -1422,7 +1420,12 @@ public class PokerHumanPlayer extends GameHumanPlayer implements
         exitButtonRight.setOnClickListener(this);
 
         ImageView gameInfo = myActivity.findViewById(R.id.guiAnnotatedLayout);
+        if (isSpanish){
+            gameInfo.setImageResource(R.drawable.gui_info_pg2_spanish);
+        }
+        else{
         gameInfo.setImageResource(R.drawable.gui_info);
+        }
     }
 
     /**
